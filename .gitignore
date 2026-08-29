@@ -10,4 +10,7 @@ __pycache__/
 .DS_Store
 *.tsbuildinfo
 .cursor/
-.vite/
+content/cache/*
+!content/cache/.gitkeep
+apps/api/data/
+*.db

@@ -1,11 +1,13 @@
 import { RouteMap } from "./RouteMap";
-import type { LifeRoute } from "../types";
+import { SourceBadge } from "./SourceBadge";
+import type { RouteEnvelope } from "../types";
 
 type RouteStageProps = {
-  route: LifeRoute;
+  route: RouteEnvelope;
   activeStopIndex: number;
   onSelectStop: (index: number) => void;
   onStartWalk: () => void;
+  startLoading?: boolean;
 };
 
 export function RouteStage({
@@ -13,6 +15,7 @@ export function RouteStage({
   activeStopIndex,
   onSelectStop,
   onStartWalk,
+  startLoading,
 }: RouteStageProps) {
   return (
     <section className="metro-panel route-stage" aria-labelledby="route-title">
@@ -48,7 +51,9 @@ export function RouteStage({
               aria-hidden="true"
             />
             <div className="route-stop__code">{stop.code}</div>
-            <div className="route-stop__name">{stop.name}</div>
+            <div className="route-stop__name">
+              {stop.name} <SourceBadge label={stop.sourceLabel} />
+            </div>
             <div className="route-stop__meta">
               {stop.district}
               {stop.walkMin > 0 ? ` · 步行 ${stop.walkMin} 分` : " · 起点站"}
@@ -58,8 +63,8 @@ export function RouteStage({
       </div>
 
       <div className="metro-actions">
-        <button type="button" className="metro-btn metro-btn--primary" onClick={onStartWalk}>
-          开始漫步 · Enter
+        <button type="button" className="metro-btn metro-btn--primary" onClick={onStartWalk} disabled={startLoading}>
+          {startLoading ? "准备中…" : "开始漫步 · Enter"}
         </button>
       </div>
     </section>

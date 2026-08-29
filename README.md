@@ -10,24 +10,20 @@
 
 **竞争单位：** 不是「推荐好不好」，而是 **WalkTask 能不能办完**（规划 → 开走 → 改线 → 终站）。
 
-## 当前版本（v0.2）
+## 当前版本（v0.3 · WalkTask Agent）
 
 | 能力 | 状态 |
 |---|---|
-| 选线 Brief（主题 / 片区 / 时长 / 步速） | ✅ |
-| OSM Overpass POI + OSRM 步行规划 | ✅ |
+| WalkTask 全生命周期（plan / start / skip / reroll / complete） | ✅ |
+| 任务 Memory + 跨会话 resume | ✅ |
+| curated 精选加权 + POI cache | ✅ |
+| L0–L2 权限确认 | ✅ |
+| 来源标注（绿/蓝/灰） | ✅ |
+| Eval Harness（50 题回归） | ✅ |
+| 主动推进（降雨改线提案） | ✅ |
+| PWA manifest | ✅ |
+| OSM Overpass + OSRM 步行规划 | ✅ |
 | MapLibre 暗色线路图 | ✅ |
-| 离线 fixture 兜底 | ✅ |
-
-## 数据源
-
-详见 [docs/DATA_SOURCES.md](./docs/DATA_SOURCES.md)
-
-| 用途 | 来源 |
-|---|---|
-| POI | OSM Overpass |
-| 步行线 | OSRM |
-| 底图 | CARTO Dark Matter |
 
 ## 快速开始
 
@@ -50,15 +46,32 @@ pnpm dev
 ## 结构
 
 ```
-apps/web/           前端（Vite + React + MapLibre）
-apps/api/           规划 API（FastAPI）
-content/fixtures/   离线示范线
-docs/               产品 / 数据 / 架构文档
+apps/web/              前端（Vite + React + MapLibre + PWA）
+apps/api/              WalkTask API（FastAPI + SQLite Memory）
+packages/contracts/    共享类型（RouteEnvelope · WalkTask · Stop）
+content/curated/       编辑精选 POI
+content/eval/          回归题库
+content/fixtures/      离线示范线
+docs/                  产品 / 数据 / 架构文档
 ```
 
-## API
+## 主要 API
 
-- `GET /v1/health`
-- `GET /v1/districts`
-- `GET /v1/osm/status`
-- `POST /v1/routes/plan` — `{ vibe, district_id, duration_min, pace }`
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| POST | `/v1/walks/plan` | 理解意图 + 创建 WalkTask |
+| GET | `/v1/walks/resume` | 恢复未完成任务 |
+| POST | `/v1/walks/{id}/start` | 开始漫步 |
+| POST | `/v1/walks/{id}/skip` | 跳过站（L2 确认） |
+| POST | `/v1/walks/{id}/reroll` | 换站（L2 确认） |
+| POST | `/v1/walks/{id}/complete` | 完成 + 验证 |
+| GET | `/v1/walks/{id}/proactive` | 降雨改线提案 |
+| POST | `/v1/eval/run` | 跑回归题库 |
+
+Legacy：`POST /v1/routes/plan` 仍可用（仅返回线路，不创建任务）。
+
+## Eval
+
+```bash
+pnpm eval   # API 需已启动
+```

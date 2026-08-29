@@ -73,6 +73,18 @@ export function BriefStage({
       </div>
 
       <div className="metro-field">
+        <label htmlFor="intent">一句话任务（可选）</label>
+        <input
+          id="intent"
+          className="metro-select"
+          type="text"
+          placeholder="今晚安福咖啡慢逛 90 分钟"
+          value={value.intentText ?? ""}
+          onChange={(e) => onChange({ ...value, intentText: e.target.value || undefined })}
+        />
+      </div>
+
+      <div className="metro-field">
         <label htmlFor="district">片区</label>
         <select
           id="district"

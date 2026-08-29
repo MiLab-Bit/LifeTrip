@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { LifeRoute } from "../types";
+import type { RouteEnvelope } from "../types";
 
 const STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
 type RouteMapProps = {
-  route: LifeRoute;
+  route: RouteEnvelope;
   activeStopIndex: number;
   onSelectStop?: (index: number) => void;
   compact?: boolean;

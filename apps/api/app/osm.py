@@ -1,10 +1,12 @@
-"""Overpass API — 潮流 POI 检索."""
+"""Overpass API — 潮流 POI 检索 + 本地 cache."""
 from __future__ import annotations
 
 import os
 from typing import Any
 
 import httpx
+
+from app.cache import read_cache, read_stale_cache, write_cache
 
 OVERPASS_URLS = (
     "https://overpass-api.de/api/interpreter",
@@ -72,12 +74,18 @@ def _parse_elements(raw: dict[str, Any]) -> list[dict[str, Any]]:
                 "lat": float(lat),
                 "lng": float(lng),
                 "tags": tags,
+                "tags_osm": tags,
+                "origin": "osm",
             }
         )
     return out
 
 
 def fetch_pois(vibe: str, district) -> list[dict[str, Any]]:
+    cached = read_cache(district.id, vibe)
+    if cached:
+        return cached
+
     query = build_query(vibe, district)
     timeout = float(os.getenv("LIFETRIP_OVERPASS_TIMEOUT", "20"))
     last_err = "overpass failed"
@@ -90,10 +98,15 @@ def fetch_pois(vibe: str, district) -> list[dict[str, Any]]:
                     continue
                 pois = _parse_elements(r.json())
                 if pois:
+                    write_cache(district.id, vibe, pois)
                     return pois
                 last_err = "empty result"
             except Exception as exc:  # noqa: BLE001
                 last_err = str(exc)
+
+    stale = read_stale_cache(district.id, vibe)
+    if stale:
+        return stale
     raise RuntimeError(last_err)
 
 

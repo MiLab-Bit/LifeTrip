@@ -1,6 +1,6 @@
 {
   "name": "@lifetrip/web",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
+    "@lifetrip/contracts": "workspace:*",
     "maplibre-gl": "^5.6.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

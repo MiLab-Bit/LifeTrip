@@ -271,16 +271,16 @@ WalkTask 完成率 = 被识别为「走线任务」的需求中，最终验证�
 
 ---
 
-## 十二、工程下一步
+## 十二、工程状态（v0.3）
 
-| 优先级 | 交付 | 关键路径 |
+| 层 | 状态 | 交付 |
 |---|---|---|
-| **P0 · L1** | `content/curated/` 安福—武康精选站 | planner 加权 + POI cache |
-| **P1 · L2** | `WalkTask` 实体 + skip/reroll API | Memory SQLite + 跨会话 resume |
-| **P2 · L3** | `packages/contracts` + Eval 50 题 | 来源绿/蓝/灰标 |
-| **P3 · L4** | 天气 trigger → 改线提案 API | 可选 PWA / 小程序 |
+| **L1** ✅ | 已完成 | `content/curated/` · planner 加权 · POI cache |
+| **L2** ✅ | 已完成 | WalkTask · skip/reroll · Memory SQLite · resume |
+| **L3** ✅ | 已完成 | `packages/contracts` · Eval 50 题 · 绿/蓝/灰标 |
+| **L4** ✅ | 雏形 | 天气 trigger → 改线提案 · PWA manifest |
 
-代码入口：`apps/api/app/planner.py` → 演进为 `plan/` + `walk/` 模块。
+**下一步：** W4 真实用户 walk 复盘 · 多片区 curated · LLM 文案润色（绑定 POI ID）
 
 ---
 

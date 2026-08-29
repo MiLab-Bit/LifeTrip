@@ -1,14 +1,15 @@
 {
   "name": "lifetrip",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "pnpm --filter @lifetrip/web dev",
     "dev:api": "cd apps/api && python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8800 --reload",
     "dev:all": "concurrently -k \"pnpm dev:api\" \"pnpm dev\"",
     "build": "pnpm --filter @lifetrip/web build",
-    "typecheck": "pnpm --filter @lifetrip/web typecheck"
+    "typecheck": "pnpm --filter @lifetrip/web typecheck",
+    "eval": "curl -s -X POST 'http://127.0.0.1:8800/v1/eval/run' | python3 -m json.tool"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
