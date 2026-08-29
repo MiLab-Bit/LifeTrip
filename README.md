@@ -10,15 +10,15 @@
 
 **竞争单位：** 不是「推荐好不好」，而是 **WalkTask 能不能办完**（规划 → 开走 → 改线 → 终站）。
 
-## 当前版本（v0.3 · WalkTask Agent）
+## 当前版本（v0.4 · WalkTask Agent + Narrative）
 
 | 能力 | 状态 |
 |---|---|
 | WalkTask 全生命周期（plan / start / skip / reroll / complete） | ✅ |
+| **curated 多片区**（安福 / 愚园 / 巨富 / 西岸 × 多 vibe） | ✅ |
+| **文案润色**（editor 基准 + local + 可选 LLM） | ✅ |
 | 任务 Memory + 跨会话 resume | ✅ |
-| curated 精选加权 + POI cache | ✅ |
 | L0–L2 权限确认 | ✅ |
-| 来源标注（绿/蓝/灰） | ✅ |
 | Eval Harness（50 题回归） | ✅ |
 | 主动推进（降雨改线提案） | ✅ |
 | PWA manifest | ✅ |
@@ -49,7 +49,8 @@ pnpm dev
 apps/web/              前端（Vite + React + MapLibre + PWA）
 apps/api/              WalkTask API（FastAPI + SQLite Memory）
 packages/contracts/    共享类型（RouteEnvelope · WalkTask · Stop）
-content/curated/       编辑精选 POI
+content/curated/       编辑精选 POI（9 条线 × 4 片区）
+content/narratives/    润色基准文案（editor / LLM）
 content/eval/          回归题库
 content/fixtures/      离线示范线
 docs/                  产品 / 数据 / 架构文档
@@ -75,3 +76,23 @@ Legacy：`POST /v1/routes/plan` 仍可用（仅返回线路，不创建任务）
 ```bash
 pnpm eval   # API 需已启动
 ```
+
+## LLM 文案润色（可选）
+
+```bash
+# .env 中设置 LIFETRIP_LLM_POLISH=1 和 LIFETRIP_LLM_API_KEY
+python3 scripts/polish_curated.py   # 批量润色 curated 站
+```
+
+- **绿标 curated**：优先 `content/narratives/` 编辑器基准
+- **蓝标 OSM**：local 规则润色；开启 LLM 后实时润色并 cache
+- 润色严格绑定 POI ID / 名称，不编造地址或价格
+
+## curated 覆盖
+
+| 片区 | 线路 |
+|---|---|
+| 安福—武康 | 咖啡 · 夜行 · 古着 |
+| 愚园—江苏路 | 咖啡 · 夜行 · 画廊 |
+| 巨富—富民 | 古着 · 咖啡 |
+| 西岸—滨江 | 画廊 |

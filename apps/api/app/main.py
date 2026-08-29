@@ -22,7 +22,7 @@ from app.walk import service as walk_service
 
 ROOT = Path(__file__).resolve().parents[2]
 
-app = FastAPI(title="LifeTrip API", version="0.3.0")
+app = FastAPI(title="LifeTrip API", version="0.4.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -102,16 +102,19 @@ def _plan_with_fallback(body: PlanRequest) -> RouteEnvelope:
 @app.get("/v1/health")
 def health():
     offline = os.getenv("LIFETRIP_OFFLINE", "0") == "1"
+    llm_on = os.getenv("LIFETRIP_LLM_POLISH", "0") == "1" and bool(os.getenv("LIFETRIP_LLM_API_KEY"))
     return {
         "ok": True,
         "service": "lifetrip-api",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "offline_mode": offline,
-        "features": ["walk_tasks", "memory", "eval", "proactive"],
+        "features": ["walk_tasks", "memory", "eval", "proactive", "narrative_polish"],
+        "llm_polish": llm_on,
         "data_sources": {
             "poi": "OpenStreetMap Overpass + curated",
             "routing": "OSRM foot",
             "weather": "Open-Meteo",
+            "narrative": "editor + local + optional LLM",
             "tiles": "CARTO Dark Matter (client)",
         },
     }

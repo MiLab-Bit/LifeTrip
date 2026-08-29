@@ -8,6 +8,7 @@ from typing import Any
 from app.contracts import RouteEnvelope, Stop
 from app.curated import load_curated
 from app.districts import District
+from app.narrative.polish import polish_stops
 from app.osm import fetch_pois
 from app.osrm import route_foot
 
@@ -192,6 +193,8 @@ def plan_route(
                 indoor=bool(p.get("indoor", True)),
             )
         )
+
+    stops = polish_stops(stops, vibe=vibe, district=district.name)
 
     subtitle = f"精选 {curated_n} · OSM {len(stops) - curated_n} 站 · 步行约 {walk_min} 分钟"
     return RouteEnvelope(

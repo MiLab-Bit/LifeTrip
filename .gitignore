@@ -12,5 +12,7 @@ __pycache__/
 .cursor/
 content/cache/*
 !content/cache/.gitkeep
-apps/api/data/
-*.db
+content/cache/narratives/*
+!content/cache/narratives/.gitkeep
+apps/api/data/*.db
+apps/api/data/*.db-*

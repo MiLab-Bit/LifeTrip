@@ -1,0 +1,77 @@
+{
+  "districtId": "west-bund",
+  "vibe": "gallery",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/west-g01",
+      "name": "西岸艺术区 A 段",
+      "lat": 31.1920,
+      "lng": 121.4620,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["画廊", "展览", "艺术"],
+      "headline": "留白墙面也是展品",
+      "body": "滨江艺术区步行起点，先看展再看江。",
+      "tip": "查当日展讯，部分馆周一闭馆。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "id": "curated/west-g02",
+      "name": "龙美术馆西岸",
+      "lat": 31.1885,
+      "lng": 121.4650,
+      "weight": 1.9,
+      "indoor": true,
+      "tags": ["美术馆", "当代艺术"],
+      "headline": "大空间的一站",
+      "body": "适合把 gallery 线的节奏拉满的一站。",
+      "tip": "预留 40 分钟以上。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "id": "curated/west-g03",
+      "name": "西岸穹顶艺术中心",
+      "lat": 31.1850,
+      "lng": 121.4680,
+      "weight": 1.7,
+      "indoor": true,
+      "tags": ["艺术空间", "工业风"],
+      "headline": "工业风转换",
+      "body": "穹顶结构本身值得绕一圈。",
+      "tip": "傍晚光线打在立面上很好看。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-22"
+    },
+    {
+      "id": "curated/west-g04",
+      "name": "滨江步道观展段",
+      "lat": 31.1900,
+      "lng": 121.4580,
+      "weight": 1.4,
+      "indoor": false,
+      "tags": ["户外", "雕塑", "江景"],
+      "headline": "户外雕塑段",
+      "body": "户外装置 + 江风，gallery 线里的呼吸站。",
+      "tip": "降雨时换 indoor 馆。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/west-g05",
+      "name": "油罐艺术公园",
+      "lat": 31.1835,
+      "lng": 121.4700,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["画廊", "公园"],
+      "headline": "油罐收束",
+      "body": "用油罐的圆形空间收束西岸艺术线。",
+      "tip": "展期变动快，门口先看海报。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    }
+  ]
+}

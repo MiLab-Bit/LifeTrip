@@ -277,10 +277,10 @@ WalkTask 完成率 = 被识别为「走线任务」的需求中，最终验证�
 |---|---|---|
 | **L1** ✅ | 已完成 | `content/curated/` · planner 加权 · POI cache |
 | **L2** ✅ | 已完成 | WalkTask · skip/reroll · Memory SQLite · resume |
-| **L3** ✅ | 已完成 | `packages/contracts` · Eval 50 题 · 绿/蓝/灰标 |
-| **L4** ✅ | 雏形 | 天气 trigger → 改线提案 · PWA manifest |
+| **L3** ✅ | 已完成 | contracts · Eval 50 题 · 绿/蓝/灰标 · **narrative polish** |
+| **L4** ✅ | 雏形 | 天气改线 · PWA · **9 条 curated 线** |
 
-**下一步：** W4 真实用户 walk 复盘 · 多片区 curated · LLM 文案润色（绑定 POI ID）
+**下一步：** W4 真实用户 walk 复盘 · 高德 POI 标签 · LLM 批量预生成 narratives
 
 ---
 

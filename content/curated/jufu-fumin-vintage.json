@@ -1,0 +1,91 @@
+{
+  "districtId": "jufu-fumin",
+  "vibe": "vintage",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/jufu-v01",
+      "name": "巨富路古着橱窗",
+      "lat": 31.2178,
+      "lng": 121.4512,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["古着", "选物", "淘街"],
+      "headline": "橱窗值得慢看",
+      "body": "巨富路气质最集中的一段，先试再进。",
+      "tip": "下午光线打橱窗最好。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "id": "curated/jufu-v02",
+      "name": "富民路二手选物",
+      "lat": 31.2188,
+      "lng": 121.4535,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["二手", "复古", "选物"],
+      "headline": "第二站：翻一翻",
+      "body": "富民路小店密度高，适合边走边逛。",
+      "tip": "带现金有时能淘到惊喜。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "id": "curated/jufu-v03",
+      "name": "长乐路交界古着",
+      "lat": 31.2165,
+      "lng": 121.4500,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["古着", "配饰"],
+      "headline": "配饰收尾站",
+      "body": "用一家配饰店收束古着线的视觉。",
+      "tip": "帽子和包是好切入点。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-22"
+    },
+    {
+      "id": "curated/jufu-v04",
+      "name": "巨富路 240 号段",
+      "lat": 31.2195,
+      "lng": 121.4520,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["古着", "quiet"],
+      "headline": "室内备选",
+      "body": "雨天改线时的同 vibe 替补。",
+      "tip": "reroll 优先候选。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/jufu-v05",
+      "name": "富民路支巷选物",
+      "lat": 31.2202,
+      "lng": 121.4548,
+      "weight": 1.4,
+      "indoor": true,
+      "tags": ["选物", "独立"],
+      "headline": "支巷独立店",
+      "body": "主路逛完拐进支巷，常有意外发现。",
+      "tip": "留意营业时间牌。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    },
+    {
+      "id": "curated/jufu-v06",
+      "name": "巨富—富民转角",
+      "lat": 31.2182,
+      "lng": 121.4525,
+      "weight": 1.3,
+      "indoor": false,
+      "tags": ["街拍", "外摆"],
+      "headline": "转角街拍站",
+      "body": "两路交界，适合拍一张线报再进店。",
+      "tip": "降雨时换 indoor 站。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-15"
+    }
+  ]
+}
