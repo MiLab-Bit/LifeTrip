@@ -2,6 +2,8 @@
 
 **潮流 City Walk · 黑绿地铁美学 · 独立仓库**
 
+仓库：[github.com/MiLab-Bit/LifeTrip](https://github.com/MiLab-Bit/LifeTrip)
+
 与 RedTrip 无关：不用上图 API、不做典籍叙事。数据以 **OpenStreetMap POI + OSRM 步行** 为主。
 
 ## 数据源（详见 `docs/DATA_SOURCES.md`）
