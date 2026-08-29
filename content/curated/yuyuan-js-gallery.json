@@ -1,0 +1,49 @@
+{
+  "districtId": "yuyuan-js",
+  "vibe": "gallery",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/yuyuan-g01",
+      "name": "愚园路艺术空间",
+      "lat": 31.2222,
+      "lng": 121.4260,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["画廊", "小型展"],
+      "headline": "弄堂里的展",
+      "body": "愚园路小型艺术空间，展期换得快。",
+      "tip": "门口海报先看展讯。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/yuyuan-g02",
+      "name": "江苏路创意园",
+      "lat": 31.2250,
+      "lng": 121.4295,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["艺术", "工作室"],
+      "headline": "工作室开放日",
+      "body": "创意园里常有临时展，碰运气也有惊喜。",
+      "tip": "周末开放概率更高。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    },
+    {
+      "id": "curated/yuyuan-g03",
+      "name": "定西路画廊段",
+      "lat": 31.2212,
+      "lng": 121.4308,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["展览", "摄影"],
+      "headline": "摄影展收尾",
+      "body": "用一家摄影画廊收束愚园艺术线。",
+      "tip": "部分展免费。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-15"
+    }
+  ]
+}

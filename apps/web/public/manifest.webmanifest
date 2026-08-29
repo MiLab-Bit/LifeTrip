@@ -1,0 +1,17 @@
+{
+  "name": "LifeTrip",
+  "short_name": "LifeTrip",
+  "description": "潮流 City Walk · 黑绿地铁美学",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f0d",
+  "theme_color": "#00e676",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
