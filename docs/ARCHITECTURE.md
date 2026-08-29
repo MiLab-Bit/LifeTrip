@@ -1,37 +1,41 @@
 # LifeTrip 技术架构
 
-> 随产品分层演进，详见 [PRODUCT_DESIGN.md](./PRODUCT_DESIGN.md) 第六节「分层路线图」。
+> 产品五系统见 [PRODUCT_DESIGN.md](./PRODUCT_DESIGN.md) 第六节；分层路线图见第十节。
 
-## 现状（Layer 0）
+## 现状（Layer 0 · Wedge 雏形）
 
 ```
-apps/web (Vite + React + MapLibre)
+apps/web
     │  POST /v1/routes/plan
     ▼
-apps/api (FastAPI)
-    ├─ districts.py     片区 bbox
-    ├─ osm.py           Overpass POI
-    ├─ osrm.py          步行 polyline
-    └─ planner.py       选站 + 排序 + 规则文案
-content/fixtures/       离线线路
+apps/api
+    ├─ districts / osm / osrm
+    └─ planner          ← 将演进为 plan/ + walk/ + memory/
+content/fixtures/
 ```
 
-## 目标形态（Layer 3 示意）
+**已有：** 规划 + 地图（Execute 之 L1 草稿）  
+**未有：** WalkTask 会话、Memory、Verify、Proactive、Eval
+
+## 目标形态（Layer 2–3）
 
 ```
-apps/web | apps/mini（可选）
+apps/web
     ▼
-packages/contracts      路线 / 站点 / 会话契约
+packages/contracts       RouteEnvelope · WalkTask · Stop
     ▼
 apps/api
-    ├─ ingest/          POI 聚合（OSM + 高德 + Curated）
-    ├─ planner/         三轴评分 + 路径优化
-    ├─ narrative/       LLM 润色（只改写，不增事实）
-    └─ session/         行中改线、进度
+    ├─ intent/           问题 vs 任务
+    ├─ memory/           漫步档案（任务级）
+    ├─ plan/             三轴 + 冲突检测
+    ├─ walk/             执行 + L0–L2 权限
+    ├─ verify/           POI/几何/完成态
+    ├─ proactive/        天气、resume 提醒
+    └─ eval/             回归题库（L3）
 content/
-    ├─ fixtures/
-    ├─ curated/         编辑精选站点
-    └─ cache/           POI 快照
+    ├─ curated/
+    ├─ cache/
+    └─ eval/cases.json
 ```
 
-原则：**先跑通闭环，再拆 package；先规则，再模型；先单城，再多城。**
+原则：**先 WalkTask 闭环，再拆 package；先规则，再 LLM；先单城，再多城。**

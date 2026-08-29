@@ -1,7 +1,7 @@
 # 参考材料
 
-可将 Kora 等企划案放在此目录，例如：
+| 文件 | 说明 |
+|---|---|
+| [kora_proposal_agent_upgrade.md](./kora_proposal_agent_upgrade.md) | KORA：从旅行助手到旅行 Agent（Freya）— LifeTrip 产品框架来源 |
 
-- `kora_proposal.docx` — 产品定位与商业章节对照
-
-上传后更新 `docs/PRODUCT_DESIGN.md` 第十四节。
+LifeTrip 对照见 [PRODUCT_DESIGN.md](../PRODUCT_DESIGN.md) 第十二节。
