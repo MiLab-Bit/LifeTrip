@@ -6,7 +6,7 @@
 
 把「出门去哪逛」从查攻略、比榜单，压缩成 **选一条线、进一站点、走起来**。数据以 OpenStreetMap 街面 POI + 步行路由为主，谈当下街面，不谈文献馆藏。
 
-完整产品规划（含 KORA Agent 框架映射）见 **[docs/PRODUCT_DESIGN.md](./docs/PRODUCT_DESIGN.md)**。
+完整产品规划见 **[docs/PRODUCT_DESIGN.md](./docs/PRODUCT_DESIGN.md)**。
 
 **竞争单位：** 不是「推荐好不好」，而是 **WalkTask 能不能办完**（规划 → 开走 → 改线 → 终站）。
 
