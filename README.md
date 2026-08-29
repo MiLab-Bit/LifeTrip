@@ -1,19 +1,31 @@
 # LifeTrip
 
-**潮流 City Walk · 黑绿地铁美学 · 独立仓库**
+**潮流 City Walk · 黑绿地铁美学**
 
 仓库：[github.com/MiLab-Bit/LifeTrip](https://github.com/MiLab-Bit/LifeTrip)
 
-与 RedTrip 无关：不用上图 API、不做典籍叙事。数据以 **OpenStreetMap POI + OSRM 步行** 为主。
+把「出门去哪逛」从查攻略、比榜单，压缩成 **选一条线、进一站点、走起来**。数据以 OpenStreetMap 街面 POI + 步行路由为主，谈当下街面，不谈文献馆藏。
 
-## 数据源（详见 `docs/DATA_SOURCES.md`）
+完整产品规划见 **[docs/PRODUCT_DESIGN.md](./docs/PRODUCT_DESIGN.md)**。
+
+## 当前版本（v0.2）
+
+| 能力 | 状态 |
+|---|---|
+| 选线 Brief（主题 / 片区 / 时长 / 步速） | ✅ |
+| OSM Overpass POI + OSRM 步行规划 | ✅ |
+| MapLibre 暗色线路图 | ✅ |
+| 离线 fixture 兜底 | ✅ |
+
+## 数据源
+
+详见 [docs/DATA_SOURCES.md](./docs/DATA_SOURCES.md)
 
 | 用途 | 来源 |
 |---|---|
-| 咖啡/Bar/古着/画廊 POI | OSM Overpass |
-| 步行 polyline | OSRM demo |
-| 地图底图 | CARTO Dark Matter |
-| 离线兜底 | `content/fixtures/*.json` |
+| POI | OSM Overpass |
+| 步行线 | OSRM |
+| 底图 | CARTO Dark Matter |
 
 ## 快速开始
 
@@ -28,22 +40,18 @@ pnpm dev:api
 pnpm dev
 ```
 
-Web: http://127.0.0.1:43123  
-API: http://127.0.0.1:8800/v1/health
+- Web: http://127.0.0.1:43123  
+- API: http://127.0.0.1:8800/v1/health  
 
-强制离线模式（跳过 Overpass/OSRM）：
-
-```bash
-LIFETRIP_OFFLINE=1 pnpm dev:api
-```
+离线模式：`LIFETRIP_OFFLINE=1 pnpm dev:api`
 
 ## 结构
 
 ```
-apps/web/          Vite + React + MapLibre
-apps/api/          FastAPI 规划服务
-content/fixtures/  离线示范线
-docs/              数据源与架构说明
+apps/web/           前端（Vite + React + MapLibre）
+apps/api/           规划 API（FastAPI）
+content/fixtures/   离线示范线
+docs/               产品 / 数据 / 架构文档
 ```
 
 ## API
@@ -52,11 +60,3 @@ docs/              数据源与架构说明
 - `GET /v1/districts`
 - `GET /v1/osm/status`
 - `POST /v1/routes/plan` — `{ vibe, district_id, duration_min, pace }`
-
-## 与 RedTrip 差异
-
-| | RedTrip | LifeTrip |
-|---|---|---|
-| 视觉 | 米色书页 | 黑绿地铁 |
-| 数据 | 上图馆藏 | OSM 街面 POI |
-| 叙事 | 典籍/溯源 | 潮流 city walk |
