@@ -10,6 +10,8 @@
 | **步行几何** | [OSRM Demo](https://router.project-osrm.org/) | 站间 polyline、距离、时长 | 无 | ✅ 主源 |
 | **底图** | [CARTO Dark Matter](https://carto.com/basemaps/) | 黑绿地铁感地图底图 | 无 | ✅ Web |
 | **离线兜底** | `content/fixtures/*.json` | Overpass/OSRM 不可达时 | — | ✅ |
+| **编辑精选** | `content/curated/*.json` | 安福/愚园/巨富/西岸 加权选站 | — | ✅ v0.4 |
+| **文案基准** | `content/narratives/*.json` | POI 绑定润色，不编造坐标 | — | ✅ v0.4 |
 
 ## 不采用（及原因）
 
@@ -28,7 +30,7 @@
 | **高德 POI + 步行** | 国内店名/新店更全 | 需 `AMAP_KEY`，作 OSM 补全而非替代 |
 | **Wikidata SPARQL** | 公共艺术、地标一句话 | 只取坐标+标签，不做典籍叙事 |
 | **OpenTripMap** | 旅游类 POI 补充 | 与 OSM 去重后合并 |
-| **自研 curated 清单** | 安福/愚园等「编辑精选」 | JSON 维护网红店，Overpass 作底 |
+| **自研 curated 清单** | 安福/愚园/巨富/西岸「编辑精选」 | ✅ JSON 维护，`content/curated/` |
 
 ## Vibe → OSM 标签映射
 
