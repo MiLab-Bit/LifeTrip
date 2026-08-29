@@ -1,0 +1,59 @@
+{
+  "lineCode": "L-G4",
+  "lineName": "艺术线",
+  "title": "西岸—滨江 · 艺术线",
+  "subtitle": "离线示范线 · 3 站",
+  "totalMin": 85,
+  "vibe": "gallery",
+  "districtId": "west-bund",
+  "distanceM": 2400,
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [121.458, 31.185],
+      [121.465, 31.192],
+      [121.468, 31.196]
+    ]
+  },
+  "stops": [
+    {
+      "id": "fixture/g1",
+      "code": "G4-01",
+      "name": "西岸滨江入口",
+      "district": "西岸—滨江",
+      "lat": 31.185,
+      "lng": 121.458,
+      "tags": ["公共艺术", "江景"],
+      "headline": "先看江，再看展",
+      "body": "公共雕塑和临时装置是最好的序厅。",
+      "tip": "日落前一小时光线最柔。",
+      "walkMin": 0
+    },
+    {
+      "id": "fixture/g2",
+      "code": "G4-02",
+      "name": "龙美术馆一带",
+      "district": "西岸—滨江",
+      "lat": 31.192,
+      "lng": 121.465,
+      "tags": ["当代", "建筑"],
+      "headline": "建筑本身就是作品",
+      "body": "工业风外立面足够构成可走的展览。",
+      "tip": "留意临时特展海报。",
+      "walkMin": 20
+    },
+    {
+      "id": "fixture/g3",
+      "code": "G4-03",
+      "name": "油罐艺术公园",
+      "district": "西岸—滨江",
+      "lat": 31.196,
+      "lng": 121.468,
+      "tags": ["装置", "实验"],
+      "headline": "终站留给最实验的那一间",
+      "body": "在一幅作品前多站三分钟。",
+      "tip": "部分空间周一闭馆。",
+      "walkMin": 18
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "districtId": "anfu-wukang",
+  "vibe": "neon",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/anfu-n01",
+      "name": "安福路餐酒段",
+      "lat": 31.2110,
+      "lng": 121.4415,
+      "weight": 1.9,
+      "indoor": true,
+      "tags": ["Bar", "餐酒", "夜行"],
+      "headline": "安福入夜",
+      "body": "安福路白天是咖啡，入夜换一张脸。",
+      "tip": "8 点后灯箱全亮。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "id": "curated/anfu-n02",
+      "name": "武康路 bistro 段",
+      "lat": 31.2070,
+      "lng": 121.4370,
+      "weight": 1.7,
+      "indoor": true,
+      "tags": ["Bistro", "外摆"],
+      "headline": "武康路口的一杯",
+      "body": "地标路口附近，气氛自带滤镜。",
+      "tip": "外摆位看路人。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-22"
+    },
+    {
+      "id": "curated/anfu-n03",
+      "name": "湖南路夜宵段",
+      "lat": 31.2130,
+      "lng": 121.4380,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["夜宵", "霓虹"],
+      "headline": "霓虹收束",
+      "body": "用一顿夜宵把夜行线落袋。",
+      "tip": "11 点后仍开的店优先。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/anfu-n04",
+      "name": "复兴西路交界",
+      "lat": 31.2090,
+      "lng": 121.4440,
+      "weight": 1.4,
+      "indoor": true,
+      "tags": ["Late-night", "安静"],
+      "headline": "安静收尾",
+      "body": "远离主路喧嚣的收尾小馆。",
+      "tip": "适合 slow pace。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    }
+  ]
+}

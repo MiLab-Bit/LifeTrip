@@ -1,0 +1,49 @@
+{
+  "districtId": "jufu-fumin",
+  "vibe": "coffee",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/jufu-c01",
+      "name": "巨富路社区咖啡",
+      "lat": 31.2175,
+      "lng": 121.4510,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["咖啡", "社区", "坐席"],
+      "headline": "社区感启动",
+      "body": "巨富路不是只有古着，咖啡店是另一条入口。",
+      "tip": "上午 10 点前最安静。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-22"
+    },
+    {
+      "id": "curated/jufu-c02",
+      "name": "富民路窗口位",
+      "lat": 31.2190,
+      "lng": 121.4540,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["外带", "手冲"],
+      "headline": "窗口带走",
+      "body": "买完继续逛富民路，节奏不中断。",
+      "tip": "问当日单品。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/jufu-c03",
+      "name": "长乐路咖啡段",
+      "lat": 31.2168,
+      "lng": 121.4495,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["特调", "甜品"],
+      "headline": "特调收束",
+      "body": "用特调收束巨富—富民咖啡线。",
+      "tip": "搭配一块甜品刚好。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    }
+  ]
+}

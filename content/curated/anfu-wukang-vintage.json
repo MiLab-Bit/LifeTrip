@@ -1,0 +1,63 @@
+{
+  "districtId": "anfu-wukang",
+  "vibe": "vintage",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/anfu-v01",
+      "name": "安福路选物店",
+      "lat": 31.2105,
+      "lng": 121.4405,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["古着", "选物", "独立"],
+      "headline": "安福淘街起点",
+      "body": "安福不只有咖啡，选物店藏在门面后面。",
+      "tip": "先试穿再决定路线节奏。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-22"
+    },
+    {
+      "id": "curated/anfu-v02",
+      "name": "武康庭古着",
+      "lat": 31.2068,
+      "lng": 121.4365,
+      "weight": 1.7,
+      "indoor": true,
+      "tags": ["古着", "复古"],
+      "headline": "庭里的复古感",
+      "body": "武康庭内部小店，气质和街面不同。",
+      "tip": "周末人流大，工作日更好逛。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/anfu-v03",
+      "name": "乌鲁木齐中路交界",
+      "lat": 31.2125,
+      "lng": 121.4430,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["二手", "配饰"],
+      "headline": "配饰站",
+      "body": "用配饰店做古着线的视觉收束。",
+      "tip": "帽子是好切入点。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    },
+    {
+      "id": "curated/anfu-v04",
+      "name": "湖南路古着橱窗",
+      "lat": 31.2138,
+      "lng": 121.4378,
+      "weight": 1.4,
+      "indoor": true,
+      "tags": ["古着", "quiet"],
+      "headline": "室内备选",
+      "body": "雨天改线时的 vintage 替补。",
+      "tip": "reroll 优先。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-15"
+    }
+  ]
+}

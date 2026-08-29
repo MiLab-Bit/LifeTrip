@@ -1,0 +1,63 @@
+{
+  "districtId": "yuyuan-js",
+  "vibe": "neon",
+  "updatedAt": "2026-08-29",
+  "stops": [
+    {
+      "id": "curated/yuyuan-n01",
+      "name": "愚园路小酒馆段",
+      "lat": 31.2220,
+      "lng": 121.4255,
+      "weight": 1.9,
+      "indoor": true,
+      "tags": ["Bar", "夜行", "餐饮"],
+      "headline": "灯箱亮起来的一站",
+      "body": "愚园路入夜后气氛切换，适合作为夜行线起点。",
+      "tip": "9 点后氛围更好。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-22"
+    },
+    {
+      "id": "curated/yuyuan-n02",
+      "name": "江苏路餐酒段",
+      "lat": 31.2245,
+      "lng": 121.4290,
+      "weight": 1.7,
+      "indoor": true,
+      "tags": ["餐酒", "Late-night"],
+      "headline": "第二站：坐下来",
+      "body": "小馆 + 一杯，把夜行从「赶路」变成「逗留」。",
+      "tip": "可先问当日特调。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-20"
+    },
+    {
+      "id": "curated/yuyuan-n03",
+      "name": "定西路夜宵段",
+      "lat": 31.2210,
+      "lng": 121.4315,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["夜宵", "霓虹"],
+      "headline": "霓虹收束",
+      "body": "用一顿夜宵收束整条夜行线。",
+      "tip": "11 点后仍营业的店优先。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-18"
+    },
+    {
+      "id": "curated/yuyuan-n04",
+      "name": "愚园支弄 bistro",
+      "lat": 31.2230,
+      "lng": 121.4238,
+      "weight": 1.4,
+      "indoor": true,
+      "tags": ["Bistro", "外摆"],
+      "headline": "支弄里的 bistro",
+      "body": "外摆位看路人，适合慢节奏夜行。",
+      "tip": "天气好选外摆。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-08-15"
+    }
+  ]
+}
