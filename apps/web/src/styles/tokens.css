@@ -1,0 +1,62 @@
+:root {
+  /* 黑绿地铁感 */
+  --lt-bg: #0a0f0d;
+  --lt-bg-elevated: #111916;
+  --lt-bg-panel: #151f1a;
+  --lt-line: #1e2e26;
+  --lt-green: #00e676;
+  --lt-green-dim: #00c853;
+  --lt-green-glow: rgba(0, 230, 118, 0.35);
+  --lt-green-muted: #6b8f7a;
+  --lt-text: #eafff3;
+  --lt-text-muted: #8fa899;
+  --lt-warning: #ffd54f;
+  --lt-danger: #ff5252;
+
+  --lt-font-sans: "SF Pro Text", "PingFang SC", "Noto Sans SC", system-ui,
+    sans-serif;
+  --lt-font-mono: "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
+
+  --lt-radius: 4px;
+  --lt-radius-pill: 999px;
+  --lt-shadow-glow: 0 0 24px var(--lt-green-glow);
+  --lt-header-h: 52px;
+  --lt-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--lt-font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--lt-text);
+  background: var(--lt-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+a {
+  color: var(--lt-green);
+}
+
+::selection {
+  background: rgba(0, 230, 118, 0.25);
+  color: var(--lt-text);
+}

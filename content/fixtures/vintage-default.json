@@ -1,0 +1,59 @@
+{
+  "lineCode": "L-V3",
+  "lineName": "古着线",
+  "title": "巨富—富民 · 古着线",
+  "subtitle": "离线示范线 · 3 站",
+  "totalMin": 80,
+  "vibe": "vintage",
+  "districtId": "jufu-fumin",
+  "distanceM": 1600,
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [121.451, 31.216],
+      [121.453, 31.218],
+      [121.455, 31.217]
+    ]
+  },
+  "stops": [
+    {
+      "id": "fixture/v1",
+      "code": "V3-01",
+      "name": "巨富路入口",
+      "district": "巨富—富民",
+      "lat": 31.216,
+      "lng": 121.451,
+      "tags": ["古着", "街拍"],
+      "headline": "入口别买第一件",
+      "body": "先摸底价位与店主审美，好东西往往在第二第三家。",
+      "tip": "现金移动支付都备好。",
+      "walkMin": 0
+    },
+    {
+      "id": "fixture/v2",
+      "code": "V3-02",
+      "name": "富民路中段",
+      "district": "巨富—富民",
+      "lat": 31.218,
+      "lng": 121.453,
+      "tags": ["配饰", "孤品"],
+      "headline": "孤品比爆款更值得停",
+      "body": "用旧物验证今天的穿搭直觉。",
+      "tip": "试衣前先拍照编号。",
+      "walkMin": 10
+    },
+    {
+      "id": "fixture/v3",
+      "code": "V3-03",
+      "name": "华亭路出口",
+      "district": "巨富—富民",
+      "lat": 31.217,
+      "lng": 121.455,
+      "tags": ["仓库感", "折扣"],
+      "headline": "最后一站留给意外",
+      "body": "买到什么不重要，重要的是读完这条街。",
+      "tip": "周末下午库存变化大。",
+      "walkMin": 16
+    }
+  ]
+}
