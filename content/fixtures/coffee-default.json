@@ -1,0 +1,59 @@
+{
+  "lineCode": "L-C2",
+  "lineName": "咖啡线",
+  "title": "愚园—江苏路 · 咖啡线",
+  "subtitle": "离线示范线 · 3 站",
+  "totalMin": 70,
+  "vibe": "coffee",
+  "districtId": "yuyuan-js",
+  "distanceM": 1800,
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [121.424, 31.220],
+      [121.428, 31.222],
+      [121.431, 31.219]
+    ]
+  },
+  "stops": [
+    {
+      "id": "fixture/c1",
+      "code": "C2-01",
+      "name": "愚园路门牌段",
+      "district": "愚园—江苏路",
+      "lat": 31.22,
+      "lng": 121.424,
+      "tags": ["咖啡", "外带"],
+      "headline": "第一杯：带走走",
+      "body": "社区店外带启动 city walk，下一杯换场景。",
+      "tip": "下午 3 点后排队更短。",
+      "walkMin": 0
+    },
+    {
+      "id": "fixture/c2",
+      "code": "C2-02",
+      "name": "江苏路支巷",
+      "district": "愚园—江苏路",
+      "lat": 31.222,
+      "lng": 121.428,
+      "tags": ["手冲", "安静"],
+      "headline": "第二杯：坐下来",
+      "body": "独立烘焙和小批次豆子，适合多聊两句。",
+      "tip": "问当日推荐豆。",
+      "walkMin": 15
+    },
+    {
+      "id": "fixture/c3",
+      "code": "C2-03",
+      "name": "定西路交界",
+      "district": "愚园—江苏路",
+      "lat": 31.219,
+      "lng": 121.431,
+      "tags": ["特调", "甜品"],
+      "headline": "第三杯：收尾特调",
+      "body": "用特调收束整条线的味觉。",
+      "tip": "最后一杯适合 solo。",
+      "walkMin": 14
+    }
+  ]
+}
