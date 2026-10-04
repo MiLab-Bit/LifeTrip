@@ -1,18 +1,28 @@
-node_modules/
-dist/
-.venv/
-venv/
+# Runtime
+*.pid
+*.log
+*.egg-info/
 __pycache__/
 *.pyc
+
+# Venv
+venv/
+.venv/
+
+# Env
 .env
 .env.*
-!.env.example
-.DS_Store
-*.tsbuildinfo
-.cursor/
-content/cache/*
-!content/cache/.gitkeep
-content/cache/narratives/*
-!content/cache/narratives/.gitkeep
-apps/api/data/*.db
-apps/api/data/*.db-*
+
+# Data
+data/*.sqlite
+data/*.db
+*.db-journal
+
+# Build
+dist/
+build/
+node_modules/
+
+# Smoke tests (local only)
+smoke_*.py
+start_*.sh
