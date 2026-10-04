@@ -96,3 +96,37 @@ python3 scripts/polish_curated.py   # 批量润色 curated 站
 | 愚园—江苏路 | 咖啡 · 夜行 · 画廊 |
 | 巨富—富民 | 古着 · 咖啡 |
 | 西岸—滨江 | 画廊 |
+
+---
+
+## Temporal 编排接入（2026-10）
+
+LifeTrip 的 WalkTask 生命周期已接入 **Temporal Server v1.27**，实现任务持久化、人在回路审批和断点恢复。
+
+### WalkTask 生命周期
+
+```
+plan_walktask → start_walktask
+     ├──→ skip_stop (Update, 人在回路)
+     ├──→ reroll_stop (Update, 人在回路)
+     └──→ complete_walktask
+```
+
+### 代码结构
+
+```
+apps/api/app/temporal/
+├── common.py        # WalkTaskInput dataclass
+├── activities.py    # 4 个同步 Activity（plan/start/reroll/complete）
+├── worker.py        # Worker 启动器（ThreadPoolExecutor）
+└── workflows/
+    └── walktask.py  # WalkTaskWorkflow（带人在回路 Update）
+```
+
+### 配置
+
+```bash
+TEMPORAL_ADDRESS=127.0.0.1:7233
+TEMPORAL_NAMESPACE=lifetrip
+TEMPORAL_TASK_QUEUE=lifetrip-task-queue
+```
