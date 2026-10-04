@@ -99,6 +99,18 @@ python3 scripts/polish_curated.py   # 批量润色 curated 站
 
 ---
 
+## 在线部署 / Live Deployment
+
+| 环境 | 地址 |
+|---|---|
+| API 服务 | http://lifetrip.sy-realm.ltd |
+| Swagger 文档 | http://lifetrip.sy-realm.ltd/docs |
+
+> FastAPI 后端（WalkTask 生命周期），部署于阿里云 ECS，经 Nginx 反代，DNS 走 Cloudflare（DNS-only 直连）。
+> 编排底座：Temporal（[temporal.sy-realm.ltd](http://temporal.sy-realm.ltd) 可视化 Workflow 执行）。
+
+
+
 ## Temporal 编排接入（2026-10）
 
 LifeTrip 的 WalkTask 生命周期已接入 **Temporal Server v1.27**，实现任务持久化、人在回路审批和断点恢复。
