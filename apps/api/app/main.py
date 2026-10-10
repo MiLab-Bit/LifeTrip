@@ -34,7 +34,7 @@ app.add_middleware(
 
 
 @app.on_event("startup")
-def startup():
+async def startup():
     store.init_db()
 
 
@@ -74,7 +74,7 @@ def _load_fixture(vibe: str, district_id: str) -> dict:
     return json.loads(fixture_path.read_text(encoding="utf-8"))
 
 
-def _plan_with_fallback(body: PlanRequest) -> RouteEnvelope:
+async def _plan_with_fallback(body: PlanRequest) -> RouteEnvelope:
     district = _district_or_404(body.district_id)
     if body.vibe not in ("neon", "coffee", "vintage", "gallery"):
         raise HTTPException(400, f"unknown vibe: {body.vibe}")
@@ -83,7 +83,7 @@ def _plan_with_fallback(body: PlanRequest) -> RouteEnvelope:
     try:
         if force_offline:
             raise RuntimeError("offline mode")
-        route = plan_route(
+        route = await plan_route(
             vibe=body.vibe,
             district=district,
             duration_min=body.duration_min,
@@ -100,7 +100,7 @@ def _plan_with_fallback(body: PlanRequest) -> RouteEnvelope:
 
 
 @app.get("/v1/health")
-def health():
+async def health():
     offline = os.getenv("LIFETRIP_OFFLINE", "0") == "1"
     llm_on = os.getenv("LIFETRIP_LLM_POLISH", "0") == "1" and bool(os.getenv("LIFETRIP_LLM_API_KEY"))
     return {
@@ -121,23 +121,23 @@ def health():
 
 
 @app.get("/v1/districts")
-def list_districts():
+async def list_districts():
     return {"districts": [d.model_dump() for d in DISTRICTS]}
 
 
 @app.get("/v1/osm/status")
-def osm_status():
-    return overpass_status()
+async def osm_status():
+    return await overpass_status()
 
 
 @app.post("/v1/routes/plan")
-def routes_plan(body: PlanRequest):
+async def routes_plan(body: PlanRequest):
     """Legacy plan endpoint — returns route envelope only."""
-    return _plan_with_fallback(body).model_dump()
+    return (await _plan_with_fallback(body)).model_dump()
 
 
 @app.post("/v1/walks/plan")
-def walks_plan(body: WalkPlanBody):
+async def walks_plan(body: WalkPlanBody):
     session_id = store.ensure_session(body.session_id)
     resumable = store.find_resumable(session_id)
     intent = classify_intent(body.intent_text, has_active_task=resumable is not None)
@@ -162,9 +162,9 @@ def walks_plan(body: WalkPlanBody):
         intent_text=body.intent_text,
     )
     try:
-        task = walk_service.plan_walk_task(session_id, brief)
+        task = await walk_service.plan_walk_task(session_id, brief)
     except Exception as exc:  # noqa: BLE001
-        route = _plan_with_fallback(PlanRequest(**body.model_dump()))
+        route = await _plan_with_fallback(PlanRequest(**body.model_dump()))
         task = store.create_task(session_id, brief, route)
     return {
         "session_id": session_id,
@@ -175,7 +175,7 @@ def walks_plan(body: WalkPlanBody):
 
 
 @app.get("/v1/walks/resume")
-def walks_resume(session_id: str = Query(...)):
+async def walks_resume(session_id: str = Query(...)):
     store.ensure_session(session_id)
     task = store.find_resumable(session_id)
     if not task:
@@ -184,7 +184,7 @@ def walks_resume(session_id: str = Query(...)):
 
 
 @app.get("/v1/walks/{task_id}")
-def walks_get(task_id: str):
+async def walks_get(task_id: str):
     task = store.get_task(task_id)
     if not task:
         raise HTTPException(404, "task not found")
@@ -192,7 +192,7 @@ def walks_get(task_id: str):
 
 
 @app.post("/v1/walks/{task_id}/start")
-def walks_start(task_id: str):
+async def walks_start(task_id: str):
     try:
         task = walk_service.start_walk(task_id)
     except ValueError as exc:
@@ -201,7 +201,7 @@ def walks_start(task_id: str):
 
 
 @app.post("/v1/walks/{task_id}/advance")
-def walks_advance(task_id: str):
+async def walks_advance(task_id: str):
     try:
         task = walk_service.advance_stop(task_id)
     except ValueError as exc:
@@ -210,25 +210,25 @@ def walks_advance(task_id: str):
 
 
 @app.post("/v1/walks/{task_id}/skip")
-def walks_skip(task_id: str, body: ConfirmBody):
+async def walks_skip(task_id: str, body: ConfirmBody):
     try:
-        task = walk_service.request_skip(task_id, confirm=body.confirm)
+        task = await walk_service.request_skip(task_id, confirm=body.confirm)
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     return task.model_dump()
 
 
 @app.post("/v1/walks/{task_id}/reroll")
-def walks_reroll(task_id: str, body: ConfirmBody):
+async def walks_reroll(task_id: str, body: ConfirmBody):
     try:
-        task = walk_service.request_reroll(task_id, confirm=body.confirm)
+        task = await walk_service.request_reroll(task_id, confirm=body.confirm)
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     return task.model_dump()
 
 
 @app.post("/v1/walks/{task_id}/complete")
-def walks_complete(task_id: str):
+async def walks_complete(task_id: str):
     try:
         task = walk_service.complete_walk(task_id)
     except ValueError as exc:
@@ -237,7 +237,7 @@ def walks_complete(task_id: str):
 
 
 @app.post("/v1/walks/{task_id}/cancel")
-def walks_cancel(task_id: str):
+async def walks_cancel(task_id: str):
     try:
         task = walk_service.cancel_walk(task_id)
     except ValueError as exc:
@@ -246,11 +246,11 @@ def walks_cancel(task_id: str):
 
 
 @app.get("/v1/walks/{task_id}/proactive")
-def walks_proactive(task_id: str):
+async def walks_proactive(task_id: str):
     task = store.get_task(task_id)
     if not task:
         raise HTTPException(404, "task not found")
-    proposal = check_weather_reroute(task)
+    proposal = await check_weather_reroute(task)
     if not proposal:
         return {"proposal": None}
     return {"proposal": proposal.model_dump()}
@@ -262,11 +262,11 @@ class ApplyRerouteBody(BaseModel):
 
 
 @app.post("/v1/walks/{task_id}/apply-reroute")
-def walks_apply_reroute(task_id: str, body: ApplyRerouteBody):
+async def walks_apply_reroute(task_id: str, body: ApplyRerouteBody):
     task = store.get_task(task_id)
     if not task:
         raise HTTPException(404, "task not found")
-    check = check_weather_reroute(task)
+    check = await check_weather_reroute(task)
     message = check.message if check else "应用改线提案"
     try:
         updated = walk_service.apply_reroute(
@@ -278,6 +278,6 @@ def walks_apply_reroute(task_id: str, body: ApplyRerouteBody):
 
 
 @app.post("/v1/eval/run")
-def eval_run(tier: str | None = None, limit: int | None = None):
+async def eval_run(tier: str | None = None, limit: int | None = None):
     result = run_eval(tier=tier, limit=limit)
     return result.model_dump()

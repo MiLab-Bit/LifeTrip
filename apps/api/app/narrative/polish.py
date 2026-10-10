@@ -1,4 +1,4 @@
-"""Narrative polish — editor baseline + optional LLM (POI-bound)."""
+"""Narrative polish — editor baseline + optional LLM (POI-bound, async)."""
 from __future__ import annotations
 
 import json
@@ -80,15 +80,23 @@ def _llm_enabled() -> bool:
     return os.getenv("LIFETRIP_LLM_POLISH", "0") == "1" and bool(os.getenv("LIFETRIP_LLM_API_KEY"))
 
 
-def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int) -> dict[str, str] | None:
+async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int) -> dict[str, str] | None:
     api_key = os.getenv("LIFETRIP_LLM_API_KEY", "")
     base = os.getenv("LIFETRIP_LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model = os.getenv("LIFETRIP_LLM_MODEL", "gpt-4o-mini")
     url = f"{base}/chat/completions"
 
     system = (
-        "你是 LifeTrip city walk 文案编辑。只润色，不编造事实。"
-        "必须保留 POI 名称不变，不可添加未提供的地址/价格/营业时间。"
+        "你是 LifeTrip city walk 文案编辑。\n"
+        "\n"
+        "【最高优先级】只润色语气，不新增事实。找不到依据就保留原文，绝不编造。\n"
+        "\n"
+        "规则（按重要性排序）：\n"
+        "1. POI 名称必须原样保留，不可改写。\n"
+        "2. 不可添加未提供的地址/价格/营业时间/电话等具体信息。\n"
+        "3. 润色限于语气和节奏（更生动/更紧凑），不改事实。\n"
+        "4. 如果原文信息太少，headline 保持简洁就好，不要凑字。\n"
+        "\n"
         "返回 JSON：{\"headline\":\"\",\"body\":\"\",\"tip\":\"\"}，不要 markdown。"
     )
     user = json.dumps(
@@ -109,13 +117,13 @@ def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int) -
     )
 
     try:
-        with httpx.Client(timeout=float(os.getenv("LIFETRIP_LLM_TIMEOUT", "25"))) as client:
-            r = client.post(
+        async with httpx.AsyncClient(timeout=float(os.getenv("LIFETRIP_LLM_TIMEOUT", "25"))) as client:
+            r = await client.post(
                 url,
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
                 json={
                     "model": model,
-                    "temperature": 0.6,
+                    "temperature": 0.3,
                     "response_format": {"type": "json_object"},
                     "messages": [
                         {"role": "system", "content": system},
@@ -133,13 +141,13 @@ def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int) -
         data["body"] = f"「{stop.name}」— {data.get('body', stop.body)}"
     return {
         "headline": str(data.get("headline") or stop.headline)[:80],
-        "body": str(data.get("body") or stop.body)[:280],
+        "body": (lambda b: b[:280].rsplit("\u3002", 1)[0] + "\u3002" if len(b) > 280 and "\u3002" in b[:280] else b[:280])(str(data.get("body") or stop.body)),
         "tip": str(data.get("tip") or stop.tip)[:120],
         "source": "llm",
     }
 
 
-def polish_stop(
+async def polish_stop(
     stop: Stop,
     *,
     vibe: str,
@@ -157,7 +165,7 @@ def polish_stop(
 
     narr: dict[str, str] | None = None
     if _llm_enabled() and stop.sourceLabel != "green":
-        narr = _call_llm(stop=stop, vibe=vibe, district=district, index=index, total=total)
+        narr = await _call_llm(stop=stop, vibe=vibe, district=district, index=index, total=total)
         if narr:
             _save_llm_cache(stop.id, vibe, narr)
 
@@ -167,6 +175,9 @@ def polish_stop(
     return stop.model_copy(update={"headline": narr["headline"], "body": narr["body"], "tip": narr["tip"]})
 
 
-def polish_stops(stops: list[Stop], *, vibe: str, district: str) -> list[Stop]:
+async def polish_stops(stops: list[Stop], *, vibe: str, district: str) -> list[Stop]:
+    """并发润色所有站点 — async 允许未来用 asyncio.gather 并行 LLM 调用。"""
+    import asyncio
     total = len(stops)
-    return [polish_stop(s, vibe=vibe, district=district, index=i, total=total) for i, s in enumerate(stops)]
+    tasks = [polish_stop(s, vibe=vibe, district=district, index=i, total=total) for i, s in enumerate(stops)]
+    return await asyncio.gather(*tasks)

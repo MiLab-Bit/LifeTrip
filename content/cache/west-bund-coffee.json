@@ -1,0 +1,473 @@
+{
+  "cached_at": 1791616934.691212,
+  "pois": [
+    {
+      "id": "osm/node/4537546489",
+      "name": "星巴克",
+      "lat": 31.188547,
+      "lng": 121.4540236,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:district": "徐汇区",
+        "addr:housenumber": "599",
+        "addr:street": "东安路",
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:district": "徐汇区",
+        "addr:housenumber": "599",
+        "addr:street": "东安路",
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4796075923",
+      "name": "M Stand",
+      "lat": 31.1839037,
+      "lng": 121.4514583,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "M Stand",
+        "brand:wikidata": "Q116056845",
+        "cuisine": "coffee_shop",
+        "name": "M Stand",
+        "outdoor_seating": "yes",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "M Stand",
+        "brand:wikidata": "Q116056845",
+        "cuisine": "coffee_shop",
+        "name": "M Stand",
+        "outdoor_seating": "yes",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/6387254106",
+      "name": "皮爷咖啡",
+      "lat": 31.185475,
+      "lng": 121.4525782,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Peet's Coffee",
+        "name:zh": "皮爷咖啡",
+        "outdoor_seating": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Peet's Coffee",
+        "name:zh": "皮爷咖啡",
+        "outdoor_seating": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/6387254107",
+      "name": "柴田西点",
+      "lat": 31.1856141,
+      "lng": 121.452195,
+      "tags": {
+        "amenity": "cafe",
+        "name": "柴田西点",
+        "name:en": "Chez Shibata"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "柴田西点",
+        "name:en": "Chez Shibata"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/6387254109",
+      "name": "国达的咖啡店",
+      "lat": 31.1850644,
+      "lng": 121.4522186,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Bonus Coffee",
+        "name:zh": "国达的咖啡店",
+        "outdoor_seating": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Bonus Coffee",
+        "name:zh": "国达的咖啡店",
+        "outdoor_seating": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/6387255820",
+      "name": "星巴克",
+      "lat": 31.1863593,
+      "lng": 121.4528517,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "outdoor_seating": "yes",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "outdoor_seating": "yes",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/7409538057",
+      "name": "Wagas",
+      "lat": 31.1884641,
+      "lng": 121.4527953,
+      "tags": {
+        "addr:housenumber": "699",
+        "addr:street": "中山南二路",
+        "amenity": "cafe",
+        "cuisine": "sandwich;pasta;salad;modern_asian;cake",
+        "diet:vegetarian": "yes",
+        "name": "Wagas",
+        "opening_hours": "Mo-Su 08:00-22:00",
+        "phone": "+86 21 6067 1630"
+      },
+      "tags_osm": {
+        "addr:housenumber": "699",
+        "addr:street": "中山南二路",
+        "amenity": "cafe",
+        "cuisine": "sandwich;pasta;salad;modern_asian;cake",
+        "diet:vegetarian": "yes",
+        "name": "Wagas",
+        "opening_hours": "Mo-Su 08:00-22:00",
+        "phone": "+86 21 6067 1630"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/7658134471",
+      "name": "Café du Dragon",
+      "lat": 31.1855585,
+      "lng": 121.4600957,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Café du Dragon"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Café du Dragon"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/9503757956",
+      "name": "小小花园",
+      "lat": 31.1833648,
+      "lng": 121.4594453,
+      "tags": {
+        "amenity": "cafe",
+        "name": "小小花园"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "小小花园"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/9503764681",
+      "name": "星巴克",
+      "lat": 31.1827271,
+      "lng": 121.4591447,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:wikipedia": "zh:星巴克",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "official_name": "Starbucks Coffee",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:wikipedia": "zh:星巴克",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "official_name": "Starbucks Coffee",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11204366612",
+      "name": "蜜雪冰城",
+      "lat": 31.1971303,
+      "lng": 121.4583169,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "蜜雪冰城",
+        "brand:en": "MIXUEBINGCHENG",
+        "brand:wikidata": "Q107406476",
+        "brand:zh": "蜜雪冰城",
+        "cuisine": "ice_cream;bubble_tea",
+        "name": "蜜雪冰城",
+        "name:en": "MIXUEBINGCHENG",
+        "name:zh": "蜜雪冰城",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "蜜雪冰城",
+        "brand:en": "MIXUEBINGCHENG",
+        "brand:wikidata": "Q107406476",
+        "brand:zh": "蜜雪冰城",
+        "cuisine": "ice_cream;bubble_tea",
+        "name": "蜜雪冰城",
+        "name:en": "MIXUEBINGCHENG",
+        "name:zh": "蜜雪冰城",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11314399974",
+      "name": "Manner",
+      "lat": 31.1903297,
+      "lng": 121.4659934,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Manner",
+        "name:ru": "Столовая и кофейня"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Manner",
+        "name:ru": "Столовая и кофейня"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11959581066",
+      "name": "Arabica %",
+      "lat": 31.1905766,
+      "lng": 121.4651121,
+      "tags": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Arabica %"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Arabica %"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11959624265",
+      "name": "Ciclore",
+      "lat": 31.1898919,
+      "lng": 121.4642875,
+      "tags": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Ciclore"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Ciclore"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11959634970",
+      "name": "Manner",
+      "lat": 31.1904996,
+      "lng": 121.4637729,
+      "tags": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Manner"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Manner"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11959656109",
+      "name": "Peet’s Coffee",
+      "lat": 31.1869775,
+      "lng": 121.4625895,
+      "tags": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Peet’s Coffee"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Peet’s Coffee"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11959656110",
+      "name": "Manner",
+      "lat": 31.1877858,
+      "lng": 121.4631672,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Manner"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Manner"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11959676531",
+      "name": "星巴克",
+      "lat": 31.1843463,
+      "lng": 121.4602749,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/12408994381",
+      "name": "星巴克",
+      "lat": 31.1826333,
+      "lng": 121.4686661,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/12739467444",
+      "name": "星巴克",
+      "lat": 31.1952781,
+      "lng": 121.469457,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    }
+  ]
+}
