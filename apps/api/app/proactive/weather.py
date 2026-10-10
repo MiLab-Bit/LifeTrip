@@ -1,4 +1,4 @@
-"""Proactive triggers — weather-based reroute proposals."""
+"""Proactive triggers — weather-based reroute proposals (async)."""
 from __future__ import annotations
 
 import os
@@ -18,7 +18,7 @@ def _district(district_id: str):
     return next((d for d in DISTRICTS if d.id == district_id), None)
 
 
-def fetch_rain_hours(lat: float, lng: float) -> list[dict[str, Any]]:
+async def fetch_rain_hours(lat: float, lng: float) -> list[dict[str, Any]]:
     if os.getenv("LIFETRIP_OFFLINE", "0") == "1":
         return [{"hour": 15, "precip_mm": 4.2}, {"hour": 16, "precip_mm": 3.1}]
     params = {
@@ -28,8 +28,8 @@ def fetch_rain_hours(lat: float, lng: float) -> list[dict[str, Any]]:
         "forecast_days": 1,
         "timezone": "Asia/Shanghai",
     }
-    with httpx.Client(timeout=10.0) as client:
-        r = client.get(METEO_URL, params=params)
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        r = await client.get(METEO_URL, params=params)
         r.raise_for_status()
         data = r.json()
     hours = data.get("hourly") or {}
@@ -43,14 +43,14 @@ def fetch_rain_hours(lat: float, lng: float) -> list[dict[str, Any]]:
     return out
 
 
-def check_weather_reroute(task: WalkTask) -> RerouteProposal | None:
+async def check_weather_reroute(task: WalkTask) -> RerouteProposal | None:
     district = _district(task.brief.district_id)
     if not district:
         return None
 
     lat = (district.south + district.north) / 2
     lng = (district.west + district.east) / 2
-    hours = fetch_rain_hours(lat, lng)
+    hours = await fetch_rain_hours(lat, lng)
     heavy = [h for h in hours if h["precip_mm"] >= 2.0]
     if not heavy:
         return None
@@ -63,7 +63,7 @@ def check_weather_reroute(task: WalkTask) -> RerouteProposal | None:
     if not outdoor_indices:
         return None
 
-    hour_range = f"{min(h['hour'] for h in heavy):02d}:00–{max(h['hour'] for h in heavy):02d}:00"
+    hour_range = f"{min(h['hour'] for h in heavy):02d}:00\u2013{max(h['hour'] for h in heavy):02d}:00"
     proposed = plan_route(
         vibe=task.brief.vibe,
         district=district,
