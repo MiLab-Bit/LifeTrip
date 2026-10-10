@@ -123,7 +123,7 @@ def _tags_for_vibe(vibe: str, poi: dict) -> list[str]:
     return base[:4]
 
 
-def plan_route(
+async def plan_route(
     *,
     vibe: str,
     district: District,
@@ -135,7 +135,7 @@ def plan_route(
 ) -> RouteEnvelope:
     curated = load_curated(district.id, vibe)
     try:
-        osm = fetch_pois(vibe, district)
+        osm = await fetch_pois(vibe, district)
     except RuntimeError:
         osm = []
     merged = _merge_pois(curated, osm)
@@ -155,7 +155,7 @@ def plan_route(
 
     coords = [(s["lng"], s["lat"]) for s in ordered]
     try:
-        osrm = route_foot(coords)
+        osrm = await route_foot(coords)
     except Exception:  # noqa: BLE001
         osrm = {
             "geometry": {
@@ -194,7 +194,7 @@ def plan_route(
             )
         )
 
-    stops = polish_stops(stops, vibe=vibe, district=district.name)
+    stops = await polish_stops(stops, vibe=vibe, district=district.name)
 
     subtitle = f"精选 {curated_n} · OSM {len(stops) - curated_n} 站 · 步行约 {walk_min} 分钟"
     return RouteEnvelope(
@@ -211,7 +211,7 @@ def plan_route(
     )
 
 
-def find_replacement(
+async def find_replacement(
     *,
     vibe: str,
     district: District,
@@ -221,7 +221,7 @@ def find_replacement(
 ) -> dict[str, Any] | None:
     curated = load_curated(district.id, vibe)
     try:
-        osm = fetch_pois(vibe, district)
+        osm = await fetch_pois(vibe, district)
     except RuntimeError:
         osm = []
     merged = _merge_pois(curated, osm)

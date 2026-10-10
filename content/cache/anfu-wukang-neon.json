@@ -1,0 +1,827 @@
+{
+  "cached_at": 1791599936.7458234,
+  "pois": [
+    {
+      "id": "osm/node/267671919",
+      "name": "Zapata's",
+      "lat": 31.2102276,
+      "lng": 121.4449697,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Zapata's"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "name": "Zapata's"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/623818947",
+      "name": "288 The Melting Pot",
+      "lat": 31.2069013,
+      "lng": 121.4418404,
+      "tags": {
+        "amenity": "pub",
+        "name": "288 The Melting Pot"
+      },
+      "tags_osm": {
+        "amenity": "pub",
+        "name": "288 The Melting Pot"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1168461305",
+      "name": "未命名",
+      "lat": 31.2125091,
+      "lng": 121.4403048,
+      "tags": {
+        "amenity": "bar",
+        "was:amenity": "nightclub",
+        "was:name:en": "JZ Bar"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "was:amenity": "nightclub",
+        "was:name:en": "JZ Bar"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1168461335",
+      "name": "未命名",
+      "lat": 31.2123608,
+      "lng": 121.440432,
+      "tags": {
+        "amenity": "bar",
+        "name:en": "Boxha Cafe"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "name:en": "Boxha Cafe"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1168461341",
+      "name": "未命名",
+      "lat": 31.2123231,
+      "lng": 121.4430995,
+      "tags": {
+        "amenity": "bar",
+        "name:en": "Cotton Club"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "name:en": "Cotton Club"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1168461344",
+      "name": "未命名",
+      "lat": 31.2125778,
+      "lng": 121.4389219,
+      "tags": {
+        "addr:housenumber": "82",
+        "addr:street": "复兴西路",
+        "amenity": "pub",
+        "description": "Homebrew beer, American style. Does food too.",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name:en": "Boxing Cat",
+        "opening_hours": "Mo-Th 17:00-02:00; Fr 15:00-02:00; Sa,Su 10:00-02:00",
+        "phone": "+86 21 6431 2091",
+        "toilets:wheelchair": "no",
+        "website": "http://www.boxingcatbrewery.com"
+      },
+      "tags_osm": {
+        "addr:housenumber": "82",
+        "addr:street": "复兴西路",
+        "amenity": "pub",
+        "description": "Homebrew beer, American style. Does food too.",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name:en": "Boxing Cat",
+        "opening_hours": "Mo-Th 17:00-02:00; Fr 15:00-02:00; Sa,Su 10:00-02:00",
+        "phone": "+86 21 6431 2091",
+        "toilets:wheelchair": "no",
+        "website": "http://www.boxingcatbrewery.com"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1168461395",
+      "name": "Arcade",
+      "lat": 31.2123638,
+      "lng": 121.4403553,
+      "tags": {
+        "amenity": "bar",
+        "name": "Arcade"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "name": "Arcade"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1168461427",
+      "name": "火锅餐厅",
+      "lat": 31.2123506,
+      "lng": 121.4432497,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "hotpot",
+        "name": "火锅餐厅",
+        "name:en": "Hot Pot King"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "cuisine": "hotpot",
+        "name": "火锅餐厅",
+        "name:en": "Hot Pot King"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1193799873",
+      "name": "未命名",
+      "lat": 31.2135451,
+      "lng": 121.4394114,
+      "tags": {
+        "amenity": "nightclub",
+        "name:en": "Shelter"
+      },
+      "tags_osm": {
+        "amenity": "nightclub",
+        "name:en": "Shelter"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1317163522",
+      "name": "未命名",
+      "lat": 31.2122003,
+      "lng": 121.4393885,
+      "tags": {
+        "amenity": "bar",
+        "name:en": "Kiitos"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "name:en": "Kiitos"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1449321186",
+      "name": "未命名",
+      "lat": 31.2115394,
+      "lng": 121.4445796,
+      "tags": {
+        "amenity": "restaurant"
+      },
+      "tags_osm": {
+        "amenity": "restaurant"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1449321192",
+      "name": "未命名",
+      "lat": 31.2111192,
+      "lng": 121.4439952,
+      "tags": {
+        "amenity": "restaurant"
+      },
+      "tags_osm": {
+        "amenity": "restaurant"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/1460661876",
+      "name": "The appartement",
+      "lat": 31.2132893,
+      "lng": 121.4394507,
+      "tags": {
+        "addr:housenumber": "47",
+        "addr:street": "yongfu lu",
+        "amenity": "bar",
+        "name": "The appartement",
+        "name:en": "The Apartment"
+      },
+      "tags_osm": {
+        "addr:housenumber": "47",
+        "addr:street": "yongfu lu",
+        "amenity": "bar",
+        "name": "The appartement",
+        "name:en": "The Apartment"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/2700754171",
+      "name": "正圆烩面",
+      "lat": 31.2141023,
+      "lng": 121.4416546,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "247",
+        "addr:street": "乌鲁木齐中路",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "正圆烩面",
+        "opening_hours": "24/7"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "247",
+        "addr:street": "乌鲁木齐中路",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "正圆烩面",
+        "opening_hours": "24/7"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3119810435",
+      "name": "Rachel's",
+      "lat": 31.2117608,
+      "lng": 121.4360253,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "202",
+        "addr:street": "Wukang",
+        "amenity": "restaurant",
+        "cuisine": "burger",
+        "name": "Rachel's",
+        "opening_hours": "We-Fr 11:00-15:00,17:00-22:00; Sa-Su 11:00-22:00"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "202",
+        "addr:street": "Wukang",
+        "amenity": "restaurant",
+        "cuisine": "burger",
+        "name": "Rachel's",
+        "opening_hours": "We-Fr 11:00-15:00,17:00-22:00; Sa-Su 11:00-22:00"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3393396129",
+      "name": "La Creperie",
+      "lat": 31.2105377,
+      "lng": 121.4469716,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "1",
+        "addr:postcode": "200031",
+        "addr:street": "Taojiang Road",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "delivery": "no",
+        "name": "La Creperie",
+        "opening_hours": "Daily, 11am-late",
+        "phone": "+86 21 5465 9055"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "1",
+        "addr:postcode": "200031",
+        "addr:street": "Taojiang Road",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "delivery": "no",
+        "name": "La Creperie",
+        "opening_hours": "Daily, 11am-late",
+        "phone": "+86 21 5465 9055"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3393396130",
+      "name": "Abbey Road",
+      "lat": 31.2109463,
+      "lng": 121.4463087,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "3",
+        "addr:postcode": "200031",
+        "addr:street": "桃江路",
+        "amenity": "restaurant",
+        "cuisine": "western",
+        "delivery": "no",
+        "dsscreated": "#brunch",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name": "Abbey Road",
+        "opening_hours": "Sa-Su 10:00-16:00",
+        "outdoor_seating": "yes",
+        "phone": "+86 21 5466 2069",
+        "price": "110RMB set, includes coffee and a small juice, or 80-90 a la carte",
+        "reservation": "recommended for outside tables",
+        "smoking": "separated"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "3",
+        "addr:postcode": "200031",
+        "addr:street": "桃江路",
+        "amenity": "restaurant",
+        "cuisine": "western",
+        "delivery": "no",
+        "dsscreated": "#brunch",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name": "Abbey Road",
+        "opening_hours": "Sa-Su 10:00-16:00",
+        "outdoor_seating": "yes",
+        "phone": "+86 21 5466 2069",
+        "price": "110RMB set, includes coffee and a small juice, or 80-90 a la carte",
+        "reservation": "recommended for outside tables",
+        "smoking": "separated"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3622531505",
+      "name": "未命名",
+      "lat": 31.2113991,
+      "lng": 121.444326,
+      "tags": {
+        "amenity": "restaurant",
+        "name:en": "Haiku Japanese Restaurant"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "name:en": "Haiku Japanese Restaurant"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3655969028",
+      "name": "Green and Safe Organic",
+      "lat": 31.2105559,
+      "lng": 121.4456557,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "6",
+        "addr:street": "东平路",
+        "amenity": "restaurant",
+        "name": "Green and Safe Organic",
+        "phone": "+86 21 5465 1288"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "6",
+        "addr:street": "东平路",
+        "amenity": "restaurant",
+        "name": "Green and Safe Organic",
+        "phone": "+86 21 5465 1288"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3737443487",
+      "name": "Gong De Links - Godly",
+      "lat": 31.2134232,
+      "lng": 121.436522,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "97",
+        "addr:street": "Wukang Rd",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "diet:vegan": "yes",
+        "name": "Gong De Links - Godly"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "97",
+        "addr:street": "Wukang Rd",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "diet:vegan": "yes",
+        "name": "Gong De Links - Godly"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3750129303",
+      "name": "Marienbad",
+      "lat": 31.2149468,
+      "lng": 121.4359093,
+      "tags": {
+        "amenity": "pub",
+        "name": "Marienbad",
+        "outdoor_seating": "yes"
+      },
+      "tags_osm": {
+        "amenity": "pub",
+        "name": "Marienbad",
+        "outdoor_seating": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/3807325560",
+      "name": "The Beaver",
+      "lat": 31.2101434,
+      "lng": 121.4471617,
+      "tags": {
+        "amenity": "bar",
+        "name": "The Beaver"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "name": "The Beaver"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4191938392",
+      "name": "Salute Wine Bar",
+      "lat": 31.2123691,
+      "lng": 121.4402213,
+      "tags": {
+        "addr:housenumber": "59",
+        "addr:street": "Fuxing West Road",
+        "amenity": "bar",
+        "cuisine": "italian;italian_pizza",
+        "internet_access": "wlan",
+        "name": "Salute Wine Bar"
+      },
+      "tags_osm": {
+        "addr:housenumber": "59",
+        "addr:street": "Fuxing West Road",
+        "amenity": "bar",
+        "cuisine": "italian;italian_pizza",
+        "internet_access": "wlan",
+        "name": "Salute Wine Bar"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4299395089",
+      "name": "Fount 日本料理",
+      "lat": 31.2082629,
+      "lng": 121.4456597,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "570",
+        "addr:postcode": "200031",
+        "addr:street": "永嘉路",
+        "amenity": "restaurant",
+        "name": "Fount 日本料理"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "570",
+        "addr:postcode": "200031",
+        "addr:street": "永嘉路",
+        "amenity": "restaurant",
+        "name": "Fount 日本料理"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4320825489",
+      "name": "未命名",
+      "lat": 31.2084023,
+      "lng": 121.4370255,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "1712",
+        "addr:street": "淮海中路",
+        "amenity": "restaurant",
+        "name:en": "MOST Restaurant"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "1712",
+        "addr:street": "淮海中路",
+        "amenity": "restaurant",
+        "name:en": "MOST Restaurant"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4374456871",
+      "name": "DAGA Brewpub",
+      "lat": 31.2126164,
+      "lng": 121.4384685,
+      "tags": {
+        "addr:housenumber": "100",
+        "addr:street": "Fuxing rd",
+        "amenity": "bar",
+        "description": "Craft beer bar and brewpub, large selection of craft beers. Does food too.",
+        "name": "DAGA Brewpub"
+      },
+      "tags_osm": {
+        "addr:housenumber": "100",
+        "addr:street": "Fuxing rd",
+        "amenity": "bar",
+        "description": "Craft beer bar and brewpub, large selection of craft beers. Does food too.",
+        "name": "DAGA Brewpub"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4455933792",
+      "name": "Sofia Pizzeria",
+      "lat": 31.2168058,
+      "lng": 121.442775,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:district": "Xuhui",
+        "addr:housenumber": "37",
+        "addr:street": "Anfu Lu",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "internet_access": "wlan",
+        "internet_access:ssid": "SOFIA_vpn",
+        "name": "Sofia Pizzeria",
+        "name:en": "Sofia Pizzeria",
+        "opening_hours": "Mo-Su 10:00-22:00",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:district": "Xuhui",
+        "addr:housenumber": "37",
+        "addr:street": "Anfu Lu",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "internet_access": "wlan",
+        "internet_access:ssid": "SOFIA_vpn",
+        "name": "Sofia Pizzeria",
+        "name:en": "Sofia Pizzeria",
+        "opening_hours": "Mo-Su 10:00-22:00",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4455938289",
+      "name": "Aussie Bar",
+      "lat": 31.2166254,
+      "lng": 121.4423683,
+      "tags": {
+        "addr:city": "Shanghai",
+        "addr:housenumber": "53-57",
+        "addr:postcode": "200031",
+        "addr:street": "安福路",
+        "amenity": "pub",
+        "charge": "88RMB-130 RMB sets, includes a fresh juice, add 80RMB for free-flow sparkling wine",
+        "dsscreated": "#brunch",
+        "name": "Aussie Bar",
+        "reservation": "available, but not essential",
+        "was:name": "Enoterra"
+      },
+      "tags_osm": {
+        "addr:city": "Shanghai",
+        "addr:housenumber": "53-57",
+        "addr:postcode": "200031",
+        "addr:street": "安福路",
+        "amenity": "pub",
+        "charge": "88RMB-130 RMB sets, includes a fresh juice, add 80RMB for free-flow sparkling wine",
+        "dsscreated": "#brunch",
+        "name": "Aussie Bar",
+        "reservation": "available, but not essential",
+        "was:name": "Enoterra"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4455938489",
+      "name": "未命名",
+      "lat": 31.2169093,
+      "lng": 121.4430437,
+      "tags": {
+        "amenity": "restaurant",
+        "internet_access": "wlan",
+        "name:en": "Le petite fleure",
+        "wheelchair": "limited"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "internet_access": "wlan",
+        "name:en": "Le petite fleure",
+        "wheelchair": "limited"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4498699090",
+      "name": "东北四级饺子王",
+      "lat": 31.2070426,
+      "lng": 121.4354374,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "东北四级饺子王",
+        "name:en": "Dongbei Four Seasons Dumpling King (Xuhui Branch)"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "name": "东北四级饺子王",
+        "name:en": "Dongbei Four Seasons Dumpling King (Xuhui Branch)"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4498699093",
+      "name": "未命名",
+      "lat": 31.21462,
+      "lng": 121.4422496,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "89",
+        "addr:street": "五原路",
+        "amenity": "restaurant",
+        "name:en": "xixi bistro"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "89",
+        "addr:street": "五原路",
+        "amenity": "restaurant",
+        "name:en": "xixi bistro"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4498704089",
+      "name": "未命名",
+      "lat": 31.2124639,
+      "lng": 121.4387616,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "133",
+        "addr:street": "复兴西路",
+        "amenity": "restaurant",
+        "name:en": "miss ali"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "133",
+        "addr:street": "复兴西路",
+        "amenity": "restaurant",
+        "name:en": "miss ali"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4504301190",
+      "name": "未命名",
+      "lat": 31.2134119,
+      "lng": 121.4364433,
+      "tags": {
+        "amenity": "restaurant",
+        "name:en": "Cozy Wine Bar & Bistro"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "name:en": "Cozy Wine Bar & Bistro"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4504341891",
+      "name": "未命名",
+      "lat": 31.2123533,
+      "lng": 121.44104,
+      "tags": {
+        "amenity": "restaurant",
+        "name:en": "Organic kitchen & wine"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "name:en": "Organic kitchen & wine"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4508376690",
+      "name": "未命名",
+      "lat": 31.2105152,
+      "lng": 121.4438127,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "chinese;uyghur",
+        "name:en": "Spice Bazaar",
+        "opening_hours": "Mo-Su 11:30-23:00"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "cuisine": "chinese;uyghur",
+        "name:en": "Spice Bazaar",
+        "opening_hours": "Mo-Su 11:30-23:00"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4520465504",
+      "name": "Azul Tapas",
+      "lat": 31.2082617,
+      "lng": 121.43443,
+      "tags": {
+        "amenity": "bar",
+        "level": "8",
+        "name": "Azul Tapas"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "level": "8",
+        "name": "Azul Tapas"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4531455308",
+      "name": "中式炸鸡",
+      "lat": 31.2124712,
+      "lng": 121.4420257,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "chicken",
+        "name": "中式炸鸡",
+        "name:en": "Chinese style fried chicken stand",
+        "name:zh": "中式炸鸡"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "cuisine": "chicken",
+        "name": "中式炸鸡",
+        "name:en": "Chinese style fried chicken stand",
+        "name:zh": "中式炸鸡"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4531749102",
+      "name": "La Cabane",
+      "lat": 31.2106355,
+      "lng": 121.4468885,
+      "tags": {
+        "amenity": "restaurant",
+        "check_date": "2026-10-06",
+        "cuisine": "french",
+        "name": "La Cabane"
+      },
+      "tags_osm": {
+        "amenity": "restaurant",
+        "check_date": "2026-10-06",
+        "cuisine": "french",
+        "name": "La Cabane"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4532109389",
+      "name": "未命名",
+      "lat": 31.2167138,
+      "lng": 121.4426336,
+      "tags": {
+        "addr:city": "上海市",
+        "addr:housenumber": "45",
+        "addr:street": "Anfu Road",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name:en": "Mia's yunnan kitchen"
+      },
+      "tags_osm": {
+        "addr:city": "上海市",
+        "addr:housenumber": "45",
+        "addr:street": "Anfu Road",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name:en": "Mia's yunnan kitchen"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/4624545489",
+      "name": "未命名",
+      "lat": 31.2096006,
+      "lng": 121.4391433,
+      "tags": {
+        "amenity": "bar",
+        "cuisine": "burger",
+        "name:en": "A.E. Kitchen",
+        "opening_hours": "Mo-Su 08:00-22:00"
+      },
+      "tags_osm": {
+        "amenity": "bar",
+        "cuisine": "burger",
+        "name:en": "A.E. Kitchen",
+        "opening_hours": "Mo-Su 08:00-22:00"
+      },
+      "origin": "osm"
+    }
+  ]
+}

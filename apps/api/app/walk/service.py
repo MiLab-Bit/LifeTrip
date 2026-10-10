@@ -20,11 +20,11 @@ def _district(district_id: str):
     return next((d for d in DISTRICTS if d.id == district_id), None)
 
 
-def plan_walk_task(session_id: str, brief: BriefInput) -> WalkTask:
+async def plan_walk_task(session_id: str, brief: BriefInput) -> WalkTask:
     district = _district(brief.district_id)
     if not district:
         raise ValueError(f"unknown district: {brief.district_id}")
-    route = plan_route(
+    route = await plan_route(
         vibe=brief.vibe,
         district=district,
         duration_min=brief.duration_min,
@@ -50,7 +50,7 @@ def advance_stop(task_id: str) -> WalkTask:
     return store.update_task(task_id, current_stop_index=nxt, status="walking")  # type: ignore[return-value]
 
 
-def request_skip(task_id: str, *, confirm: bool = False) -> WalkTask:
+async def request_skip(task_id: str, *, confirm: bool = False) -> WalkTask:
     task = store.get_task(task_id)
     if not task:
         raise ValueError("task not found")
@@ -70,7 +70,7 @@ def request_skip(task_id: str, *, confirm: bool = False) -> WalkTask:
     if not district:
         raise ValueError("district missing")
     exclude = {s.id for s in stops}
-    route = plan_route(
+    route = await plan_route(
         vibe=task.brief.vibe,
         district=district,
         duration_min=task.brief.duration_min,
@@ -87,7 +87,7 @@ def request_skip(task_id: str, *, confirm: bool = False) -> WalkTask:
     )  # type: ignore[return-value]
 
 
-def request_reroll(task_id: str, *, confirm: bool = False, stop_index: int | None = None) -> WalkTask:
+async def request_reroll(task_id: str, *, confirm: bool = False, stop_index: int | None = None) -> WalkTask:
     task = store.get_task(task_id)
     if not task:
         raise ValueError("task not found")
@@ -97,7 +97,7 @@ def request_reroll(task_id: str, *, confirm: bool = False, stop_index: int | Non
     if not district:
         raise ValueError("district missing")
     exclude = {s.id for s in task.route.stops}
-    replacement = find_replacement(
+    replacement = await find_replacement(
         vibe=task.brief.vibe,
         district=district,
         exclude_ids=exclude,

@@ -1,4 +1,4 @@
-"""Overpass API — 潮流 POI 检索 + 本地 cache."""
+"""Overpass API — 潮流 POI 检索 + 本地 cache (async)."""
 from __future__ import annotations
 
 import os
@@ -81,7 +81,7 @@ def _parse_elements(raw: dict[str, Any]) -> list[dict[str, Any]]:
     return out
 
 
-def fetch_pois(vibe: str, district) -> list[dict[str, Any]]:
+async def fetch_pois(vibe: str, district) -> list[dict[str, Any]]:
     cached = read_cache(district.id, vibe)
     if cached:
         return cached
@@ -89,10 +89,10 @@ def fetch_pois(vibe: str, district) -> list[dict[str, Any]]:
     query = build_query(vibe, district)
     timeout = float(os.getenv("LIFETRIP_OVERPASS_TIMEOUT", "20"))
     last_err = "overpass failed"
-    with httpx.Client(timeout=timeout, headers={"User-Agent": UA}) as client:
+    async with httpx.AsyncClient(timeout=timeout, headers={"User-Agent": UA}) as client:
         for url in OVERPASS_URLS:
             try:
-                r = client.post(url, data={"data": query})
+                r = await client.post(url, data={"data": query})
                 if r.status_code != 200:
                     last_err = f"{url} HTTP {r.status_code}"
                     continue
@@ -110,10 +110,10 @@ def fetch_pois(vibe: str, district) -> list[dict[str, Any]]:
     raise RuntimeError(last_err)
 
 
-def overpass_status() -> dict[str, Any]:
+async def overpass_status() -> dict[str, Any]:
     try:
-        with httpx.Client(timeout=8.0, headers={"User-Agent": UA}) as client:
-            r = client.get(f"{OVERPASS_URLS[0]}?data=[out:json];node(1);out;")
+        async with httpx.AsyncClient(timeout=8.0, headers={"User-Agent": UA}) as client:
+            r = await client.get(f"{OVERPASS_URLS[0]}?data=[out:json];node(1);out;")
             return {"ok": r.status_code == 200, "status_code": r.status_code}
     except Exception as exc:  # noqa: BLE001
         return {"ok": False, "error": str(exc)}
