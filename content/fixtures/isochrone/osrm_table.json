@@ -1,0 +1,10 @@
+{
+  "comment": "离线合成路网模型（OfflineOsrmTransport 读取）。duration = haversine/speed * factor(bearing)。detour_rules 模拟河流/铁路阻隔：东北向 1.9（过桥绕行），西南向 1.5（公园绕行）。这些系数决定了等时圈在东北向出现明显凹口，用于检验 ring 多边形对凹形的保留能力。",
+  "center_hint": { "lat": 31.2304, "lng": 121.4737 },
+  "base_speed_kmh": 4.8,
+  "default_factor": 1.15,
+  "detour_rules": [
+    { "bearing_from": 20, "bearing_to": 110, "factor": 1.9, "note": "模拟江/铁路阻隔：该扇区绕行系数大" },
+    { "bearing_from": 200, "bearing_to": 260, "factor": 1.5, "note": "模拟公园路网绕行" }
+  ]
+}
