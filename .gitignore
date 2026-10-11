@@ -26,3 +26,7 @@ node_modules/
 # Smoke tests (local only)
 smoke_*.py
 start_*.sh
+
+# 运行时数据库（冒烟/测试运行会重新生成）
+apps/api/data/*.db
+apps/api/data/*.db-journal
