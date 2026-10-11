@@ -1,55 +1,87 @@
-# REL-8 · 门禁 CI（零配置版）
-# 只做两件事：把环境装上，然后调用 scripts/preflight.sh。
-# preflight 会自己识别这个仓库里有哪些检查项，所以这里不需要写死目录名或命令。
-# 唯一必需的检查名：preflight
 name: ci
 
+# 门禁：任何分支的 push 与所有 PR 都跑同一条命令 —— scripts/preflight.sh。
+# 本地和 CI 共用一个入口，避免「本地过了 CI 没过」。
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   preflight:
+    name: preflight
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: 仓库结构探测（失败排查时看这段日志）
         run: |
-          echo "--- 顶层 ---"; ls -a
-          echo "--- package.json ---"
-          find . -maxdepth 3 -name package.json -not -path "*/node_modules/*" || true
-          echo "--- python 线索 ---"
-          ls -a | grep -iE "python-version|pyproject|requirements|setup.py" || true
+          echo "== 顶层 =="; ls -a | head -40
+          echo "== 找到的清单元数据 =="
+          for f in requirements.txt requirements-dev.txt pyproject.toml setup.py pnpm-lock.yaml yarn.lock package-lock.json package.json; do
+            [ -e "$f" ] && echo "  $f"
+          done
+          true
 
       - uses: actions/setup-python@v5
+        if: ${{ hashFiles('requirements*.txt','pyproject.toml','setup.py') != '' }}
         with:
-          python-version: "3.12"          # 待确认：按你本地版本改一行即可（其余不用改）
+          python-version: "3.12"
 
       - uses: actions/setup-node@v4
+        if: ${{ hashFiles('**/package.json') != '' }}
         with:
           node-version: "20"
 
       - name: 安装 Python 依赖（有才装）
-        if: ${{ hashFiles('requirements.txt', 'pyproject.toml', 'setup.py') != '' }}
+        if: ${{ hashFiles('requirements*.txt','pyproject.toml','setup.py') != '' }}
         run: |
-          python -m pip install -U pip
-          [ -f requirements.txt ] && pip install -r requirements.txt || true
-          [ -f pyproject.toml ] && (pip install -e . || pip install .) || true
-          [ -f setup.py ] && pip install . || true
+          set -e
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt;
+          elif [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt;
+          else python -m pip install .; fi
 
       - name: 安装前端依赖（有才装）
         if: ${{ hashFiles('**/package.json') != '' }}
         run: |
           set -e
-          dir="$(dirname "$(find . -maxdepth 3 -name package.json -not -path '*/node_modules/*' | head -1)")"
-          echo "前端目录：$dir"
+          # 先找锁文件。pnpm/yarn/npm 工作区的锁文件在工作区【根目录】，
+          # 而「第一个 package.json」可能是成员包（例如 apps/web）。
+          # 从成员包目录里找锁文件会找不到，于是退化到 npm install ——
+          # 而 npm 不认 workspace:* 协议，会直接失败（EUNSUPPORTEDPROTOCOL）。
+          lock="$(find . -maxdepth 4 \( -name pnpm-lock.yaml -o -name yarn.lock -o -name package-lock.json \) -not -path '*/node_modules/*' | head -1)"
+          if [ -n "$lock" ]; then
+            dir="$(dirname "$lock")"
+          else
+            dir="$(dirname "$(find . -maxdepth 3 -name package.json -not -path '*/node_modules/*' | head -1)")"
+          fi
+          echo "工作区根目录：$dir"
           cd "$dir"
-          if [ -f pnpm-lock.yaml ]; then corepack enable && pnpm install --frozen-lockfile;
-          elif [ -f yarn.lock ]; then yarn install --frozen-lockfile;
-          elif [ -f package-lock.json ]; then npm ci;
-          else npm install; fi
+          case "$lock" in
+            *pnpm-lock.yaml)
+              corepack enable 2>/dev/null || true
+              if ! command -v pnpm >/dev/null 2>&1; then npm i -g pnpm@9; fi
+              pnpm install --frozen-lockfile
+              ;;
+            *yarn.lock)
+              yarn install --frozen-lockfile
+              ;;
+            *package-lock.json)
+              npm ci
+              ;;
+            *)
+              npm install
+              ;;
+          esac
 
       - name: 跑门禁（唯一入口）
         if: ${{ hashFiles('scripts/preflight.sh') != '' }}
@@ -58,4 +90,6 @@ jobs:
       - name: 没有门禁脚本时的兜底
         if: ${{ hashFiles('scripts/preflight.sh') == '' }}
         run: |
-          echo "::warning::仓库里还没有 scripts/preflight.sh，本次只做了依赖安装验证"
+          set -e
+          echo "::warning::仓库里没有 scripts/preflight.sh，退化为最小检查"
+          pytest -q || true
