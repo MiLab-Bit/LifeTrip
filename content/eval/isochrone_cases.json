@@ -1,0 +1,544 @@
+{
+  "suite": "isochrone-regression",
+  "version": 1,
+  "comment": "LifeTrip 等时圈 10 题回归集。期望值由离线管线（OfflineOsrmTransport + curated POI）实际运行生成，断言口径见 tests/test_isochrone.py::test_eval_regression。TODO-ADAPT：若 /v1/eval/run 有既有的题目 schema（如 packages/contracts 里的 EvalCase），把本文件的字段映射过去；回归断言逻辑可复用 tests 里的实现。",
+  "tolerance": {
+    "area_rel": 0.02,
+    "coverage_abs": 1e-06
+  },
+  "cases": [
+    {
+      "id": "iso-001",
+      "title": "基准：15 分钟 16 方向 ring",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 15
+      },
+      "expect": {
+        "area_m2": 2150439.5,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 1,
+            "coverage_rate": 0.333333
+          },
+          "education": {
+            "total": 4,
+            "inside": 2,
+            "coverage_rate": 0.5
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 6,
+            "coverage_rate": 0.6
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 2,
+            "coverage_rate": 0.4
+          }
+        },
+        "blind_spots": [
+          "green"
+        ]
+      }
+    },
+    {
+      "id": "iso-002",
+      "title": "方向加密到 32：弦长近似误差减小，面积应略增（与 16 方向差 <15%）",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 15,
+        "directions": 32
+      },
+      "expect": {
+        "area_m2": 2385536.4,
+        "vertex_count": 64,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 1,
+            "coverage_rate": 0.333333
+          },
+          "education": {
+            "total": 4,
+            "inside": 2,
+            "coverage_rate": 0.5
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 7,
+            "coverage_rate": 0.7
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 2,
+            "coverage_rate": 0.4
+          }
+        },
+        "blind_spots": [
+          "green"
+        ]
+      }
+    },
+    {
+      "id": "iso-003",
+      "title": "凸包模式：面积应不小于 ring 模式（凹形被抹平）",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 15,
+        "polygon_mode": "hull"
+      },
+      "expect": {
+        "area_m2": 2591002.8,
+        "vertex_count": 12,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 2,
+            "coverage_rate": 0.666667
+          },
+          "education": {
+            "total": 4,
+            "inside": 3,
+            "coverage_rate": 0.75
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 8,
+            "coverage_rate": 0.8
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 3,
+            "coverage_rate": 0.6
+          }
+        },
+        "blind_spots": [
+          "green"
+        ]
+      }
+    },
+    {
+      "id": "iso-004",
+      "title": "缩短到 10 分钟：面积缩小、盲区增多",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 10
+      },
+      "expect": {
+        "area_m2": 955757.7,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 0,
+            "coverage_rate": 0.0
+          },
+          "education": {
+            "total": 4,
+            "inside": 0,
+            "coverage_rate": 0.0
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 2,
+            "coverage_rate": 0.285714
+          },
+          "dining": {
+            "total": 10,
+            "inside": 7,
+            "coverage_rate": 0.7
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          }
+        },
+        "blind_spots": [
+          "medical",
+          "education",
+          "shopping",
+          "green",
+          "transit"
+        ]
+      }
+    },
+    {
+      "id": "iso-005",
+      "title": "放宽到 25 分钟：面积扩大、盲区减少",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 25
+      },
+      "expect": {
+        "area_m2": 5973357.9,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 1,
+            "coverage_rate": 0.333333
+          },
+          "education": {
+            "total": 4,
+            "inside": 4,
+            "coverage_rate": 1.0
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 7,
+            "coverage_rate": 0.7
+          },
+          "green": {
+            "total": 5,
+            "inside": 4,
+            "coverage_rate": 0.8
+          },
+          "transit": {
+            "total": 5,
+            "inside": 3,
+            "coverage_rate": 0.6
+          }
+        },
+        "blind_spots": []
+      }
+    },
+    {
+      "id": "iso-006",
+      "title": "阈值收紧到 0.6：盲区类别应多于基准",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 15,
+        "blind_spot_threshold": 0.6
+      },
+      "expect": {
+        "area_m2": 2150439.5,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 1,
+            "coverage_rate": 0.333333
+          },
+          "education": {
+            "total": 4,
+            "inside": 2,
+            "coverage_rate": 0.5
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 6,
+            "coverage_rate": 0.6
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 2,
+            "coverage_rate": 0.4
+          }
+        },
+        "blind_spots": [
+          "medical",
+          "education",
+          "green",
+          "transit"
+        ]
+      }
+    },
+    {
+      "id": "iso-007",
+      "title": "中心点北移 ~670m：合成路网平移不变，面积相同但覆盖结构改变",
+      "request": {
+        "center": {
+          "lat": 31.2364,
+          "lng": 121.4737
+        },
+        "minutes": 15
+      },
+      "expect": {
+        "area_m2": 2150439.5,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 2,
+            "coverage_rate": 0.666667
+          },
+          "education": {
+            "total": 4,
+            "inside": 2,
+            "coverage_rate": 0.5
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 2,
+            "coverage_rate": 0.285714
+          },
+          "dining": {
+            "total": 10,
+            "inside": 6,
+            "coverage_rate": 0.6
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          }
+        },
+        "blind_spots": [
+          "shopping",
+          "green",
+          "transit"
+        ]
+      }
+    },
+    {
+      "id": "iso-008",
+      "title": "快走 6 km/h：面积应大于基准",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 15,
+        "walking_speed_kmh": 6.0
+      },
+      "expect": {
+        "area_m2": 3360043.7,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 1,
+            "coverage_rate": 0.333333
+          },
+          "education": {
+            "total": 4,
+            "inside": 3,
+            "coverage_rate": 0.75
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 7,
+            "coverage_rate": 0.7
+          },
+          "green": {
+            "total": 5,
+            "inside": 2,
+            "coverage_rate": 0.4
+          },
+          "transit": {
+            "total": 5,
+            "inside": 2,
+            "coverage_rate": 0.4
+          }
+        },
+        "blind_spots": []
+      }
+    },
+    {
+      "id": "iso-009",
+      "title": "阈值放宽到 0.1：盲区应只剩类别缺失项",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 15,
+        "blind_spot_threshold": 0.1
+      },
+      "expect": {
+        "area_m2": 2150439.5,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 1,
+            "coverage_rate": 0.333333
+          },
+          "education": {
+            "total": 4,
+            "inside": 2,
+            "coverage_rate": 0.5
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 6,
+            "coverage_rate": 0.857143
+          },
+          "dining": {
+            "total": 10,
+            "inside": 6,
+            "coverage_rate": 0.6
+          },
+          "green": {
+            "total": 5,
+            "inside": 1,
+            "coverage_rate": 0.2
+          },
+          "transit": {
+            "total": 5,
+            "inside": 2,
+            "coverage_rate": 0.4
+          }
+        },
+        "blind_spots": []
+      }
+    },
+    {
+      "id": "iso-010",
+      "title": "5 分钟小圈：绝大多数类别应判盲区",
+      "request": {
+        "center": {
+          "lat": 31.2304,
+          "lng": 121.4737
+        },
+        "minutes": 5
+      },
+      "expect": {
+        "area_m2": 238941.1,
+        "vertex_count": 32,
+        "degraded": false,
+        "degraded_directions": 0,
+        "coverage": {
+          "medical": {
+            "total": 3,
+            "inside": 0,
+            "coverage_rate": 0.0
+          },
+          "education": {
+            "total": 4,
+            "inside": 0,
+            "coverage_rate": 0.0
+          },
+          "shopping": {
+            "total": 7,
+            "inside": 0,
+            "coverage_rate": 0.0
+          },
+          "dining": {
+            "total": 10,
+            "inside": 2,
+            "coverage_rate": 0.2
+          },
+          "green": {
+            "total": 5,
+            "inside": 0,
+            "coverage_rate": 0.0
+          },
+          "transit": {
+            "total": 5,
+            "inside": 0,
+            "coverage_rate": 0.0
+          }
+        },
+        "blind_spots": [
+          "medical",
+          "education",
+          "shopping",
+          "dining",
+          "green",
+          "transit"
+        ]
+      }
+    }
+  ]
+}

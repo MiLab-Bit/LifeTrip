@@ -19,6 +19,7 @@ from app.plan.planner import plan_route
 from app.proactive.weather import check_weather_reroute
 from app.osm import overpass_status
 from app.walk import service as walk_service
+from app.api.v1.isochrone import router as isochrone_router
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -31,6 +32,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(isochrone_router, prefix="/v1")
 
 
 @app.on_event("startup")

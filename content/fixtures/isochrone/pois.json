@@ -1,0 +1,243 @@
+{
+  "comment": "curated POI 集：由 tests/generate_eval_fixtures.py 从 LAYOUT 布局表确定性生成。中心点 31.2304,121.4737。",
+  "pois": [
+    {
+      "id": "curated-000",
+      "name": "兰州拉面",
+      "category": "dining",
+      "lat": 31.2326397,
+      "lng": 121.4739292
+    },
+    {
+      "id": "curated-001",
+      "name": "便利店咖啡",
+      "category": "dining",
+      "lat": 31.2324667,
+      "lng": 121.4757282
+    },
+    {
+      "id": "curated-002",
+      "name": "沙县小吃",
+      "category": "dining",
+      "lat": 31.2312146,
+      "lng": 121.4772556
+    },
+    {
+      "id": "curated-003",
+      "name": "社区食堂",
+      "category": "dining",
+      "lat": 31.2291409,
+      "lng": 121.4762503
+    },
+    {
+      "id": "curated-004",
+      "name": "麻辣烫",
+      "category": "dining",
+      "lat": 31.2270197,
+      "lng": 121.4751388
+    },
+    {
+      "id": "curated-005",
+      "name": "面包房",
+      "category": "dining",
+      "lat": 31.2264909,
+      "lng": 121.4724751
+    },
+    {
+      "id": "curated-006",
+      "name": "火锅店",
+      "category": "dining",
+      "lat": 31.2281516,
+      "lng": 121.469146
+    },
+    {
+      "id": "curated-007",
+      "name": "早点铺",
+      "category": "dining",
+      "lat": 31.2319738,
+      "lng": 121.4705121
+    },
+    {
+      "id": "curated-008",
+      "name": "江景餐厅",
+      "category": "dining",
+      "lat": 31.2338203,
+      "lng": 121.482279
+    },
+    {
+      "id": "curated-009",
+      "name": "深夜食堂",
+      "category": "dining",
+      "lat": 31.2393656,
+      "lng": 121.4688103
+    },
+    {
+      "id": "curated-010",
+      "name": "联华超市",
+      "category": "shopping",
+      "lat": 31.2339426,
+      "lng": 121.4744305
+    },
+    {
+      "id": "curated-011",
+      "name": "全家便利店",
+      "category": "shopping",
+      "lat": 31.2330822,
+      "lng": 121.4781801
+    },
+    {
+      "id": "curated-012",
+      "name": "菜市场",
+      "category": "shopping",
+      "lat": 31.2299296,
+      "lng": 121.4799863
+    },
+    {
+      "id": "curated-013",
+      "name": "百货商店",
+      "category": "shopping",
+      "lat": 31.2255775,
+      "lng": 121.478432
+    },
+    {
+      "id": "curated-014",
+      "name": "社区生鲜",
+      "category": "shopping",
+      "lat": 31.2254726,
+      "lng": 121.4731959
+    },
+    {
+      "id": "curated-015",
+      "name": "购物中心",
+      "category": "shopping",
+      "lat": 31.2249081,
+      "lng": 121.4660466
+    },
+    {
+      "id": "curated-016",
+      "name": "杂货店",
+      "category": "shopping",
+      "lat": 31.2316491,
+      "lng": 121.4654139
+    },
+    {
+      "id": "curated-017",
+      "name": "社区卫生服务站",
+      "category": "medical",
+      "lat": 31.2352711,
+      "lng": 121.4726955
+    },
+    {
+      "id": "curated-018",
+      "name": "三甲医院",
+      "category": "medical",
+      "lat": 31.2366946,
+      "lng": 121.4864524
+    },
+    {
+      "id": "curated-019",
+      "name": "药店",
+      "category": "medical",
+      "lat": 31.2369151,
+      "lng": 121.4757417
+    },
+    {
+      "id": "curated-020",
+      "name": "实验小学",
+      "category": "education",
+      "lat": 31.2344753,
+      "lng": 121.4759225
+    },
+    {
+      "id": "curated-021",
+      "name": "幼儿园",
+      "category": "education",
+      "lat": 31.2314149,
+      "lng": 121.4804324
+    },
+    {
+      "id": "curated-022",
+      "name": "老年大学",
+      "category": "education",
+      "lat": 31.2254862,
+      "lng": 121.4805478
+    },
+    {
+      "id": "curated-023",
+      "name": "区图书馆",
+      "category": "education",
+      "lat": 31.2226116,
+      "lng": 121.4684418
+    },
+    {
+      "id": "curated-024",
+      "name": "街角公园",
+      "category": "green",
+      "lat": 31.2348513,
+      "lng": 121.478906
+    },
+    {
+      "id": "curated-025",
+      "name": "滨江绿道",
+      "category": "green",
+      "lat": 31.2312617,
+      "lng": 121.4852251
+    },
+    {
+      "id": "curated-026",
+      "name": "社区花园",
+      "category": "green",
+      "lat": 31.225727,
+      "lng": 121.476855
+    },
+    {
+      "id": "curated-027",
+      "name": "体育公园",
+      "category": "green",
+      "lat": 31.2254585,
+      "lng": 121.4613092
+    },
+    {
+      "id": "curated-028",
+      "name": "植物园",
+      "category": "green",
+      "lat": 31.2414223,
+      "lng": 121.4628821
+    },
+    {
+      "id": "curated-029",
+      "name": "公交枢纽站",
+      "category": "transit",
+      "lat": 31.2357959,
+      "lng": 121.4737
+    },
+    {
+      "id": "curated-030",
+      "name": "地铁站A口",
+      "category": "transit",
+      "lat": 31.2366306,
+      "lng": 121.4779072
+    },
+    {
+      "id": "curated-031",
+      "name": "地铁站B口",
+      "category": "transit",
+      "lat": 31.2237576,
+      "lng": 121.4723304
+    },
+    {
+      "id": "curated-032",
+      "name": "长途客运站",
+      "category": "transit",
+      "lat": 31.2280566,
+      "lng": 121.4892358
+    },
+    {
+      "id": "curated-033",
+      "name": "共享单车点",
+      "category": "transit",
+      "lat": 31.2300864,
+      "lng": 121.4695091
+    }
+  ]
+}
