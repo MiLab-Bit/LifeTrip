@@ -1,6 +1,7 @@
 """Eval harness — regression over fact / decision / emergency cases."""
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 
@@ -11,6 +12,31 @@ from app.intent import classify_intent
 from app.paths import EVAL
 from app.plan.planner import plan_route
 from app.verify.verify import verify_route
+
+
+
+
+def _run_coro(coro):
+    """在同步函数里安全地跑一个协程。
+
+    /v1/eval/run 既可能从同步上下文（pytest / CLI / 脚本）调用，也可能在 FastAPI
+    的事件循环里被调用；asyncio.run() 在已有运行中的事件循环里会直接抛错，
+    所以两种情况分开处理。
+    """
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+
+    import concurrent.futures
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+        return ex.submit(asyncio.run, coro).result()
+
+
+def _plan_route_sync(**kwargs):
+    """plan_route 是协程函数；同步的 eval runner 必须把它真正跑起来再取结果。"""
+    return _run_coro(plan_route(**kwargs))
 
 
 def _load_cases() -> list[dict[str, Any]]:
@@ -65,7 +91,7 @@ def _run_emergency(case: dict[str, Any]) -> EvalCaseResult:
     if not district:
         return EvalCaseResult(id=cid, tier="emergency", passed=False, detail="district missing")
     try:
-        route = plan_route(
+        route = _plan_route_sync(
             vibe=case.get("vibe", "coffee"),
             district=district,
             duration_min=int(case.get("durationMin", 90)),

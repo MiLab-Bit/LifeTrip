@@ -1,0 +1,97 @@
+name: ci
+
+# 门禁：main 的 push 与所有 PR 都跑同一条命令 —— scripts/preflight.sh。
+# 本地和 CI 共用一个入口，避免「本地过了 CI 没过」。
+# push 只挂 main：分支开发期由 pull_request 事件覆盖，
+# 否则「推分支 + 开 PR」会让同一个 commit 跑两遍。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    name: preflight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 仓库结构探测（失败排查时看这段日志）
+        run: |
+          echo "== 顶层 =="; ls -a | head -40
+          echo "== 找到的清单元数据 =="
+          for f in requirements.txt requirements-dev.txt pyproject.toml setup.py pnpm-lock.yaml yarn.lock package-lock.json package.json; do
+            [ -e "$f" ] && echo "  $f"
+          done
+          true
+
+      - uses: actions/setup-python@v5
+        if: ${{ hashFiles('requirements*.txt','pyproject.toml','setup.py') != '' }}
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        if: ${{ hashFiles('**/package.json') != '' }}
+        with:
+          node-version: "20"
+
+      - name: 安装 Python 依赖（有才装）
+        if: ${{ hashFiles('requirements*.txt','pyproject.toml','setup.py') != '' }}
+        run: |
+          set -e
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt;
+          elif [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt;
+          else python -m pip install .; fi
+
+      - name: 安装前端依赖（有才装）
+        if: ${{ hashFiles('**/package.json') != '' }}
+        run: |
+          set -e
+          # 先找锁文件。pnpm/yarn/npm 工作区的锁文件在工作区【根目录】，
+          # 而「第一个 package.json」可能是成员包（例如 apps/web）。
+          # 从成员包目录里找不到锁文件时会退化到 npm install，
+          # 而 npm 不认 workspace:* 协议，会直接失败（EUNSUPPORTEDPROTOCOL）。
+          lock="$(find . -maxdepth 4 \( -name pnpm-lock.yaml -o -name yarn.lock -o -name package-lock.json \) -not -path '*/node_modules/*' | head -1)"
+          if [ -n "$lock" ]; then
+            dir="$(dirname "$lock")"
+          else
+            dir="$(dirname "$(find . -maxdepth 3 -name package.json -not -path '*/node_modules/*' | head -1)")"
+          fi
+          echo "工作区根目录：$dir"
+          cd "$dir"
+          case "$lock" in
+            *pnpm-lock.yaml)
+              corepack enable 2>/dev/null || true
+              if ! command -v pnpm >/dev/null 2>&1; then npm i -g pnpm@9; fi
+              pnpm install --frozen-lockfile
+              ;;
+            *yarn.lock)
+              yarn install --frozen-lockfile
+              ;;
+            *package-lock.json)
+              npm ci
+              ;;
+            *)
+              npm install
+              ;;
+          esac
+
+      - name: 跑门禁（唯一入口）
+        if: ${{ hashFiles('scripts/preflight.sh') != '' }}
+        run: bash scripts/preflight.sh
+
+      - name: 没有门禁脚本时的兜底
+        if: ${{ hashFiles('scripts/preflight.sh') == '' }}
+        run: |
+          set -e
+          echo "::warning::仓库里没有 scripts/preflight.sh，退化为最小检查"
+          pytest -q || true
