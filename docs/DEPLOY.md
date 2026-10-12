@@ -1,67 +1,56 @@
-# DEPLOY · 部署、验收与回滚
+# DEPLOY · 部署、验收与回滚（LifeTrip）
 
-## 1. 拓扑（现状）
+## 1. 运行面（2026-10-12 实测）
 ```
-公网 → Cloudflare Tunnel（cloudflared）→ Nginx → 各本地端口
-  lifetrip-api   uvicorn 127.0.0.1:8800   代码 /opt/lifetrip，前端 dist 静态
-  redtrip        8799
-  bizatlas       8000
-  cardio         8010
-  temporal       7233 / 8233
-  openclaw       docker 容器（飞书 WebSocket 长连接 + Telegram bot One_MiBot）
-  glm-relay      systemd（GLM-5.2 → 上游中转）
-  备份            每天 03:00
+公网 → Cloudflare Tunnel（cloudflared）→ Nginx → 本地端口
+  lifetrip-api     127.0.0.1:8800   代码 /opt/lifetrip            健康端点 /v1/health
+  lifetrip-worker  Temporal worker  /opt/lifetrip
+  lifetrip-staging 127.0.0.1:8801   代码 /opt/lifetrip-staging（内存上限 512M）
+  osrm-routed      docker 127.0.0.1:5000   上海 MLD 抽片，等时圈用
+  前端             Nginx root=/opt/lifetrip/apps/web/dist（构建产物，不在 git 里）
 ```
 主机：阿里云 ECS `cn-heyuan` · `ecs.u1-c1m2.large`（2C4G）。
-**注意**：如果本仓库是 public，上面这些细节（IP、端口、目录）不要写进来；本文件只适用于私有仓库。
+**注意**：本仓库是 public，上面这些细节不要出现在任何对外材料里。
 
-## 2. 环境
-| 环境 | 入口 | 用途 |
-|---|---|---|
-| staging / UAT | 同一台机器、独立目录与端口（待现场核实具体端口），Cloudflare Tunnel 的第二个 hostname | 发布前验收与回滚演练 |
-| production | `lifetrip.sy-realm.ltd` | 对外 |
-
-staging 与生产**共用这台 2C4G**，所以：
-- staging 只跑必需服务，不要复制 14 项飞书 bot 任务；
-- 不要在服务器上跑 Node 构建（会吃满内存并与 OpenClaw 抢内存），构建一律在 CI 里做。
-
-## 3. 发布
-先看一眼脚本会认成什么（只读，不做任何改动）：
+## 2. 发布前（只读自检）
 ```bash
-bash scripts/deploy.sh --detect
+APP_DIR=/opt/lifetrip bash scripts/deploy.sh --detect
 ```
-再发布：
+会打印：认到的 systemd 单元（并校验它确实指向该目录）、端口、健康端点、当前版本、环境变量键名（值隐藏）。
+
+## 3. 部署
 ```bash
-bash scripts/deploy.sh v2026.10.1
+APP_DIR=/opt/lifetrip-staging TARGET_ENV=staging bash scripts/deploy.sh <tag>   # 先 staging
+APP_DIR=/opt/lifetrip         TARGET_ENV=production bash scripts/deploy.sh <tag>   # 再生产
 ```
-脚本行为：`git fetch --tags` → `checkout <tag>` → 重启 systemd 单元 → 轮询健康端点（最多约 60 秒）→ 失败则自动回退到上一个 tag。
-发布前先在 staging 跑一次；生产发布同样用它。
+脚本行为：`git fetch --tags` → `checkout --force <ref>` → **校验 HEAD 与目标 commit 一致** →
+重启 systemd 单元 → 轮询 `/v1/health`（最多约 60 秒）→ 失败则自动回退到上一个 tag。
+
+**坑（实测）**：`APP_DIR` 默认是 `/opt/lifetrip`。想部署 staging 却只写 `bash scripts/deploy.sh <tag>`，
+会去重启**生产**的 `lifetrip-api`。脚本已加护栏（`SERVICE` 与 `APP_DIR` 不一致直接拒绝），
+但命令请一律写全 `APP_DIR=`。
+
+可选：`ISOCHRONE_PROBE`、`REQUIRE_ISOCHRONE=1`（等时圈仍降级就算失败）、`POST_DEPLOY_CMD`、`ROLLBACK_TO`。
 
 ## 4. UAT 验收清单
-- [ ] `scripts/preflight.sh` 在目标 tag 上返回 0
-- [ ] 健康端点返回 200
-- [ ] 首页与主要页面能打开，前端版本标识与预期一致
-- [ ] `/v1/isochrone/analyze` 对固定坐标返回的 `time_s` **非 null**（若为 null，记为「已知降级」，不算通过）
-- [ ] `manifest.json` 里的 commit SHA 与线上运行的版本一致
-- [ ] 飞书侧原有通道仍可用（发布不应影响 openclaw / glm-relay）
-
-## 4.5 基线采集（发布前先留一份）
-```bash
-bash scripts/collect-baseline.sh --brief     # 先看关键几段
-bash scripts/collect-baseline.sh > infra/baseline-$(date +%F).txt 2>&1   # 留档
-```
-它是只读的：不重启、不改配置、不写文件；环境变量只打印键名，token/secret/key 类字段值打成 `****`。
+- [ ] `bash scripts/preflight.sh` 返回 0
+- [ ] `curl -fsS http://127.0.0.1:8800/v1/health` = 200
+- [ ] 首页能打开，前端版本标识与预期一致
+- [ ] `/v1/isochrone/analyze`（上海市域内坐标）`degraded=false` 且 `time_s` 非 null
+- [ ] `manifest.json` 的 commit SHA 与 `git -C /opt/lifetrip rev-parse HEAD` 一致
+- [ ] 飞书通道仍可用（发布不应影响 openclaw / glm-relay）
 
 ## 5. 回滚
 ```bash
-git tag -l | sort -V | tail -3        # 找上一个 tag
-bash scripts/deploy.sh <上一个 tag>
+git tag -l | sort -V | tail -3
+APP_DIR=/opt/lifetrip TARGET_ENV=production bash scripts/deploy.sh <上一个 tag>
 ```
-- 前后端必须同 tag 一起回退（脚本按 tag 取整份产物）。
-- 回滚后重跑第 4 节清单。
-- 目标：从决定回滚到旧版本恢复服务 ≤ 30 分钟。
-- 在 release notes 里记一句回滚原因。
+- 实测 staging 单次回滚 8 秒（演练记录见 `milab-release`）。
+- **前端 dist 不在 tag 里**：回滚只还原后端代码；`apps/web/dist` 是构建产物，
+  需要同版本时请另外处理（当前没有自动化路径，见 RELEASE.md 第 6 节）。
+- 回滚后重跑第 4 节。
 
 ## 6. 已知风险
-- 内存：3.6G + swap 已用近 1G，OpenClaw RSS 1.4G+。发布动作与内存事故容易互相掩盖 —— 发布时不要同时做其他维护动作。
-- 入口：Cloudflare Tunnel 断掉时，所有服务一起不可达；发布前后各确认一次隧道状态。
+- 内存：3.6G，swap 常用 1.2G 上下，OpenClaw RSS 1.2~1.4G。发布时不要同时做别的维护动作。
+- `/opt/lifetrip` 与 `/opt/lifetrip-staging` 目录名互为前缀，永远显式指定 `APP_DIR`。
+- 等时圈只覆盖上海市域；市域外坐标必然 `degraded=true`，别当成故障。
