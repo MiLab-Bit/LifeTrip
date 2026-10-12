@@ -1,36 +1,96 @@
-# REL-9 · 打 tag 即产出发布清单（manifest）
+# REL-9 / REL-16 · 打 tag 即产出发布清单（manifest）与前端产物资产
 # 放法：<repo>/.github/workflows/release.yml
-# 触发：push 形如 v2026.10.1 的 tag
+#
+# 触发：
+#   - push 形如 v2026.10.2 的 tag      → 常规发布路径
+#   - workflow_dispatch 指定已有 tag   → 给历史 tag 补发前端资产（不新建、不移动 tag）
+#
+# REL-16 变更：tag 之前，前端 dist 被 .gitignore 排除、不进 Release，
+# 所以 manifest 的 artifact_sha256 只代表后端，且「前后端同 tag 一起回滚」不成立。
+# 现在这里真的构建前端、产出 lifetrip-web-<tag>.tar.gz，并让摘要同时覆盖前后端。
 name: release-cut
 
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "已存在的 tag（补发前端资产用，例如 v2026.10.1）"
+        required: true
+        type: string
 
 permissions:
-  contents: write      # 建 release 需要；不要给更多
+  contents: write      # 建 release / 传资产需要；不要给更多
+
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   cut:
     runs-on: ubuntu-latest
+    env:
+      REF: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0            # manifest 需要完整历史来定位 commit
-
-      - name: 生成 manifest.json
+      - name: 先确认 ref 长得像版本号（省得手滑打成别的 tag）
         run: |
           set -eu
+          echo "本次发布 ref：$REF"
+          case "$REF" in
+            v*) ;;
+            *) echo "::error::ref 必须以 v 开头；版本号方案见 RELEASE.md"; exit 1 ;;
+          esac
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REF }}
+          fetch-depth: 0            # manifest 需要完整历史来定位 commit
+
+      - name: 确认远端真的有这个 tag（不许「安静地骗人」）
+        run: |
+          set -eu
+          git rev-parse --verify "refs/tags/$REF" >/dev/null 2>&1 \
+            || { echo "::error::远端没有 tag $REF"; exit 1; }
+          git fetch --tags --prune origin
+          git rev-parse --verify "refs/tags/$REF" >/dev/null 2>&1 \
+            || { echo "::error::远端没有 tag $REF"; exit 1; }
+          echo "commit=$(git rev-parse HEAD)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 构建前端并打包成 Release 资产（与 CI 用同一条脚本）
+        run: bash scripts/build-web-asset.sh "$REF"
+
+      - name: 生成 manifest.json（摘要同时覆盖前端产物与后端）
+        run: |
+          set -eu
+          . ./web-asset.env
           SHA="$(git rev-parse HEAD)"
-          ART="$(find . -maxdepth 4 -type f \( -name 'dist*' -o -name '*.whl' -o -name '*.tar.gz' \) \
-                 -exec sha256sum {} + 2>/dev/null | sort | sha256sum | cut -d' ' -f1)"
-          LOCK="$(sha256sum package-lock.json requirements.txt 2>/dev/null \
-                 | sort | sha256sum | cut -d' ' -f1)"
+          # 后端没有构建产物（Python 直接跑源码），所以后端摘要 = 该 commit 的 API 源码树摘要
+          BE="$(git ls-files apps/api packages requirements.txt | LC_ALL=C sort \
+                | xargs -r sha256sum | sha256sum | cut -d' ' -f1)"
+          LOCK="$(sha256sum pnpm-lock.yaml requirements.txt package.json 2>/dev/null \
+                  | LC_ALL=C sort | sha256sum | cut -d' ' -f1)"
+          # artifact_sha256 保留原名，但语义改为「前端 + 后端一起」的组合摘要
+          COMBINED="$(printf 'frontend:%s\nbackend:%s\n' "$ASSET_SHA256" "$BE" | sha256sum | cut -d' ' -f1)"
           cat > manifest.json <<EOF
           {
-            "version": "${GITHUB_REF_NAME}",
+            "version": "$REF",
             "commit": "$SHA",
-            "artifact_sha256": "$ART",
+            "artifact_sha256": "$COMBINED",
+            "artifact_scope": "frontend+backend",
+            "frontend_artifact": {
+              "name": "$ASSET_NAME",
+              "sha256": "$ASSET_SHA256",
+              "size": $ASSET_SIZE,
+              "kind": "web-dist-tarball",
+              "archive_root": "dist/"
+            },
+            "backend_artifact_sha256": "$BE",
+            "backend_artifact_scope": "git ls-files apps/api packages requirements.txt",
             "lock_sha256": "$LOCK",
             "environment": "production",
             "generated_at": "$(date -u +%FT%TZ)"
@@ -38,8 +98,18 @@ jobs:
           EOF
           cat manifest.json
 
-      - name: 建 release 并上传 manifest
+      - name: 建 release / 上传资产（补发时覆盖同名资产）
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 用内置 token，不需要长期 PAT
-        run: gh release create "${GITHUB_REF_NAME}" --notes-file RELEASE.md manifest.json
-        # 若要让「部署到生产」必须人工点一下，把部署 job 放进 production Environment（REL-12）
+        run: |
+          set -eu
+          . ./web-asset.env
+          ls -l manifest.json "$ASSET_PATH"
+          if gh release view "$REF" >/dev/null 2>&1; then
+            echo "release $REF 已存在 → 补传资产（--clobber）"
+            gh release upload "$REF" manifest.json "$ASSET_PATH" --clobber
+          else
+            gh release create "$REF" --notes-file RELEASE.md manifest.json "$ASSET_PATH"
+          fi
+          gh release view "$REF" --json tagName,assets \
+            --template '{{.tagName}}: {{range .assets}} {{.name}} ({{.size}}B){{end}}{{"\n"}}'
