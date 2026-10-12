@@ -85,6 +85,12 @@ jobs:
               ;;
           esac
 
+      - name: 前端产物可构建（与 release-cut 用同一条脚本，避免打 tag 时才发现构建坏了）
+        if: ${{ hashFiles('scripts/build-web-asset.sh') != '' }}
+        env:
+          OUT_DIR: /tmp/web-asset
+        run: SKIP_INSTALL=1 bash scripts/build-web-asset.sh ci
+
       - name: 跑门禁（唯一入口）
         if: ${{ hashFiles('scripts/preflight.sh') != '' }}
         run: bash scripts/preflight.sh
