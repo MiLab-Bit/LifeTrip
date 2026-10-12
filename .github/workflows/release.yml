@@ -1,0 +1,45 @@
+# REL-9 · 打 tag 即产出发布清单（manifest）
+# 放法：<repo>/.github/workflows/release.yml
+# 触发：push 形如 v2026.10.1 的 tag
+name: release-cut
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write      # 建 release 需要；不要给更多
+
+jobs:
+  cut:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # manifest 需要完整历史来定位 commit
+
+      - name: 生成 manifest.json
+        run: |
+          set -eu
+          SHA="$(git rev-parse HEAD)"
+          ART="$(find . -maxdepth 4 -type f \( -name 'dist*' -o -name '*.whl' -o -name '*.tar.gz' \) \
+                 -exec sha256sum {} + 2>/dev/null | sort | sha256sum | cut -d' ' -f1)"
+          LOCK="$(sha256sum package-lock.json requirements.txt 2>/dev/null \
+                 | sort | sha256sum | cut -d' ' -f1)"
+          cat > manifest.json <<EOF
+          {
+            "version": "${GITHUB_REF_NAME}",
+            "commit": "$SHA",
+            "artifact_sha256": "$ART",
+            "lock_sha256": "$LOCK",
+            "environment": "production",
+            "generated_at": "$(date -u +%FT%TZ)"
+          }
+          EOF
+          cat manifest.json
+
+      - name: 建 release 并上传 manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 用内置 token，不需要长期 PAT
+        run: gh release create "${GITHUB_REF_NAME}" --notes-file RELEASE.md manifest.json
+        # 若要让「部署到生产」必须人工点一下，把部署 job 放进 production Environment（REL-12）
