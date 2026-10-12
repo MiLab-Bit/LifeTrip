@@ -12,8 +12,8 @@
 | 健康端点 | `GET /v1/health`（**不是 `/healthz`**） |
 | 线上域名 | `lifetrip.sy-realm.ltd` |
 | 当前 tag | **`v2026.10.1`** → commit `079fae8`，线上实测即此版本 |
-| release 附件 | `manifest.json`（commit `079fae8e207bf04a3dde48481ca9bd1633fd6637`） |
-| CI | `.github/workflows/ci.yml`，job `preflight`；另有 `release-cut`（tag 触发） |
+| release 附件 | `manifest.json` + `lifetrip-web-<tag>.tar.gz`（前端产物，**REL-16 起**） |
+| CI | `.github/workflows/ci.yml`，job `preflight`（含「前端产物可构建」一步）；另有 `release-cut`（tag 触发） |
 | 分支保护 | 已开（必需 `preflight`，strict=true，需 PR，禁 force push，`enforce_admins=false`） |
 | tag ruleset | 已开（id 24875000 `protect-release-tags`，v* 禁删禁移） |
 | Environment | `production` 已建（required reviewers），但**当前没有任何 workflow 引用它**（见第 6 节） |
@@ -27,7 +27,7 @@
 2. 本地复跑：`bash scripts/preflight.sh`。
 3. 合并 PR。
 4. 打 tag 并推送（**只由人工执行**）：`git tag -a v2026.10.2 -m "LifeTrip v2026.10.2" && git push origin v2026.10.2`
-   → 触发 `release-cut`，产出 release notes 与 `manifest.json`。
+   → 触发 `release-cut`：**真的构建前端**、产出 `lifetrip-web-<tag>.tar.gz` 与 `manifest.json`。
 5. 部署 staging：`APP_DIR=/opt/lifetrip-staging TARGET_ENV=staging bash scripts/deploy.sh v2026.10.2`
 6. UAT 验收（`docs/DEPLOY.md` 第 4 节）。
 7. 部署生产：`APP_DIR=/opt/lifetrip TARGET_ENV=production bash scripts/deploy.sh v2026.10.2`
@@ -49,8 +49,13 @@ APP_DIR=/opt/lifetrip TARGET_ENV=production bash scripts/deploy.sh <上一个 ta
 - 实测：staging 上单次回滚 **8 秒**（`milab-release/docs/REL-15-staging回滚演练-2026-10-12.md`）。
 - **自动回退的真实边界**：脚本取「目标 ref 之前最近的 tag」。现在只有一个 tag，
   所以第一次发布的自动回退是空的；第二个 tag 出现后才会真正生效。
-- **前端不在 tag 里（重要）**：`apps/web/dist` 被 `.gitignore` 忽略、不进仓库，
-  所以 `git checkout <tag>` **只回滚后端**，前端 `dist` 原地不动。回滚前请确认前端是否需要另行处理（见第 6 节）。
+- **前端现在跟着 tag 走了（REL-16）**：`deploy.sh` 在切代码之前会先按 tag 从该 Release 下载
+  `lifetrip-web-<tag>.tar.gz`，用同一 Release 的 `manifest.json` 里的 `frontend_artifact.sha256` 校验，
+  再原子解包到 `$FRONTEND_DIR`（默认 `$APP_DIR/apps/web/dist`）。所以「前后端同 tag 一起回滚」成立。
+- **取不到前端 = 部署失败**：下载失败 / 摘要不符 / 包结构不对，一律退出码非 0，**不会静默跳过**。
+- **历史 tag 例外**：`v2026.10.1` 的 Release 只有 `manifest.json`（前端资产是 REL-16 才开始产出的）。
+  回滚到这类 tag 会硬失败；只有显式加 `ALLOW_FRONTEND_MISSING=1` 才会「只切后端」并大声告警。
+  要补齐历史 tag，用 `release-cut` 的 `workflow_dispatch` 指定该 tag 跑一次（只加资产，不动 tag）。
 
 ## 5. 同源纪律
 `scripts/deploy.sh` / `CLAUDE.md` / `docs/DEPLOY.md` 都是 `milab-release` 的副本。
@@ -60,7 +65,8 @@ APP_DIR=/opt/lifetrip TARGET_ENV=production bash scripts/deploy.sh <上一个 ta
 ## 6. 已知缺口（如实记录）
 - `production` Environment 已建但**没有 workflow 使用它**：部署目前是「人在服务器上跑 deploy.sh」，
   没有走 GitHub Actions，所以审批闸门当前不生效。
-- 前端 `dist` 不由 tag 携带，`manifest.json` 里的 `artifact_sha256` 也不是前端产物的摘要
-  （`release-cut` 没有任何构建步骤，它算的是仓库里恰好叫 `dist*`/`*.whl`/`*.tar.gz` 的那几个文件的摘要）。
-  ⇒「前后端同 tag 一起回退」**目前不成立**。要修就得先决定前端产物怎么交付（随 release 附件发，还是走独立构建流水线）。
+- ~~前端 `dist` 不由 tag 携带~~ → **REL-16 已修**：`release-cut` 会构建前端并上传 `lifetrip-web-<tag>.tar.gz`，
+  `manifest.json` 的 `artifact_sha256` 改为「前端 + 后端」的组合摘要（并有 `frontend_artifact` /
+  `backend_artifact_sha256` 两个明细字段）。旧的 `artifact_sha256` 只覆盖到仓库里一个恰好叫
+  `districts.py` 的后端源文件——按字面理解「只是后端摘要」甚至都不成立，它只是一个文件的摘要。
 - staging 公网入口（Cloudflare DNS）未配，只能从服务器内部验收。
