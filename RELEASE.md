@@ -11,12 +11,12 @@
 | systemd 单元 | `lifetrip-api`（8800） / `lifetrip-worker` / `lifetrip-staging`（8801） |
 | 健康端点 | `GET /v1/health`（**不是 `/healthz`**） |
 | 线上域名 | `lifetrip.sy-realm.ltd` |
-| 当前 tag | **`v2026.10.1`** → commit `079fae8`，线上实测即此版本 |
+| 当前 tag | **`v2026.10.2`** → commit `1f38bbf`，线上实测即此版本（前端产物 `lifetrip-web-v2026.10.2.tar.gz`） |
 | release 附件 | `manifest.json` + `lifetrip-web-<tag>.tar.gz`（前端产物，**REL-16 起**） |
-| CI | `.github/workflows/ci.yml`，job `preflight`（含「前端产物可构建」一步）；另有 `release-cut`（tag 触发） |
+| workflow | `.github/workflows/`：`ci`（job `preflight`，含「前端产物可构建」）+ `release-cut`（tag 触发）+ `deploy-production`（手动触发，走 `production` Environment 审批） |
 | 分支保护 | 已开（必需 `preflight`，strict=true，需 PR，禁 force push，`enforce_admins=false`） |
 | tag ruleset | 已开（id 24875000 `protect-release-tags`，v* 禁删禁移） |
-| Environment | `production` 已建（required reviewers），但**当前没有任何 workflow 引用它**（见第 6 节） |
+| Environment | `production`：required reviewers = 仓库属主（API 读回确认）；`deploy-production` 的 `deploy` job 引用它 → **审批闸门生效**（见第 6 节） |
 
 ## 1. 版本号方案
 - 格式：`vYYYY.MM.<build>`，例 `v2026.10.1`。
@@ -30,7 +30,11 @@
    → 触发 `release-cut`：**真的构建前端**、产出 `lifetrip-web-<tag>.tar.gz` 与 `manifest.json`。
 5. 部署 staging：`APP_DIR=/opt/lifetrip-staging TARGET_ENV=staging bash scripts/deploy.sh v2026.10.2`
 6. UAT 验收（`docs/DEPLOY.md` 第 4 节）。
-7. 部署生产：`APP_DIR=/opt/lifetrip TARGET_ENV=production bash scripts/deploy.sh v2026.10.2`
+7. 部署生产（两条路，二选一）：
+   - **走 GitHub（常规路径，有审批闸门）**：Actions → `deploy-production` → Run workflow → 填 tag
+     → 到本次运行的 `production` Environment 上点 **Approve and run**。
+   - **服务器上手跑（紧急用，绕过闸门）**：
+     `APP_DIR=/opt/lifetrip TARGET_ENV=production HEALTH_PATH=/v1/health bash scripts/deploy.sh v2026.10.2`
 
 ## 3. 验收命令
 ```bash
@@ -63,8 +67,12 @@ APP_DIR=/opt/lifetrip TARGET_ENV=production bash scripts/deploy.sh <上一个 ta
 **先改上游，再同步到本仓库。**
 
 ## 6. 已知缺口（如实记录）
-- `production` Environment 已建但**没有 workflow 使用它**：部署目前是「人在服务器上跑 deploy.sh」，
-  没有走 GitHub Actions，所以审批闸门当前不生效。
+- ~~`production` Environment 没有 workflow 使用它~~ → **REL-16 已接**：`.github/workflows/deploy-production.yml`
+  的 `deploy` job 引用了 `production` Environment，**下一次走 GitHub 的生产部署会先停在「等待批准」**，
+  由仓库属主点 Approve and run 才开始。
+- ⚠ **它还跑不完**：Environment 里还没有 3 个 secret（`LIFETRIP_DEPLOY_HOST` / `LIFETRIP_DEPLOY_USER` /
+  `LIFETRIP_SSH_KEY`），**必须由本人添加**（我方不动她账号里的凭据），步骤见
+  `milab-release/docs/最小权限发布凭据.md` 第 2 节。在那之前，job 会在批准之后停在「缺 secret」并明确报错。
 - ~~前端 `dist` 不由 tag 携带~~ → **REL-16 已修**：`release-cut` 会构建前端并上传 `lifetrip-web-<tag>.tar.gz`，
   `manifest.json` 的 `artifact_sha256` 改为「前端 + 后端」的组合摘要（并有 `frontend_artifact` /
   `backend_artifact_sha256` 两个明细字段）。旧的 `artifact_sha256` 只覆盖到仓库里一个恰好叫
