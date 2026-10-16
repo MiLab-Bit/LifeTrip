@@ -41,7 +41,7 @@ export function BriefStage({
       : "/v1/districts";
     fetch(url)
       .then((r) => r.json())
-      .then(setDistricts)
+      .then((d) => setDistricts(d.districts ?? d ?? []))
       .catch(() =>
         setDistricts([
           { id: "anfu-wukang", name: "安福—武康", city: "上海" },
