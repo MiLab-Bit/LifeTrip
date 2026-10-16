@@ -49,6 +49,15 @@ DISTRICTS: list[District] = [
         north=31.198,
         east=121.472,
     ),
+    District(
+        id="the-bund",
+        name="外滩",
+        city="上海",
+        south=31.225,
+        west=121.482,
+        north=31.248,
+        east=121.498,
+    ),
     # ── 北京 ──
     District(
         id="gulou-nanluo",
