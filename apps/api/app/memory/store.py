@@ -84,6 +84,42 @@ def init_db() -> None:
             );
             CREATE INDEX IF NOT EXISTS idx_community_published
                 ON community_routes(published_at DESC);
+
+            -- v0.6: UGC POI Contributions
+            CREATE TABLE IF NOT EXISTS poi_contributions (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                name TEXT NOT NULL,
+                vibe TEXT NOT NULL,
+                city TEXT NOT NULL,
+                district TEXT NOT NULL DEFAULT '',
+                lat REAL NOT NULL,
+                lng REAL NOT NULL,
+                headline TEXT NOT NULL,
+                body TEXT NOT NULL,
+                tip TEXT NOT NULL DEFAULT '',
+                tags_json TEXT NOT NULL DEFAULT '[]',
+                indoor INTEGER NOT NULL DEFAULT 1,
+                status TEXT NOT NULL DEFAULT 'pending',
+                created_at TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS idx_contrib_status
+                ON poi_contributions(status, vibe, city);
+
+            -- v1.0: Developer API Keys
+            CREATE TABLE IF NOT EXISTS dev_api_keys (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                full_key TEXT NOT NULL UNIQUE,
+                key_prefix TEXT NOT NULL,
+                name TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                last_used TEXT,
+                is_active INTEGER NOT NULL DEFAULT 1,
+                rate_limit INTEGER NOT NULL DEFAULT 100
+            );
+            CREATE INDEX IF NOT EXISTS idx_apikeys_session
+                ON dev_api_keys(session_id);
             """
         )
 
@@ -422,3 +458,106 @@ def increment_walk_count(route_id: str) -> None:
             "UPDATE community_routes SET walk_count = walk_count + 1 WHERE id = ?",
             (route_id,),
         )
+
+
+# ── v0.6: UGC POI Contributions ────────────────────────────────
+
+def save_contribution(contrib: dict[str, Any]) -> str:
+    now = _now()
+    with _conn() as conn:
+        conn.execute(
+            """
+            INSERT INTO poi_contributions
+                (id, session_id, name, vibe, city, district, lat, lng,
+                 headline, body, tip, tags_json, indoor, status, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+            """,
+            (
+                contrib["id"], contrib["session_id"], contrib["name"],
+                contrib["vibe"], contrib["city"], contrib.get("district", ""),
+                contrib["lat"], contrib["lng"],
+                contrib["headline"], contrib["body"], contrib.get("tip", ""),
+                json.dumps(contrib.get("tags", [])),
+                contrib.get("indoor", True), now,
+            ),
+        )
+    return contrib["id"]
+
+
+def list_contributions(limit: int = 50, offset: int = 0) -> list[dict[str, Any]]:
+    with _conn() as conn:
+        rows = conn.execute(
+            """
+            SELECT * FROM poi_contributions
+            ORDER BY created_at DESC LIMIT ? OFFSET ?
+            """,
+            (limit, offset),
+        ).fetchall()
+    results = []
+    for r in rows:
+        d = dict(r)
+        d["tags"] = json.loads(d.get("tags_json", "[]"))
+        del d["tags_json"]
+        results.append(d)
+    return results
+
+
+def list_approved_pois(vibe: str | None = None, city: str | None = None) -> list[dict[str, Any]]:
+    query = "SELECT * FROM poi_contributions WHERE status = 'approved'"
+    params: list[Any] = []
+    if vibe:
+        query += " AND vibe = ?"
+        params.append(vibe)
+    if city:
+        query += " AND city = ?"
+        params.append(city)
+    query += " ORDER BY created_at DESC LIMIT 50"
+    with _conn() as conn:
+        rows = conn.execute(query, params).fetchall()
+    results = []
+    for r in rows:
+        d = dict(r)
+        d["tags"] = json.loads(d.get("tags_json", "[]"))
+        del d["tags_json"]
+        results.append(d)
+    return results
+
+
+# ── v1.0: Developer API Keys ───────────────────────────────────
+
+def create_api_key(session_id: str, name: str) -> dict[str, str]:
+    key_id = str(uuid.uuid4())[:8]
+    full_key = f"ltk_{uuid.uuid4().hex}"
+    prefix = full_key[:12]
+    now = _now()
+    with _conn() as conn:
+        conn.execute(
+            """
+            INSERT INTO dev_api_keys (id, session_id, full_key, key_prefix, name, created_at, is_active)
+            VALUES (?, ?, ?, ?, ?, ?, 1)
+            """,
+            (key_id, session_id, full_key, prefix, name, now),
+        )
+    return {"id": key_id, "key": full_key, "prefix": prefix, "name": name}
+
+
+def list_api_keys(session_id: str) -> list[dict[str, Any]]:
+    with _conn() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, session_id, key_prefix, name, created_at, last_used, is_active, rate_limit
+            FROM dev_api_keys WHERE session_id = ?
+            ORDER BY created_at DESC
+            """,
+            (session_id,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def revoke_api_key(session_id: str, key_id: str) -> bool:
+    with _conn() as conn:
+        cur = conn.execute(
+            "UPDATE dev_api_keys SET is_active = 0 WHERE id = ? AND session_id = ?",
+            (key_id, session_id),
+        )
+    return cur.rowcount > 0
