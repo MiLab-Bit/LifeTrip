@@ -1,14 +1,23 @@
 export type {
   AppStage,
+  Badge,
   BriefInput,
+  CommunityRoute,
+  CollectedPOI,
+  DistrictCoverage,
+  ExploreStats,
   GeoGeometry,
+  LayeredNarrative,
   PendingAction,
   RerouteProposal,
   RouteEnvelope,
+  RouteRating,
   SourceLabel,
   Stop,
   VibeId,
+  WalkCardData,
   WalkPlanResponse,
+  WalkProfile,
   WalkTask,
 } from "@lifetrip/contracts";
 

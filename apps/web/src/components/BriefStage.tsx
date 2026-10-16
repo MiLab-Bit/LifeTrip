@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { fetchDistricts } from "../lib/api";
 import type { BriefInput, DistrictOption, VibeId } from "../types";
 
 const VIBES = [
@@ -25,20 +24,31 @@ export function BriefStage({
   error,
 }: BriefStageProps) {
   const [districts, setDistricts] = useState<DistrictOption[]>([]);
+  const [cities, setCities] = useState<string[]>(["上海", "北京", "杭州", "成都"]);
+  const [selectedCity, setSelectedCity] = useState("上海");
   const selectedVibe = VIBES.find((v) => v.id === value.vibe);
 
   useEffect(() => {
-    fetchDistricts()
-      .then(setDistricts)
+    fetch("/v1/cities")
+      .then((r) => r.json())
+      .then((d) => { if (d.cities) setCities(d.cities); })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const url = selectedCity
+      ? `/v1/districts?city=${encodeURIComponent(selectedCity)}`
+      : "/v1/districts";
+    fetch(url)
+      .then((r) => r.json())
+      .then((d) => setDistricts(d.districts ?? d ?? []))
       .catch(() =>
         setDistricts([
           { id: "anfu-wukang", name: "安福—武康", city: "上海" },
           { id: "yuyuan-js", name: "愚园—江苏路", city: "上海" },
-          { id: "jufu-fumin", name: "巨富—富民", city: "上海" },
-          { id: "west-bund", name: "西岸—滨江", city: "上海" },
         ]),
       );
-  }, []);
+  }, [selectedCity]);
 
   return (
     <section className="metro-panel" aria-labelledby="brief-title">
@@ -47,7 +57,7 @@ export function BriefStage({
         拼一条当下最好逛的 city walk
       </h1>
       <p className="metro-lead">
-        数据来自 OpenStreetMap + OSRM 步行，不用上图 API。谈街面 POI，不谈典籍。
+        选个主题和时长，LifeTrip 帮你拼一条当下最好逛的 city walk。
       </p>
 
       <div className="metro-field">
@@ -82,6 +92,23 @@ export function BriefStage({
           value={value.intentText ?? ""}
           onChange={(e) => onChange({ ...value, intentText: e.target.value || undefined })}
         />
+      </div>
+
+      <div className="metro-field">
+        <label id="city-label">城市</label>
+        <div className="metro-chip-row" role="group" aria-labelledby="city-label">
+          {cities.map((city) => (
+            <button
+              key={city}
+              type="button"
+              className="metro-chip"
+              aria-pressed={selectedCity === city}
+              onClick={() => setSelectedCity(city)}
+            >
+              {city}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="metro-field">
