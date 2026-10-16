@@ -9,13 +9,23 @@ export function ExplorePanel() {
   const [tab, setTab] = useState<"badges" | "map" | "collection">("badges");
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
     Promise.all([fetchExplore(), fetchProfile()])
       .then(([s, p]) => {
+        clearTimeout(timeout);
         setStats(s);
         setProfile(p);
       })
-      .catch(() => {})
+      .catch(() => {
+        clearTimeout(timeout);
+        setStats(null);
+      })
       .finally(() => setLoading(false));
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
 
   if (loading) {
