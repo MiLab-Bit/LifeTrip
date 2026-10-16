@@ -108,6 +108,7 @@ export type WalkProfile = {
   total_distance_m: number;
   total_stops_visited: number;
   badges: string[];
+  dna_prefs?: Record<string, number>;
   last_active_at?: string | null;
   created_at: string;
   updated_at: string;
