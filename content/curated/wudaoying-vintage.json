@@ -1,0 +1,63 @@
+{
+  "districtId": "wudaoying",
+  "vibe": "vintage",
+  "updatedAt": "2026-10-14",
+  "stops": [
+    {
+      "id": "curated/bj-v01",
+      "name": "Vintage Lab 五道营",
+      "lat": 39.9530,
+      "lng": 116.4120,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["古着", "选物"],
+      "headline": "五道营的选物起点",
+      "body": "精挑细选的古着和设计师品牌，适合慢慢逛。",
+      "tip": "店主会在旁边安静介绍来历。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-20"
+    },
+    {
+      "id": "curated/bj-v02",
+      "name": "古着市集 雍和宫段",
+      "lat": 39.9490,
+      "lng": 116.4100,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["二手", "复古"],
+      "headline": "雍和宫脚下的复古站",
+      "body": "有各种年代的二手衣物和配件，淘一淘总有收获。",
+      "tip": "现金有时候能讲价。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-16"
+    },
+    {
+      "id": "curated/bj-v03",
+      "name": "Hide Space 国子监",
+      "lat": 39.9510,
+      "lng": 116.4150,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["选物", "设计师"],
+      "headline": "国子监旁的设计师空间",
+      "body": "独立设计师品牌的集合店，风格偏日系简约。",
+      "tip": "试衣间很大，不用排队。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-14"
+    },
+    {
+      "id": "curated/bj-v04",
+      "name": "胡同杂货铺 安定门",
+      "lat": 39.9560,
+      "lng": 116.4130,
+      "weight": 1.4,
+      "indoor": true,
+      "tags": ["杂货", "手作"],
+      "headline": "收尾杂货站",
+      "body": "手作小物和复古杂货，适合收尾带一件纪念品。",
+      "tip": "陶器手作每月上新一次。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-10"
+    }
+  ]
+}

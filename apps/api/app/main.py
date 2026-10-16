@@ -5,12 +5,12 @@ import json
 import os
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.contracts import BriefInput, RouteEnvelope
-from app.districts import DISTRICTS, District
+from app.districts import DISTRICTS, CITIES, District
 from app.eval.harness import run_eval
 from app.intent import classify_intent
 from app.memory import store
@@ -121,11 +121,6 @@ async def health():
             "tiles": "CARTO Dark Matter (client)",
         },
     }
-
-
-@app.get("/v1/districts")
-async def list_districts():
-    return {"districts": [d.model_dump() for d in DISTRICTS]}
 
 
 @app.get("/v1/osm/status")
@@ -423,3 +418,147 @@ async def rate_community_route(route_id: str, rating: int):
 async def community_route_walked(route_id: str):
     store.increment_walk_count(route_id)
     return {"ok": True}
+
+
+# ════════════════════════════════════════════════════════════════
+# v0.6: Multi-City + UGC POI Contribution
+# ════════════════════════════════════════════════════════════════
+
+@app.get("/v1/cities")
+async def list_cities():
+    return {"cities": CITIES}
+
+
+@app.get("/v1/districts")
+async def list_districts(city: str | None = Query(default=None)):
+    """List districts, optionally filtered by city."""
+    districts = DISTRICTS
+    if city:
+        districts = [d for d in DISTRICTS if d.city == city]
+    return {"districts": [d.model_dump() for d in districts]}
+
+
+class ContributePOIBody(BaseModel):
+    name: str = Field(description="POI 名称")
+    vibe: str = Field(description="coffee | vintage | gallery | neon")
+    city: str = Field(description="所在城市")
+    district: str = ""
+    lat: float = Field(description="纬度")
+    lng: float = Field(description="经度")
+    headline: str = Field(description="一句话亮点")
+    body: str = Field(description="推荐理由")
+    tip: str = ""
+    tags: list[str] = []
+    indoor: bool = True
+
+
+@app.post("/v1/poi/contribute")
+async def contribute_poi(session_id: str = Query(...), body: ContributePOIBody = Body(...)):
+    """UGC — 用户投稿新 POI。"""
+    sid = store.ensure_session(session_id)
+    import uuid as _uuid
+    contrib_id = f"ugc/{_uuid.uuid4().hex[:12]}"
+    store.save_contribution({
+        "id": contrib_id,
+        "session_id": sid,
+        "name": body.name,
+        "vibe": body.vibe,
+        "city": body.city,
+        "district": body.district,
+        "lat": body.lat,
+        "lng": body.lng,
+        "headline": body.headline,
+        "body": body.body,
+        "tip": body.tip,
+        "tags": body.tags,
+        "indoor": body.indoor,
+    })
+    return {"id": contrib_id, "status": "pending", "message": "投稿已提交，审核通过后上线"}
+
+
+@app.get("/v1/poi/contributions")
+async def list_contributions(limit: int = 50):
+    """查看用户投稿的 POI 列表。"""
+    return {"contributions": store.list_contributions(limit=limit)}
+
+
+@app.get("/v1/poi/approved")
+async def list_approved_pois(vibe: str | None = None, city: str | None = None):
+    """查看已审核通过的社区 POI。"""
+    return {"pois": store.list_approved_pois(vibe=vibe, city=city)}
+
+
+# ════════════════════════════════════════════════════════════════
+# v1.0: Developer API Platform
+# ════════════════════════════════════════════════════════════════
+
+class CreateAPIKeyBody(BaseModel):
+    name: str = Field(description="API Key 名称")
+
+
+@app.post("/v1/dev/api-keys")
+async def create_api_key(session_id: str = Query(...), body: CreateAPIKeyBody = Body(...)):
+    """创建开发者 API Key。"""
+    sid = store.ensure_session(session_id)
+    result = store.create_api_key(sid, body.name)
+    return result
+
+
+@app.get("/v1/dev/api-keys")
+async def list_api_keys(session_id: str = Query(...)):
+    """列出当前会话的所有 API Key（不含完整密钥）。"""
+    sid = store.ensure_session(session_id)
+    return {"keys": store.list_api_keys(sid)}
+
+
+@app.delete("/v1/dev/api-keys/{key_id}")
+async def revoke_api_key(key_id: str, session_id: str = Query(...)):
+    """吊销 API Key。"""
+    sid = store.ensure_session(session_id)
+    ok = store.revoke_api_key(sid, key_id)
+    if not ok:
+        raise HTTPException(404, "key not found")
+    return {"ok": True}
+
+
+@app.get("/v1/dev/usage")
+async def dev_usage(session_id: str = Query(...)):
+    """开发者用量统计。"""
+    sid = store.ensure_session(session_id)
+    keys = store.list_api_keys(sid)
+    completed = store.list_recent_completed(sid, limit=100)
+    total_requests = sum(k.get("rate_limit", 100) for k in keys if k.get("is_active"))
+    return {
+        "session_id": sid,
+        "active_keys": sum(1 for k in keys if k.get("is_active")),
+        "total_keys": len(keys),
+        "quota_hourly": total_requests,
+        "walks_created": len(completed),
+        "endpoints_available": 30,
+    }
+
+
+@app.get("/v1/dev/docs")
+async def dev_docs():
+    """开发者 API 文档摘要。"""
+    return {
+        "base_url": "/v1",
+        "version": "1.0.0",
+        "auth": "Bearer token via Authorization header or ?api_key= query param",
+        "rate_limit": "100 requests/hour per key (free tier)",
+        "endpoints": [
+            {"method": "GET",  "path": "/v1/cities", "desc": "列出所有支持城市"},
+            {"method": "GET",  "path": "/v1/districts", "desc": "列出片区（可按 city 过滤）"},
+            {"method": "POST", "path": "/v1/walks/plan", "desc": "规划漫步线路"},
+            {"method": "POST", "path": "/v1/walks/{id}/start", "desc": "开始漫步"},
+            {"method": "POST", "path": "/v1/walks/{id}/advance", "desc": "前进到下一站"},
+            {"method": "POST", "path": "/v1/walks/{id}/skip", "desc": "跳过当前站"},
+            {"method": "POST", "path": "/v1/walks/{id}/reroll", "desc": "换掉当前站"},
+            {"method": "POST", "path": "/v1/walks/{id}/complete", "desc": "完成漫步"},
+            {"method": "GET",  "path": "/v1/profile/{session_id}", "desc": "获取 WalkDNA 画像"},
+            {"method": "GET",  "path": "/v1/explore/{session_id}", "desc": "探索图谱"},
+            {"method": "GET",  "path": "/v1/community/routes", "desc": "社区线路列表"},
+            {"method": "POST", "path": "/v1/poi/contribute", "desc": "投稿新 POI"},
+            {"method": "GET",  "path": "/v1/poi/approved", "desc": "已审核社区 POI"},
+        ],
+    }

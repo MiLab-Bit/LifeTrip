@@ -197,3 +197,36 @@ class CommunityRoute(BaseModel):
     tags: list[str] = Field(default_factory=list)
     published_at: str = ""
     author_label: str = "匿名探索者"
+
+
+# ── v0.6: UGC POI Contribution ──────────────────────────────────
+
+class POIContribution(BaseModel):
+    id: str
+    session_id: str
+    name: str
+    vibe: str  # coffee / vintage / gallery / neon
+    city: str
+    district: str = ""
+    lat: float
+    lng: float
+    headline: str
+    body: str
+    tip: str = ""
+    tags: list[str] = Field(default_factory=list)
+    indoor: bool = True
+    status: str = "pending"  # pending / approved / rejected
+    created_at: str = ""
+
+
+# ── v1.0: Developer API ────────────────────────────────────────
+
+class DevAPIKey(BaseModel):
+    id: str
+    session_id: str
+    key_prefix: str  # first 8 chars for display
+    name: str
+    created_at: str
+    last_used: str | None = None
+    is_active: bool = True
+    rate_limit: int = 100  # requests per hour

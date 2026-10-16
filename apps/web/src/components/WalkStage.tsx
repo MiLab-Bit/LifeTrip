@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { RouteMap } from "./RouteMap";
 import { SourceBadge } from "./SourceBadge";
 import type { RouteEnvelope } from "../types";
@@ -27,6 +28,35 @@ export function WalkStage({
   const total = route.stops.length;
   const progress = ((stopIndex + 1) / total) * 100;
   const isLast = stopIndex === total - 1;
+  const [ttsPlaying, setTtsPlaying] = useState(false);
+  const ttsUtterRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  useEffect(() => {
+    // Stop TTS when stop changes
+    if (ttsPlaying) {
+      window.speechSynthesis?.cancel();
+      setTtsPlaying(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stopIndex]);
+
+  const handleTTS = () => {
+    if (!window.speechSynthesis) return;
+    if (ttsPlaying) {
+      window.speechSynthesis.cancel();
+      setTtsPlaying(false);
+      return;
+    }
+    const text = `${stop.name}。${stop.headline}。${stop.body}。小贴士：${stop.tip}`;
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = "zh-CN";
+    utt.rate = 1.0;
+    utt.onend = () => setTtsPlaying(false);
+    utt.onerror = () => setTtsPlaying(false);
+    ttsUtterRef.current = utt;
+    window.speechSynthesis.speak(utt);
+    setTtsPlaying(true);
+  };
 
   if (!stop || stop.skipped) {
     return (
@@ -83,6 +113,9 @@ export function WalkStage({
       </p>
 
       <div className="metro-actions metro-actions--wrap">
+        <button type="button" className="metro-btn metro-btn--tts" onClick={handleTTS} disabled={!window.speechSynthesis}>
+          {ttsPlaying ? "🔇 停止语音" : "🎧 AI 导览"}
+        </button>
         <button type="button" className="metro-btn metro-btn--ghost" onClick={onPrev} disabled={stopIndex === 0 || loading}>
           上一站
         </button>

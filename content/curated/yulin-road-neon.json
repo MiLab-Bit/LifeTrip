@@ -1,0 +1,49 @@
+{
+  "districtId": "yulin-road",
+  "vibe": "neon",
+  "updatedAt": "2026-10-14",
+  "stops": [
+    {
+      "id": "curated/cd-n01",
+      "name": "玉林路小酒馆",
+      "lat": 30.6430,
+      "lng": 104.0730,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["酒馆", "民谣", "赵雷"],
+      "headline": "走到玉林路的尽头",
+      "body": "赵雷那首《成都》的原型，里面有人弹着吉他唱民谣。",
+      "tip": "周末晚 9 点后有驻唱。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "curated/cd-n02",
+      "name": "九眼桥酒吧街",
+      "lat": 30.6510,
+      "lng": 104.0810,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["酒吧", "夜生活"],
+      "headline": "成都夜生活地标",
+      "body": "九眼桥沿江一排酒吧，选一家氛围对的上楼。",
+      "tip": "二楼能看到江景。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-20"
+    },
+    {
+      "id": "curated/cd-n03",
+      "name": "镋钯街深夜食堂",
+      "lat": 30.6580,
+      "lng": 104.0860,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["夜宵", "居酒屋"],
+      "headline": "收尾的深夜食堂",
+      "body": "小杯清酒加一份关东煮，夜行收束站。",
+      "tip": "玉子烧是招牌。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-18"
+    }
+  ]
+}

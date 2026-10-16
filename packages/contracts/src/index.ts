@@ -93,7 +93,7 @@ export type WalkPlanResponse = {
 
 export type VibeId = "neon" | "coffee" | "vintage" | "gallery";
 
-export type AppStage = "brief" | "loading" | "route" | "walk" | "done" | "confirm" | "explore" | "community";
+export type AppStage = "brief" | "loading" | "route" | "walk" | "done" | "confirm" | "explore" | "community" | "contribute" | "developer";
 
 // ── Sprint 1: WalkDNA ──────────────────────────────────────────
 
