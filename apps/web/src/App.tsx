@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { BriefStage } from "./components/BriefStage";
 import { CommunityFeed } from "./components/CommunityFeed";
+import { ContributePanel } from "./components/ContributePanel";
 import { ConfirmStage } from "./components/ConfirmStage";
+import { DeveloperPanel } from "./components/DeveloperPanel";
 import { DoneStage } from "./components/DoneStage";
 import { ExplorePanel } from "./components/ExplorePanel";
 import { LoadingStage } from "./components/LoadingStage";
@@ -295,11 +297,25 @@ export default function App() {
             <button type="button" className="metro-btn" onClick={() => setStage("explore")}>
               🗺️ 探索图谱
             </button>
+            <button type="button" className="metro-btn" onClick={() => setStage("contribute")}>
+              📝 投稿 POI
+            </button>
+            <button type="button" className="metro-btn" onClick={() => setStage("developer")}>
+              🔑 开发者 API
+            </button>
             <button type="button" className="metro-btn metro-btn--primary" onClick={() => setStage("brief")}>
               再走一条
             </button>
           </div>
         </>
+      ) : null}
+
+      {stage === "contribute" ? (
+        <ContributePanel onBack={() => setStage("community")} />
+      ) : null}
+
+      {stage === "developer" ? (
+        <DeveloperPanel onBack={() => setStage("community")} />
       ) : null}
     </MetroShell>
   );

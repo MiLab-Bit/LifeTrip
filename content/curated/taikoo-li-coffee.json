@@ -1,0 +1,63 @@
+{
+  "districtId": "taikoo-li",
+  "vibe": "coffee",
+  "updatedAt": "2026-10-14",
+  "stops": [
+    {
+      "id": "curated/cd-c01",
+      "name": "Let's Grind 太古里",
+      "lat": 30.6530,
+      "lng": 104.0820,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["咖啡", "手冲"],
+      "headline": "太古里的开场站",
+      "body": "成都精品咖啡的代表，选品豆稳定输出。",
+      "tip": "试试瑰夏手冲。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-20"
+    },
+    {
+      "id": "curated/cd-c02",
+      "name": "The Sense 镋钯街",
+      "lat": 30.6580,
+      "lng": 104.0860,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["手冲", "简约"],
+      "headline": "镋钯街的安静角落",
+      "body": "网红街区里的低调实力派，适合坐下来聊。",
+      "tip": "工作日下午有空位。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-18"
+    },
+    {
+      "id": "curated/cd-c03",
+      "name": "玉林路咖啡窗口",
+      "lat": 30.6440,
+      "lng": 104.0740,
+      "weight": 1.6,
+      "indoor": false,
+      "tags": ["外带", "社区"],
+      "headline": "玉林路的小确幸",
+      "body": "社区咖啡窗口，当地人日常来一杯的地方。",
+      "tip": "跟老板聊几句会推荐隐藏单品。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-15"
+    },
+    {
+      "id": "curated/cd-c04",
+      "name": "宽窄巷子收尾站",
+      "lat": 30.6700,
+      "lng": 104.0580,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["特调", "巷子"],
+      "headline": "宽窄巷子里的收尾杯",
+      "body": "在巷子里找个安静座位，用一杯竹香拿铁收尾。",
+      "tip": "竹香拿铁是成都限定。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-12"
+    }
+  ]
+}
