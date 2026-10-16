@@ -155,7 +155,15 @@ def complete_walk(task_id: str) -> WalkTask:
         pending_action=None,
     )
     passed, _ = verify_completion(task)  # type: ignore[arg-type]
-    return store.update_task(task_id, verify_passed=passed)  # type: ignore[return-value]
+    task = store.update_task(task_id, verify_passed=passed)
+
+    # Sprint 1: derive WalkDNA profile after each completion
+    try:
+        store.derive_profile(task.session_id)
+    except Exception:  # noqa: BLE001
+        pass  # profile derivation is best-effort, don't fail the walk
+
+    return task
 
 
 def cancel_walk(task_id: str) -> WalkTask:

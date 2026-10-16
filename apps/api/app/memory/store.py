@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Any
 
-from app.contracts import BriefInput, PendingAction, RouteEnvelope, WalkTask
+from app.contracts import BriefInput, PendingAction, RouteEnvelope, WalkProfile, WalkTask
 from app.paths import DATA
 
 DB_PATH = DATA / "lifetrip.db"
@@ -45,6 +45,45 @@ def init_db() -> None:
             );
             CREATE INDEX IF NOT EXISTS idx_walk_tasks_session
                 ON walk_tasks(session_id, status);
+
+            -- Sprint 1: WalkDNA
+            CREATE TABLE IF NOT EXISTS walk_profiles (
+                session_id TEXT PRIMARY KEY,
+                profile_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+
+            -- Sprint 5: Route ratings
+            CREATE TABLE IF NOT EXISTS route_ratings (
+                id TEXT PRIMARY KEY,
+                task_id TEXT NOT NULL,
+                session_id TEXT NOT NULL,
+                overall INTEGER NOT NULL,
+                poi_ratings_json TEXT NOT NULL DEFAULT '{}',
+                comment TEXT NOT NULL DEFAULT '',
+                photos_json TEXT NOT NULL DEFAULT '[]',
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES sessions(id)
+            );
+            CREATE INDEX IF NOT EXISTS idx_ratings_session
+                ON route_ratings(session_id);
+
+            -- Sprint 5: Community routes
+            CREATE TABLE IF NOT EXISTS community_routes (
+                id TEXT PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                route_json TEXT NOT NULL,
+                tags_json TEXT NOT NULL DEFAULT '[]',
+                rating_sum REAL NOT NULL DEFAULT 0,
+                rating_count INTEGER NOT NULL DEFAULT 0,
+                walk_count INTEGER NOT NULL DEFAULT 0,
+                author_label TEXT NOT NULL DEFAULT '匿名探索者',
+                published_at TEXT NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES sessions(id)
+            );
+            CREATE INDEX IF NOT EXISTS idx_community_published
+                ON community_routes(published_at DESC);
             """
         )
 
@@ -186,3 +225,200 @@ def list_recent_completed(session_id: str, limit: int = 5) -> list[WalkTask]:
             (session_id, limit),
         ).fetchall()
     return [_row_to_task(r) for r in rows]
+
+
+# ── Sprint 1: WalkDNA ──────────────────────────────────────────
+
+def get_profile(session_id: str) -> WalkProfile | None:
+    """Load a user's WalkDNA profile."""
+    with _conn() as conn:
+        row = conn.execute(
+            "SELECT profile_json FROM walk_profiles WHERE session_id = ?",
+            (session_id,),
+        ).fetchone()
+    if not row:
+        return None
+    data = json.loads(row["profile_json"])
+    data["session_id"] = session_id
+    return WalkProfile.model_validate(data)
+
+
+def save_profile(profile: WalkProfile) -> WalkProfile:
+    """Insert or update a WalkDNA profile."""
+    now = _now()
+    profile.updated_at = now
+    if not profile.created_at:
+        profile.created_at = now
+    with _conn() as conn:
+        conn.execute(
+            """
+            INSERT INTO walk_profiles (session_id, profile_json, created_at, updated_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(session_id) DO UPDATE SET
+                profile_json = excluded.profile_json,
+                updated_at = excluded.updated_at
+            """,
+            (profile.session_id, profile.model_dump_json(), profile.created_at, now),
+        )
+    return profile
+
+
+def derive_profile(session_id: str) -> WalkProfile:
+    """Build/update WalkDNA from all completed walk tasks."""
+    from app.contracts import WalkProfile as WP  # local import avoids circular
+
+    existing = get_profile(session_id)
+    profile = existing or WP(session_id=session_id, created_at=_now())
+
+    completed = list_recent_completed(session_id, limit=100)
+
+    # Aggregate stats
+    vibe_counts: dict[str, int] = {}
+    district_counts: dict[str, int] = {}
+    time_slots: list[str] = []
+    total_min = 0
+    total_dist = 0
+    total_stops = 0
+
+    for task in completed:
+        v = task.brief.vibe
+        vibe_counts[v] = vibe_counts.get(v, 0) + 1
+        d = task.brief.district_id
+        district_counts[d] = district_counts.get(d, 0) + 1
+        total_min += task.route.totalMin
+        total_dist += task.route.distanceM or 0
+        total_stops += len(task.route.stops)
+        if task.completed_at:
+            time_slots.append(task.completed_at[:13])  # hour precision
+
+    profile.completed_walks = len(completed)
+    profile.total_walk_minutes = total_min
+    profile.total_distance_m = total_dist
+    profile.total_stops_visited = total_stops
+
+    # Vibe weights (normalized)
+    if vibe_counts:
+        mx = max(vibe_counts.values())
+        profile.vibe_weights = {k: round(v / mx, 2) for k, v in vibe_counts.items()}
+
+    # Frequent districts (sorted by count)
+    profile.frequent_districts = [
+        d for d, _ in sorted(district_counts.items(), key=lambda x: -x[1])
+    ][:5]
+
+    # Pace preference (most common)
+    paces = {}
+    for task in completed:
+        p = task.brief.pace
+        paces[p] = paces.get(p, 0) + 1
+    if paces:
+        profile.pace_preference = max(paces, key=paces.get)  # type: ignore[arg-type]
+
+    # Preferred time slots
+    if time_slots:
+        from collections import Counter
+        hour_counts = Counter()
+        for ts in time_slots:
+            try:
+                hour_counts[int(ts[11:13])] += 1
+            except (ValueError, IndexError):
+                pass
+        top_hours = [h for h, _ in hour_counts.most_common(3)]
+        profile.preferred_time_slots = [f"{h:02d}:00" for h in top_hours]
+
+    # Last active
+    if completed:
+        profile.last_active_at = completed[0].completed_at or completed[0].updated_at
+
+    # Badges (computed via explore module)
+    from app.explore.badges import compute_badges
+    profile.badges = [b.id for b in compute_badges(profile, completed)]
+
+    return save_profile(profile)
+
+
+# ── Sprint 5: Route Ratings ───────────────────────────────────
+
+def save_rating(rating_id: str, task_id: str, session_id: str, overall: int,
+                poi_ratings: dict, comment: str, photos: list[str]) -> None:
+    now = _now()
+    with _conn() as conn:
+        conn.execute(
+            """
+            INSERT INTO route_ratings
+                (id, task_id, session_id, overall, poi_ratings_json, comment,
+                 photos_json, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                rating_id, task_id, session_id, overall,
+                json.dumps(poi_ratings), comment,
+                json.dumps(photos), now,
+            ),
+        )
+
+
+def get_ratings_for_task(task_id: str) -> list[dict[str, Any]]:
+    with _conn() as conn:
+        rows = conn.execute(
+            "SELECT * FROM route_ratings WHERE task_id = ? ORDER BY created_at DESC",
+            (task_id,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+# ── Sprint 5: Community Routes ────────────────────────────────
+
+def publish_community_route(route_id: str, session_id: str, route_json: str,
+                             tags: list[str], author_label: str) -> None:
+    now = _now()
+    with _conn() as conn:
+        conn.execute(
+            """
+            INSERT INTO community_routes
+                (id, session_id, route_json, tags_json, published_at)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (route_id, session_id, route_json, json.dumps(tags), now),
+        )
+
+
+def list_community_routes(limit: int = 20, offset: int = 0) -> list[dict[str, Any]]:
+    with _conn() as conn:
+        rows = conn.execute(
+            """
+            SELECT * FROM community_routes
+            ORDER BY published_at DESC LIMIT ? OFFSET ?
+            """,
+            (limit, offset),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def rate_community_route(route_id: str, rating: int) -> dict[str, Any] | None:
+    with _conn() as conn:
+        row = conn.execute(
+            "SELECT rating_sum, rating_count FROM community_routes WHERE id = ?",
+            (route_id,),
+        ).fetchone()
+        if not row:
+            return None
+        new_sum = row["rating_sum"] + rating
+        new_count = row["rating_count"] + 1
+        conn.execute(
+            """
+            UPDATE community_routes
+            SET rating_sum = ?, rating_count = ?
+            WHERE id = ?
+            """,
+            (new_sum, new_count, route_id),
+        )
+    return {"rating_sum": new_sum, "rating_count": new_count}
+
+
+def increment_walk_count(route_id: str) -> None:
+    with _conn() as conn:
+        conn.execute(
+            "UPDATE community_routes SET walk_count = walk_count + 1 WHERE id = ?",
+            (route_id,),
+        )
