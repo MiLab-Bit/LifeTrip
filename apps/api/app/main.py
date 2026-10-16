@@ -284,3 +284,142 @@ async def walks_apply_reroute(task_id: str, body: ApplyRerouteBody):
 async def eval_run(tier: str | None = None, limit: int | None = None):
     result = run_eval(tier=tier, limit=limit)
     return result.model_dump()
+
+
+# ── Sprint 1: WalkDNA ──────────────────────────────────────────
+
+@app.get("/v1/profile/{session_id}")
+async def get_profile(session_id: str):
+    profile = store.get_profile(session_id)
+    if not profile:
+        # Auto-derive on first access
+        profile = store.derive_profile(session_id)
+    return profile.model_dump()
+
+
+@app.post("/v1/profile/{session_id}/refresh")
+async def refresh_profile(session_id: str):
+    profile = store.derive_profile(session_id)
+    return profile.model_dump()
+
+
+# ── Sprint 2: Explore ──────────────────────────────────────────
+
+@app.get("/v1/explore/{session_id}")
+async def get_explore(session_id: str):
+    from app.explore.badges import compute_badges
+    from app.explore.collection import compute_collection, compute_stats
+    from app.explore.coverage import compute_coverage
+    from app.contracts import ExploreStats
+
+    completed = store.list_recent_completed(session_id, limit=100)
+    profile = store.get_profile(session_id)
+
+    stats = compute_stats(completed)
+    badges = compute_badges(profile, completed) if profile else []
+    coverage = compute_coverage(completed)
+    collection = compute_collection(completed)
+
+    return ExploreStats(
+        session_id=session_id,
+        total_walks=stats["total_walks"],
+        total_km=stats["total_km"],
+        total_stops=stats["total_stops"],
+        total_minutes=stats["total_minutes"],
+        districts=coverage,
+        collected_pois=collection,
+        badges=badges,
+    ).model_dump()
+
+
+# ── Sprint 3: Narrative v2 ─────────────────────────────────────
+
+@app.get("/v1/walks/{task_id}/stops/{stop_idx}/narrative")
+async def get_stop_narrative(task_id: str, stop_idx: int):
+    from app.narrative.layers import generate_layered
+
+    task = store.get_task(task_id)
+    if not task:
+        raise HTTPException(404, "task not found")
+    if stop_idx < 0 or stop_idx >= len(task.route.stops):
+        raise HTTPException(400, "stop index out of range")
+
+    stop = task.route.stops[stop_idx]
+    narrative = await generate_layered(stop, vibe=task.brief.vibe)
+    return narrative.model_dump()
+
+
+# ── Sprint 4: Walk Card (data endpoint — image generated client-side) ──
+
+@app.get("/v1/walks/{task_id}/card-data")
+async def get_card_data(task_id: str):
+    task = store.get_task(task_id)
+    if not task:
+        raise HTTPException(404, "task not found")
+    profile = store.get_profile(task.session_id)
+    return {
+        "task": task.model_dump(),
+        "profile": profile.model_dump() if profile else None,
+        "card_id": str(__import__("uuid").uuid4())[:8],
+    }
+
+
+# ── Sprint 5: Ratings ─────────────────────────────────────────
+
+class RatingBody(BaseModel):
+    overall: int  # 1-5
+    poi_ratings: dict[str, int] = {}
+    comment: str = ""
+    photos: list[str] = []
+
+
+@app.post("/v1/walks/{task_id}/rate")
+async def rate_walk(task_id: str, session_id: str, body: RatingBody):
+    from app.community.service import submit_rating
+    rating = submit_rating(
+        task_id, session_id, body.overall,
+        body.poi_ratings, body.comment, body.photos,
+    )
+    return rating.model_dump()
+
+
+# ── Sprint 5: Community Routes ─────────────────────────────────
+
+class PublishBody(BaseModel):
+    tags: list[str] = []
+    author_label: str = "匿名探索者"
+
+
+@app.get("/v1/community/routes")
+async def list_community_routes(limit: int = 20, offset: int = 0):
+    from app.community.service import list_routes
+    routes = list_routes(limit=limit, offset=offset)
+    return {"routes": [r.model_dump() for r in routes], "count": len(routes)}
+
+
+@app.post("/v1/community/publish/{task_id}")
+async def publish_route(task_id: str, session_id: str, body: PublishBody):
+    from app.community.service import publish_route as do_publish
+    task = store.get_task(task_id)
+    if not task:
+        raise HTTPException(404, "task not found")
+    if task.status != "completed":
+        raise HTTPException(400, "can only publish completed routes")
+    route = do_publish(session_id, task.route, body.tags, body.author_label)
+    return route.model_dump()
+
+
+@app.post("/v1/community/routes/{route_id}/rate")
+async def rate_community_route(route_id: str, rating: int):
+    from app.community.service import rate_route
+    result = rate_route(route_id, rating)
+    if not result:
+        raise HTTPException(404, "route not found")
+    avg = result["rating_sum"] / result["rating_count"] if result["rating_count"] else 0
+    return {"route_id": route_id, "avg_rating": round(avg, 1), "count": result["rating_count"]}
+
+
+@app.post("/v1/community/routes/{route_id}/walk")
+async def community_route_walked(route_id: str):
+    store.increment_walk_count(route_id)
+    return {"ok": True}
