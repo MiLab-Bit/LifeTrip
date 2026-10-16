@@ -3,7 +3,6 @@ import { BriefStage } from "./components/BriefStage";
 import { CommunityFeed } from "./components/CommunityFeed";
 import { ContributePanel } from "./components/ContributePanel";
 import { ConfirmStage } from "./components/ConfirmStage";
-import { DemoPlayer } from "./components/DemoPlayer";
 import { DeveloperPanel } from "./components/DeveloperPanel";
 import { DoneStage } from "./components/DoneStage";
 import { ExplorePanel } from "./components/ExplorePanel";
@@ -37,7 +36,6 @@ const DEFAULT_BRIEF: BriefInput = {
 
 export default function App() {
   const [stage, setStage] = useState<AppStage>("brief");
-  const [demoActive, setDemoActive] = useState(false);
   const [brief, setBrief] = useState<BriefInput>(DEFAULT_BRIEF);
   const [task, setTask] = useState<WalkTask | null>(null);
   const [resumable, setResumable] = useState<WalkTask | null>(null);
@@ -201,8 +199,6 @@ export default function App() {
   };
 
   return (
-    <>
-    {demoActive && <DemoPlayer onClose={() => setDemoActive(false)} />}
     <MetroShell lineCode={lineMeta.code} lineLabel={lineMeta.label}>
       {stage === "brief" && resumable ? (
         <ResumeBanner task={resumable} onResume={handleResume} onDismiss={() => setResumable(null)} />
@@ -321,18 +317,6 @@ export default function App() {
       {stage === "developer" ? (
         <DeveloperPanel onBack={() => setStage("community")} />
       ) : null}
-
-      {/* Demo button — always visible on brief stage */}
-      {stage === "brief" && !demoActive ? (
-        <button
-          type="button"
-          className="demo-launch-btn"
-          onClick={() => setDemoActive(true)}
-        >
-          ▶ 播放外滩 Demo
-        </button>
-      ) : null}
     </MetroShell>
-    </>
   );
 }
