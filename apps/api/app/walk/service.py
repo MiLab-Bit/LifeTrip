@@ -29,6 +29,7 @@ async def plan_walk_task(session_id: str, brief: BriefInput) -> WalkTask:
         district=district,
         duration_min=brief.duration_min,
         pace=brief.pace,
+        session_id=session_id,
     )
     ok, _ = verify_route(route)
     route.source = "live" if ok else route.source
@@ -77,6 +78,7 @@ async def request_skip(task_id: str, *, confirm: bool = False) -> WalkTask:
         pace=task.brief.pace,
         exclude_ids=exclude,
         seed=hash(task_id) % 10000,
+        session_id=task.session_id,
     )
     # preserve skipped markers on names if possible
     return store.update_task(

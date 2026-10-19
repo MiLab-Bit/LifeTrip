@@ -44,6 +44,7 @@ class WalkTaskWorkflow:
             "plan_walktask",
             {
                 "task_id": self.task_id,
+                "session_id": _get(inp, "session_id", ""),
                 "area": _get(inp, "area", "anfu-wukang"),
                 "vibe": _get(inp, "vibe", "coffee"),
                 "district_id": _get(inp, "district_id", "anfu-wukang"),

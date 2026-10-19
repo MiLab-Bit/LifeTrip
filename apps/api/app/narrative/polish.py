@@ -4,11 +4,21 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 
 import httpx
 
 from app.contracts import Stop
-from app.paths import CACHE_NARRATIVES_DIR, NARRATIVES
+from app.paths import CACHE_NARRATIVES_DIR, DATA, NARRATIVES
+
+_SHARED = os.getenv("OPENCLAW_SHARED_DIR", "/opt/shared")
+if _SHARED not in sys.path:
+    sys.path.insert(0, _SHARED)
+try:
+    from llm_quota import allow as _quota_allow
+except ModuleNotFoundError:  # 开发克隆无 /opt/shared 时不阻断
+    def _quota_allow(*_a, **_k) -> bool:
+        return True
 
 VIBE_TONE = {
     "coffee": "独立杂志感，短句，强调当下逛法",
@@ -79,7 +89,13 @@ def _llm_enabled() -> bool:
     return os.getenv("LIFETRIP_LLM_POLISH", "0") == "1" and bool(os.getenv("LIFETRIP_LLM_API_KEY"))
 
 
-async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int) -> dict[str, str] | None:
+def _quota_db() -> str:
+    return os.getenv("LIFETRIP_QUOTA_DB") or str(DATA / "lifetrip.db")
+
+
+async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int, session_id: str = "") -> dict[str, str] | None:
+    if not _quota_allow(_quota_db(), session_id or "anon"):
+        return None
     api_key = os.getenv("LIFETRIP_LLM_API_KEY", "")
     base = os.getenv("LIFETRIP_LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model = os.getenv("LIFETRIP_LLM_MODEL", "gpt-4o-mini")
@@ -153,6 +169,7 @@ async def polish_stop(
     district: str,
     index: int,
     total: int,
+    session_id: str = "",
 ) -> Stop:
     editor = _load_editor_narrative(stop.id)
     if editor:
@@ -164,7 +181,7 @@ async def polish_stop(
 
     narr: dict[str, str] | None = None
     if _llm_enabled() and stop.sourceLabel != "green":
-        narr = await _call_llm(stop=stop, vibe=vibe, district=district, index=index, total=total)
+        narr = await _call_llm(stop=stop, vibe=vibe, district=district, index=index, total=total, session_id=session_id)
         if narr:
             _save_llm_cache(stop.id, vibe, narr)
 
@@ -174,9 +191,9 @@ async def polish_stop(
     return stop.model_copy(update={"headline": narr["headline"], "body": narr["body"], "tip": narr["tip"]})
 
 
-async def polish_stops(stops: list[Stop], *, vibe: str, district: str) -> list[Stop]:
+async def polish_stops(stops: list[Stop], *, vibe: str, district: str, session_id: str = "") -> list[Stop]:
     """并发润色所有站点 — async 允许未来用 asyncio.gather 并行 LLM 调用。"""
     import asyncio
     total = len(stops)
-    tasks = [polish_stop(s, vibe=vibe, district=district, index=i, total=total) for i, s in enumerate(stops)]
+    tasks = [polish_stop(s, vibe=vibe, district=district, index=i, total=total, session_id=session_id) for i, s in enumerate(stops)]
     return await asyncio.gather(*tasks)

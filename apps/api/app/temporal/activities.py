@@ -25,6 +25,7 @@ async def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
     district_id = inp.get("district_id", "anfu-wukang")
     duration_min = inp.get("duration_min", 90)
     pace = inp.get("pace", "normal")
+    session_id = inp.get("session_id", "")
     
     # Get district
     from app.districts import DISTRICTS
@@ -38,6 +39,7 @@ async def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
         district=district,
         duration_min=duration_min,
         pace=pace,
+        session_id=session_id,
     )
     
     # Polish stops with LLM

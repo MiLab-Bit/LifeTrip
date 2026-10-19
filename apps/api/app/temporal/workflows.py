@@ -26,6 +26,7 @@ class PlanRouteInput:
 class PolishStopsInput:
     route: dict
     vibe: str
+    session_id: str = ""
 
 
 @activity.defn
@@ -58,6 +59,7 @@ async def polish_stops_activity(input: PolishStopsInput) -> list[dict]:
         stops=stops,
         vibe=input.vibe,
         district=district_id,
+        session_id=input.session_id,
     )
     
     return [s.model_dump() for s in polished]
@@ -106,7 +108,7 @@ class WalkPlanWorkflow:
         )
         
         # Step 2: Polish stops with LLM
-        polish_input = PolishStopsInput(route=route, vibe=brief['vibe'])
+        polish_input = PolishStopsInput(route=route, vibe=brief['vibe'], session_id=session_id)
         
         polished_stops = await workflow.execute_activity(
             polish_stops_activity,
