@@ -32,6 +32,10 @@ sys.path.insert(0, os.path.join(REPO, "apps", "api"))
 # 冒烟必须是确定性的：强制离线，绝不碰外网。
 os.environ["LIFETRIP_OFFLINE"] = "1"
 os.environ.setdefault("LIFETRIP_LLM_POLISH", "0")
+# 本脚本是进程内 TestClient, 不经 systemd unit 的 EnvironmentFile——
+# 不供 secret 的话 ensure_session(None)->new_session_id() 会 fail-closed 500。
+# 给一个确定性测试 secret(生产 secret 由 unit/.env.llm 提供, 两者互不可换)。
+os.environ.setdefault("LIFETRIP_SESSION_SECRET", "smoke-inprocess-test-secret")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
