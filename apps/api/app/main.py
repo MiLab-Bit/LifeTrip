@@ -9,12 +9,14 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from fastapi.responses import JSONResponse
 
 from app.contracts import BriefInput, RouteEnvelope
 from app.districts import DISTRICTS, CITIES, District
 from app.eval.harness import run_eval
 from app.intent import classify_intent
 from app.memory import store
+from app.session_auth import SessionInvalid, verify_session_id
 from app.paths import FIXTURES
 from app.plan.planner import plan_route
 from app.proactive.weather import check_weather_reroute
@@ -35,6 +37,14 @@ app.add_middleware(
 )
 
 app.include_router(isochrone_router, prefix="/v1")
+
+
+@app.exception_handler(SessionInvalid)
+async def _session_invalid_handler(_request, exc: SessionInvalid):
+    return JSONResponse(
+        status_code=403,
+        content={"error": "SESSION_INVALID", "message": str(exc) or "session 无效或已被篡改"},
+    )
 
 
 @app.on_event("startup")
@@ -286,6 +296,7 @@ async def eval_run(tier: str | None = None, limit: int | None = None):
 
 @app.get("/v1/profile/{session_id}")
 async def get_profile(session_id: str):
+    verify_session_id(session_id)
     profile = store.get_profile(session_id)
     if not profile:
         # Auto-derive on first access
@@ -295,6 +306,7 @@ async def get_profile(session_id: str):
 
 @app.post("/v1/profile/{session_id}/refresh")
 async def refresh_profile(session_id: str):
+    verify_session_id(session_id)
     profile = store.derive_profile(session_id)
     return profile.model_dump()
 
@@ -303,6 +315,7 @@ async def refresh_profile(session_id: str):
 
 @app.get("/v1/explore/{session_id}")
 async def get_explore(session_id: str):
+    verify_session_id(session_id)
     from app.explore.badges import compute_badges
     from app.explore.collection import compute_collection, compute_stats
     from app.explore.coverage import compute_coverage
@@ -371,6 +384,7 @@ class RatingBody(BaseModel):
 
 @app.post("/v1/walks/{task_id}/rate")
 async def rate_walk(task_id: str, session_id: str, body: RatingBody):
+    verify_session_id(session_id)
     from app.community.service import submit_rating
     rating = submit_rating(
         task_id, session_id, body.overall,
@@ -395,6 +409,7 @@ async def list_community_routes(limit: int = 20, offset: int = 0):
 
 @app.post("/v1/community/publish/{task_id}")
 async def publish_route(task_id: str, session_id: str, body: PublishBody):
+    verify_session_id(session_id)
     from app.community.service import publish_route as do_publish
     task = store.get_task(task_id)
     if not task:
