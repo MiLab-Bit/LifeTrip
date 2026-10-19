@@ -64,7 +64,6 @@ def _save_llm_cache(poi_id: str, vibe: str, narr: dict[str, str]) -> None:
 def _local_polish(stop: Stop, vibe: str, index: int, total: int) -> dict[str, str]:
     """Rule-based polish when LLM unavailable — still POI-bound."""
     role = ["起点", "中段", "高潮", "收束"][min(index, 3)]
-    tone = VIBE_TONE.get(vibe, "city walk")
     headline = stop.headline
     if index == 0 and vibe == "coffee":
         headline = "第一杯：启动这条线"
@@ -72,7 +71,7 @@ def _local_polish(stop: Stop, vibe: str, index: int, total: int) -> dict[str, st
         headline = f"终站 · {stop.headline[:12]}"
     body = stop.body
     if len(body) < 40:
-        body = f"「{stop.name}」— {role}。{body}（{tone}）"
+        body = f"「{stop.name}」— {role}。{body}"
     return {"headline": headline, "body": body, "tip": stop.tip, "source": "local"}
 
 
@@ -117,7 +116,7 @@ async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: 
     )
 
     try:
-        async with httpx.AsyncClient(timeout=float(os.getenv("LIFETRIP_LLM_TIMEOUT", "25"))) as client:
+        async with httpx.AsyncClient(timeout=float(os.getenv("LIFETRIP_LLM_TIMEOUT", "120")), proxy=None) as client:
             r = await client.post(
                 url,
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},

@@ -47,7 +47,7 @@ export function BriefStage({
         拼一条当下最好逛的 city walk
       </h1>
       <p className="metro-lead">
-        数据来自 OpenStreetMap + OSRM 步行，不用上图 API。谈街面 POI，不谈典籍。
+        选个主题和时长，LifeTrip 帮你拼一条当下最好逛的 city walk。
       </p>
 
       <div className="metro-field">

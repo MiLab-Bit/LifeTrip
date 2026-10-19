@@ -1,0 +1,77 @@
+{
+  "districtId": "gulou-nanluo",
+  "vibe": "coffee",
+  "updatedAt": "2026-10-14",
+  "stops": [
+    {
+      "id": "curated/bj-c01",
+      "name": "Soloist Coffee 鼓楼店",
+      "lat": 39.9385,
+      "lng": 116.4030,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["咖啡", "手冲", "坐席"],
+      "headline": "鼓楼脚下第一杯",
+      "body": "胡同口独立烘焙，适合外带一杯开始漫游。",
+      "tip": "上午光线穿过胡同最好看。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-20"
+    },
+    {
+      "id": "curated/bj-c02",
+      "name": "Voyage Coffee 东四",
+      "lat": 39.9350,
+      "lng": 116.4160,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["手冲", "北欧风"],
+      "headline": "东四九条里的安静角落",
+      "body": "极简空间，选品豆丰富，适合坐下来慢聊。",
+      "tip": "问当日限定单品。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-18"
+    },
+    {
+      "id": "curated/bj-c03",
+      "name": "Berry Beans 北新桥",
+      "lat": 39.9410,
+      "lng": 116.4120,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["咖啡", "甜品", "二楼"],
+      "headline": "二楼的胡同视角",
+      "body": "有二楼座位可以俯瞰胡同，适合拍一组街景。",
+      "tip": "工作日下午二楼基本不用排队。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-15"
+    },
+    {
+      "id": "curated/bj-c04",
+      "name": "Metal Hands 南锣",
+      "lat": 39.9370,
+      "lng": 116.4070,
+      "weight": 1.5,
+      "indoor": false,
+      "tags": ["外带", "地标"],
+      "headline": "南锣鼓巷的地标站",
+      "body": "户外排队也常见，到了门口看一眼今日人流再决定。",
+      "tip": "周末人多的建议错峰。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-12"
+    },
+    {
+      "id": "curated/bj-c05",
+      "name": "交道口胡同咖啡",
+      "lat": 39.9420,
+      "lng": 116.4140,
+      "weight": 1.7,
+      "indoor": true,
+      "tags": ["特调", "安静"],
+      "headline": "收尾特调站",
+      "body": "一杯特调收束整条胡同咖啡线。",
+      "tip": "桂花拿铁秋冬限定。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-22"
+    }
+  ]
+}

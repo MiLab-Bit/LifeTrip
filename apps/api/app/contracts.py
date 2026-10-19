@@ -112,3 +112,121 @@ class EvalRunResult(BaseModel):
     passed: int
     failed: int
     results: list[EvalCaseResult]
+
+
+# ── Sprint 1: WalkDNA ──────────────────────────────────────────
+
+class WalkProfile(BaseModel):
+    """User's accumulated walk preferences and stats (WalkDNA)."""
+    session_id: str
+    vibe_weights: dict[str, float] = Field(default_factory=dict)
+    pace_preference: str = "normal"
+    frequent_districts: list[str] = Field(default_factory=list)
+    preferred_time_slots: list[str] = Field(default_factory=list)
+    completed_walks: int = 0
+    total_walk_minutes: int = 0
+    total_distance_m: int = 0
+    total_stops_visited: int = 0
+    badges: list[str] = Field(default_factory=list)
+    last_active_at: str | None = None
+    created_at: str = ""
+    updated_at: str = ""
+
+
+# ── Sprint 2: Explore ──────────────────────────────────────────
+
+class Badge(BaseModel):
+    id: str
+    name: str
+    description: str
+    icon: str = "🏅"
+    earned: bool = False
+    earned_at: str | None = None
+
+
+class DistrictCoverage(BaseModel):
+    district_id: str
+    district_name: str
+    walks_completed: int = 0
+    lit: bool = False  # walked at least once
+
+
+class ExploreStats(BaseModel):
+    """Aggregated exploration data for the explore map / badge wall."""
+    session_id: str
+    total_walks: int = 0
+    total_km: float = 0.0
+    total_stops: int = 0
+    total_minutes: int = 0
+    districts: list[DistrictCoverage] = Field(default_factory=list)
+    collected_pois: list[dict[str, Any]] = Field(default_factory=list)
+    badges: list[Badge] = Field(default_factory=list)
+
+
+# ── Sprint 3: Narrative v2 ─────────────────────────────────────
+
+class LayeredNarrative(BaseModel):
+    """Multi-depth narrative for a single POI arrival."""
+    poi_id: str
+    quick: str  # 1-sentence, ~15s glance
+    standard: str  # 3-4 sentences, ~60s, default
+    deep: str  # cultural/historical/architectural deep dive
+    source_label: SourceLabel = "blue"
+    source_note: str = ""
+
+
+# ── Sprint 5: Community ────────────────────────────────────────
+
+class RouteRating(BaseModel):
+    task_id: str
+    session_id: str
+    overall: int  # 1-5
+    poi_ratings: dict[str, int] = Field(default_factory=dict)  # poi_id -> 1-5
+    comment: str = ""
+    photos: list[str] = Field(default_factory=list)
+    created_at: str = ""
+
+
+class CommunityRoute(BaseModel):
+    id: str
+    session_id: str  # publisher
+    route: RouteEnvelope
+    rating: float = 0.0
+    rating_count: int = 0
+    walk_count: int = 0  # how many people walked it
+    tags: list[str] = Field(default_factory=list)
+    published_at: str = ""
+    author_label: str = "匿名探索者"
+
+
+# ── v0.6: UGC POI Contribution ──────────────────────────────────
+
+class POIContribution(BaseModel):
+    id: str
+    session_id: str
+    name: str
+    vibe: str  # coffee / vintage / gallery / neon
+    city: str
+    district: str = ""
+    lat: float
+    lng: float
+    headline: str
+    body: str
+    tip: str = ""
+    tags: list[str] = Field(default_factory=list)
+    indoor: bool = True
+    status: str = "pending"  # pending / approved / rejected
+    created_at: str = ""
+
+
+# ── v1.0: Developer API ────────────────────────────────────────
+
+class DevAPIKey(BaseModel):
+    id: str
+    session_id: str
+    key_prefix: str  # first 8 chars for display
+    name: str
+    created_at: str
+    last_used: str | None = None
+    is_active: bool = True
+    rate_limit: int = 100  # requests per hour
