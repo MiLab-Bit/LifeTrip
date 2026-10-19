@@ -136,7 +136,13 @@ def _conn():
 
 
 def ensure_session(session_id: str | None) -> str:
-    sid = session_id or str(uuid.uuid4())
+    from app.session_auth import SessionInvalid, new_session_id, verify_session_id
+
+    if session_id:
+        verify_session_id(session_id)  # 伪造/篡改 → SessionInvalid(403)
+        sid = session_id
+    else:
+        sid = new_session_id()
     with _conn() as conn:
         row = conn.execute("SELECT id FROM sessions WHERE id = ?", (sid,)).fetchone()
         if row:
