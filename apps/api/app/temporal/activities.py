@@ -12,25 +12,47 @@ def _hb(*d: str) -> None:
 
 
 @activity.defn(name="plan_walktask")
-def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
-    """规划一条 WalkTask 路线（选 POI + 排序 + 步行路由）。"""
+async def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
+    """规划一条 WalkTask 路线（选 POI + 排序 + 步行路由 + LLM 文案）。"""
     _hb("plan:start")
-    area = inp.get("area", "unknown")
-    vibe = inp.get("vibe", "casual")
-    dur = inp.get("duration_min", 90)
-    _hb(f"plan:done area={area}")
+    
+    from app.plan.planner import plan_route
+    from app.districts import District
+    from app.narrative.polish import polish_stops
+    from app.contracts import Stop
+    
+    vibe = inp.get("vibe", "coffee")
+    district_id = inp.get("district_id", "anfu-wukang")
+    duration_min = inp.get("duration_min", 90)
+    pace = inp.get("pace", "normal")
+    
+    # Get district
+    from app.districts import DISTRICTS
+    district = next((d for d in DISTRICTS if d.id == district_id), None)
+    if not district:
+        raise ValueError(f"unknown district: {district_id}")
+    
+    # Plan route
+    route = await plan_route(
+        vibe=vibe,
+        district=district,
+        duration_min=duration_min,
+        pace=pace,
+    )
+    
+    # Polish stops with LLM
+    stops = route.stops
+    polished = await polish_stops(
+        stops=stops,
+        vibe=vibe,
+        district=district_id,
+    )
+    
+    _hb(f"plan:done stops={len(polished)}")
+    
     return {
-        "task_id": inp.get("task_id", "wt-001"),
-        "area": area,
-        "vibe": vibe,
-        "duration_min": dur,
-        "stops": [
-            {"order": 1, "name": f"{area} 起点咖啡", "lat": 31.220, "lng": 121.460, "minutes": 15},
-            {"order": 2, "name": f"{area} 地标建筑", "lat": 31.222, "lng": 121.462, "minutes": 25},
-            {"order": 3, "name": f"{area} 隐藏小巷", "lat": 31.224, "lng": 121.464, "minutes": 20},
-            {"order": 4, "name": f"{area} 终点甜品店", "lat": 31.226, "lng": 121.466, "minutes": 30},
-        ],
-        "total_walk_m": 1200,
+        "task_id": inp.get("task_id"),
+        "route": route.model_dump(),
         "status": "planned",
     }
 

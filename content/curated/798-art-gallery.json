@@ -1,0 +1,63 @@
+{
+  "districtId": "798-art",
+  "vibe": "gallery",
+  "updatedAt": "2026-10-14",
+  "stops": [
+    {
+      "id": "curated/bj-g01",
+      "name": "UCCA 尤伦斯当代艺术中心",
+      "lat": 39.9840,
+      "lng": 116.4940,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["当代艺术", "大展"],
+      "headline": "798 的核心站",
+      "body": "798 园区里最重要的当代艺术空间，常年有高质量展览。",
+      "tip": "提前在公众号预约免排队。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-20"
+    },
+    {
+      "id": "curated/bj-g02",
+      "name": "木木美术馆",
+      "lat": 39.9830,
+      "lng": 116.4960,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["当代艺术", "个展"],
+      "headline": "小而精的独立美术馆",
+      "body": "体量不大但展览策划很有想法，适合慢慢看。",
+      "tip": "门口有很好看的装置可以拍照。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-16"
+    },
+    {
+      "id": "curated/bj-g03",
+      "name": "佩斯画廊",
+      "lat": 39.9850,
+      "lng": 116.4930,
+      "weight": 1.5,
+      "indoor": true,
+      "tags": ["画廊", "国际"],
+      "headline": "国际画廊的北京据点",
+      "body": "佩斯在亚洲的主要空间之一，展出国际艺术家作品。",
+      "tip": "展厅挑高很高，适合认真看完。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-14"
+    },
+    {
+      "id": "curated/bj-g04",
+      "name": "798 园区闲逛段",
+      "lat": 39.9860,
+      "lng": 116.4970,
+      "weight": 1.2,
+      "indoor": false,
+      "tags": ["户外", "园区"],
+      "headline": "园区里的散步收尾",
+      "body": "看完展后在园区里随便走走，街头涂鸦和装置都是风景。",
+      "tip": "黄昏时园区光影最好看。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-10"
+    }
+  ]
+}

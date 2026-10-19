@@ -1,5 +1,5 @@
 {
-  "cached_at": 1791719504.632995,
+  "cached_at": 1792131203.4025714,
   "pois": [
     {
       "id": "osm/node/1449321189",
@@ -15,27 +15,6 @@
         "amenity": "cafe",
         "name": "老麦咖啡馆",
         "wheelchair": "limited"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/1460664402",
-      "name": "未命名",
-      "lat": 31.2086299,
-      "lng": 121.4344693,
-      "tags": {
-        "addr:housenumber": "376",
-        "addr:street": "wukang lu",
-        "amenity": "cafe",
-        "name:en": "Coffee Tree",
-        "outdoor_seating": "yes"
-      },
-      "tags_osm": {
-        "addr:housenumber": "376",
-        "addr:street": "wukang lu",
-        "amenity": "cafe",
-        "name:en": "Coffee Tree",
-        "outdoor_seating": "yes"
       },
       "origin": "osm"
     },
@@ -143,78 +122,6 @@
       "origin": "osm"
     },
     {
-      "id": "osm/node/4462666090",
-      "name": "未命名",
-      "lat": 31.213766,
-      "lng": 121.4415967,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "Mata Mata"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "Mata Mata"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/4501828693",
-      "name": "未命名",
-      "lat": 31.2142245,
-      "lng": 121.4395849,
-      "tags": {
-        "addr:housenumber": "250",
-        "addr:street": "五原路",
-        "amenity": "cafe",
-        "name:en": "LGMY Gallery & Coffee"
-      },
-      "tags_osm": {
-        "addr:housenumber": "250",
-        "addr:street": "五原路",
-        "amenity": "cafe",
-        "name:en": "LGMY Gallery & Coffee"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/4515456795",
-      "name": "未命名",
-      "lat": 31.2156729,
-      "lng": 121.4386395,
-      "tags": {
-        "addr:housenumber": "201",
-        "addr:street": "安福路",
-        "amenity": "cafe",
-        "cuisine": "breakfast;cake;coffee_shop;tea",
-        "name:en": "amokka",
-        "opening_hours": "Mo-Su 07:30-24:00"
-      },
-      "tags_osm": {
-        "addr:housenumber": "201",
-        "addr:street": "安福路",
-        "amenity": "cafe",
-        "cuisine": "breakfast;cake;coffee_shop;tea",
-        "name:en": "amokka",
-        "opening_hours": "Mo-Su 07:30-24:00"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/4620212589",
-      "name": "未命名",
-      "lat": 31.2101614,
-      "lng": 121.4376319,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "Rumors Coffee Roastery"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "Rumors Coffee Roastery"
-      },
-      "origin": "osm"
-    },
-    {
       "id": "osm/node/4675863489",
       "name": "Baker & Spice",
       "lat": 31.2157669,
@@ -244,42 +151,6 @@
         "opening_hours": "Mo-Su 06:00-22:00",
         "shop": "bakery",
         "wheelchair": "no"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/5136774621",
-      "name": "未命名",
-      "lat": 31.2177434,
-      "lng": 121.4352695,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "Coffee Pls"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "Coffee Pls"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/5199940026",
-      "name": "未命名",
-      "lat": 31.2128542,
-      "lng": 121.4420673,
-      "tags": {
-        "addr:housenumber": "361",
-        "addr:street": "乌鲁木齐中路",
-        "amenity": "cafe",
-        "cuisine": "sandwich;coffee_shop",
-        "name:en": "Wakewake!"
-      },
-      "tags_osm": {
-        "addr:housenumber": "361",
-        "addr:street": "乌鲁木齐中路",
-        "amenity": "cafe",
-        "cuisine": "sandwich;coffee_shop",
-        "name:en": "Wakewake!"
       },
       "origin": "osm"
     },
@@ -315,100 +186,6 @@
         "opening_hours": "Mo-Su 07:30-22:00",
         "takeaway": "yes",
         "website": "http://www.boomboombagels.com/"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/5434280321",
-      "name": "未命名",
-      "lat": 31.2151768,
-      "lng": 121.4357134,
-      "tags": {
-        "addr:housenumber": "322",
-        "addr:street": "安福路",
-        "amenity": "cafe",
-        "cuisine": "breakfast;crepe;coffee_shop;french",
-        "name:en": "RAC Coffee",
-        "opening_hours": "Mo-Su 08:00-18:00",
-        "outdoor_seating": "yes",
-        "wheelchair": "no"
-      },
-      "tags_osm": {
-        "addr:housenumber": "322",
-        "addr:street": "安福路",
-        "amenity": "cafe",
-        "cuisine": "breakfast;crepe;coffee_shop;french",
-        "name:en": "RAC Coffee",
-        "opening_hours": "Mo-Su 08:00-18:00",
-        "outdoor_seating": "yes",
-        "wheelchair": "no"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/5537474423",
-      "name": "未命名",
-      "lat": 31.2088099,
-      "lng": 121.4350315,
-      "tags": {
-        "addr:housenumber": "368",
-        "addr:street": "武康路",
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "name:en": "Drops Coffee Studio"
-      },
-      "tags_osm": {
-        "addr:housenumber": "368",
-        "addr:street": "武康路",
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "name:en": "Drops Coffee Studio"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/5625816324",
-      "name": "未命名",
-      "lat": 31.2126221,
-      "lng": 121.4414205,
-      "tags": {
-        "addr:housenumber": "44",
-        "addr:street": "复兴西路",
-        "amenity": "cafe",
-        "cuisine": "tea",
-        "name:en": "mountain yucaoshe teahouse",
-        "opening_hours": "Mo-Su 11:30-14:30, 17:30-22:00"
-      },
-      "tags_osm": {
-        "addr:housenumber": "44",
-        "addr:street": "复兴西路",
-        "amenity": "cafe",
-        "cuisine": "tea",
-        "name:en": "mountain yucaoshe teahouse",
-        "opening_hours": "Mo-Su 11:30-14:30, 17:30-22:00"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/5793760453",
-      "name": "未命名",
-      "lat": 31.2100752,
-      "lng": 121.4377766,
-      "tags": {
-        "addr:housenumber": "11",
-        "addr:street": "湖南路",
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "name:en": "Café 1984",
-        "opening_hours": "Mo-Su 11:00-20:00"
-      },
-      "tags_osm": {
-        "addr:housenumber": "11",
-        "addr:street": "湖南路",
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "name:en": "Café 1984",
-        "opening_hours": "Mo-Su 11:00-20:00"
       },
       "origin": "osm"
     },
@@ -506,76 +283,6 @@
         "name:zh": "Costa咖啡",
         "official_name": "Costa Coffee",
         "takeaway": "yes"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6163707386",
-      "name": "未命名",
-      "lat": 31.2161347,
-      "lng": 121.444313,
-      "tags": {
-        "addr:housenumber": "191",
-        "addr:street": "常熟路",
-        "amenity": "cafe",
-        "name:en": "Mini Max",
-        "wheelchair": "limited"
-      },
-      "tags_osm": {
-        "addr:housenumber": "191",
-        "addr:street": "常熟路",
-        "amenity": "cafe",
-        "name:en": "Mini Max",
-        "wheelchair": "limited"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6163707390",
-      "name": "未命名",
-      "lat": 31.2179509,
-      "lng": 121.4478763,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "Gwen’s Jiang",
-        "wheelchair": "no"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "Gwen’s Jiang",
-        "wheelchair": "no"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6163717686",
-      "name": "未命名",
-      "lat": 31.216874,
-      "lng": 121.4429455,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "Oha Eatery (coffee)",
-        "wheelchair": "limited"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "Oha Eatery (coffee)",
-        "wheelchair": "limited"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6163717785",
-      "name": "未命名",
-      "lat": 31.2164311,
-      "lng": 121.4442136,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "42 Coffee Brewers"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "42 Coffee Brewers"
       },
       "origin": "osm"
     },
@@ -692,27 +399,6 @@
       "origin": "osm"
     },
     {
-      "id": "osm/node/6366812756",
-      "name": "未命名",
-      "lat": 31.2113982,
-      "lng": 121.4359961,
-      "tags": {
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "name:en": "Lokal by Wagas",
-        "outdoor_seating": "yes",
-        "takeaway": "yes"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "name:en": "Lokal by Wagas",
-        "outdoor_seating": "yes",
-        "takeaway": "yes"
-      },
-      "origin": "osm"
-    },
-    {
       "id": "osm/node/6366812757",
       "name": "Modi Cafe",
       "lat": 31.2102277,
@@ -732,59 +418,6 @@
         "takeaway": "yes",
         "was:amenity": "restaurant",
         "was:name:en": "SmoothieBowl"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6533868666",
-      "name": "未命名",
-      "lat": 31.2152286,
-      "lng": 121.4359711,
-      "tags": {
-        "addr:housenumber": "308",
-        "addr:street": "安福路",
-        "amenity": "cafe",
-        "name:en": "Sunflour",
-        "outdoor_seating": "yes",
-        "shop": "bakery"
-      },
-      "tags_osm": {
-        "addr:housenumber": "308",
-        "addr:street": "安福路",
-        "amenity": "cafe",
-        "name:en": "Sunflour",
-        "outdoor_seating": "yes",
-        "shop": "bakery"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6533895143",
-      "name": "未命名",
-      "lat": 31.2150751,
-      "lng": 121.4410101,
-      "tags": {
-        "amenity": "cafe",
-        "outdoor_seating": "no"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "outdoor_seating": "no"
-      },
-      "origin": "osm"
-    },
-    {
-      "id": "osm/node/6900242087",
-      "name": "未命名",
-      "lat": 31.2069545,
-      "lng": 121.4478769,
-      "tags": {
-        "amenity": "cafe",
-        "name:en": "Art Gallery Café"
-      },
-      "tags_osm": {
-        "amenity": "cafe",
-        "name:en": "Art Gallery Café"
       },
       "origin": "osm"
     },
@@ -830,6 +463,281 @@
       "tags_osm": {
         "amenity": "cafe",
         "name": "Wawy"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/7656355075",
+      "name": "星巴克",
+      "lat": 31.2143077,
+      "lng": 121.4452801,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:wikipedia": "en:Starbucks",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "official_name": "Starbucks Coffee",
+        "takeaway": "yes",
+        "wheelchair": "no"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:wikipedia": "en:Starbucks",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "official_name": "Starbucks Coffee",
+        "takeaway": "yes",
+        "wheelchair": "no"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/8221559052",
+      "name": "Drops Coffee",
+      "lat": 31.2127568,
+      "lng": 121.4478613,
+      "tags": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Drops Coffee",
+        "wheelchair": "limited"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Drops Coffee",
+        "wheelchair": "limited"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/8234177784",
+      "name": "La Boulangerie",
+      "lat": 31.2051897,
+      "lng": 121.4473515,
+      "tags": {
+        "amenity": "cafe",
+        "name": "La Boulangerie",
+        "name:en": "La Boulangerie"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "La Boulangerie",
+        "name:en": "La Boulangerie"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/8318682577",
+      "name": "Funk & Kale",
+      "lat": 31.2151447,
+      "lng": 121.4355777,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Funk & Kale"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Funk & Kale"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/8736210182",
+      "name": "Pace",
+      "lat": 31.2168325,
+      "lng": 121.436751,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Pace",
+        "outdoor_seating": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Pace",
+        "outdoor_seating": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/8736255773",
+      "name": "For Cookie Lovers",
+      "lat": 31.2163101,
+      "lng": 121.435233,
+      "tags": {
+        "amenity": "cafe",
+        "name": "For Cookie Lovers"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "For Cookie Lovers"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/8736256930",
+      "name": "Common Good",
+      "lat": 31.217968,
+      "lng": 121.4433616,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Common Good",
+        "wheelchair": "no"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "Common Good",
+        "wheelchair": "no"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/9123793646",
+      "name": "No Nay",
+      "lat": 31.2049756,
+      "lng": 121.440573,
+      "tags": {
+        "amenity": "cafe",
+        "name": "No Nay"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "No Nay"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11159116853",
+      "name": "Manner Coffee",
+      "lat": 31.213783,
+      "lng": 121.4448718,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "Manner Coffee",
+        "brand:wikidata": "Q111338344",
+        "cuisine": "coffee_shop",
+        "level": "0",
+        "name": "Manner Coffee",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "Manner Coffee",
+        "brand:wikidata": "Q111338344",
+        "cuisine": "coffee_shop",
+        "level": "0",
+        "name": "Manner Coffee",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/11276662108",
+      "name": "星巴克",
+      "lat": 31.2077683,
+      "lng": 121.4439448,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/12203903440",
+      "name": "星巴克",
+      "lat": 31.2141686,
+      "lng": 121.4456277,
+      "tags": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "indoor_seating": "yes",
+        "level": "0",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes",
+        "wheelchair": "no"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "brand": "星巴克",
+        "brand:en": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:zh": "星巴克",
+        "cuisine": "coffee_shop",
+        "indoor_seating": "yes",
+        "level": "0",
+        "name": "星巴克",
+        "name:en": "Starbucks",
+        "name:zh": "星巴克",
+        "takeaway": "yes",
+        "wheelchair": "no"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/13038965001",
+      "name": "In Dough We Trust",
+      "lat": 31.2133886,
+      "lng": 121.4394047,
+      "tags": {
+        "amenity": "cafe",
+        "name": "In Dough We Trust"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "In Dough We Trust"
+      },
+      "origin": "osm"
+    },
+    {
+      "id": "osm/node/13039035801",
+      "name": "In Dough We Trust",
+      "lat": 31.2133886,
+      "lng": 121.4394047,
+      "tags": {
+        "amenity": "cafe",
+        "name": "In Dough We Trust"
+      },
+      "tags_osm": {
+        "amenity": "cafe",
+        "name": "In Dough We Trust"
       },
       "origin": "osm"
     }

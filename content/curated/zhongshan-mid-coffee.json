@@ -1,0 +1,63 @@
+{
+  "districtId": "zhongshan-mid",
+  "vibe": "coffee",
+  "updatedAt": "2026-10-14",
+  "stops": [
+    {
+      "id": "curated/hz-c01",
+      "name": "Ceremorning 咖啡",
+      "lat": 30.2520,
+      "lng": 120.1690,
+      "weight": 2.0,
+      "indoor": true,
+      "tags": ["咖啡", "手冲", "中山中路"],
+      "headline": "中山中路的起点站",
+      "body": "老街里的精品咖啡，空间不大但选品扎实。",
+      "tip": "工作日上午最安静。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "curated/hz-c02",
+      "name": "Random Coffee 中山北路",
+      "lat": 30.2560,
+      "lng": 120.1720,
+      "weight": 1.8,
+      "indoor": true,
+      "tags": ["手冲", "极简"],
+      "headline": "极简空间的第二杯",
+      "body": "黑白极简风格，选品豆换得勤，适合手冲爱好者。",
+      "tip": "试试耶加雪菲水洗。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-20"
+    },
+    {
+      "id": "curated/hz-c03",
+      "name": "西湖边的窗口位",
+      "lat": 30.2480,
+      "lng": 120.1650,
+      "weight": 1.5,
+      "indoor": false,
+      "tags": ["外带", "湖景"],
+      "headline": "边走边喝的西湖站",
+      "body": "靠近西湖的外带窗口，拿一杯边走边看湖。",
+      "tip": "下午 3 点后光线最美。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-18"
+    },
+    {
+      "id": "curated/hz-c04",
+      "name": "解百旁的收尾站",
+      "lat": 30.2600,
+      "lng": 120.1740,
+      "weight": 1.6,
+      "indoor": true,
+      "tags": ["特调", "甜品"],
+      "headline": "桂花风味收尾",
+      "body": "杭州特色的桂花拿铁，收束整条咖啡线。",
+      "tip": "桂花拿铁是全年都有。",
+      "sourceLabel": "green",
+      "verifiedAt": "2026-09-15"
+    }
+  ]
+}

@@ -15,23 +15,23 @@ OVERPASS_URLS = (
 
 VIBE_FILTERS: dict[str, list[str]] = {
     "neon": [
-        'node["amenity"~"^(bar|pub|nightclub|restaurant)$"]',
-        'way["amenity"~"^(bar|pub|nightclub|restaurant)$"]',
+        'node["amenity"~"^(bar|pub|nightclub|restaurant)$"]["name"]',
+        'way["amenity"~"^(bar|pub|nightclub|restaurant)$"]["name"]',
     ],
     "coffee": [
-        'node["amenity"="cafe"]',
-        'way["amenity"="cafe"]',
-        'node["shop"="coffee"]',
+        'node["amenity"="cafe"]["name"]',
+        'way["amenity"="cafe"]["name"]',
+        'node["shop"="coffee"]["name"]',
     ],
     "vintage": [
-        'node["shop"~"^(clothes|second_hand|charity|variety_store)$"]',
-        'way["shop"~"^(clothes|second_hand|charity|variety_store)$"]',
+        'node["shop"~"^(clothes|second_hand|charity|variety_store)$"]["name"]',
+        'way["shop"~"^(clothes|second_hand|charity|variety_store)$"]["name"]',
     ],
     "gallery": [
-        'node["tourism"~"^(gallery|museum)$"]',
-        'way["tourism"~"^(gallery|museum)$"]',
-        'node["amenity"="arts_centre"]',
-        'way["amenity"="arts_centre"]',
+        'node["tourism"~"^(gallery|museum)$"]["name"]',
+        'way["tourism"~"^(gallery|museum)$"]["name"]',
+        'node["amenity"="arts_centre"]["name"]',
+        'way["amenity"="arts_centre"]["name"]',
     ],
 }
 
@@ -66,7 +66,9 @@ def _parse_elements(raw: dict[str, Any]) -> list[dict[str, Any]]:
             lat, lng = c.get("lat"), c.get("lon")
         if lat is None or lng is None:
             continue
-        name = tags.get("name:zh") or tags.get("name") or tags.get("brand") or "未命名"
+        name = tags.get("name:zh") or tags.get("name") or tags.get("brand") or ""
+        if not name:
+            continue  # skip nameless OSM nodes — they'd show as 未命名
         out.append(
             {
                 "id": f"osm/{el.get('type')}/{el.get('id')}",

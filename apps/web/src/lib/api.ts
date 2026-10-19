@@ -1,10 +1,16 @@
 import type {
   BriefInput,
+  CommunityRoute,
   DistrictOption,
+  ExploreStats,
+  LayeredNarrative,
   PendingAction,
   RerouteProposal,
   RouteEnvelope,
+  RouteRating,
+  WalkCardData,
   WalkPlanResponse,
+  WalkProfile,
   WalkTask,
 } from "../types";
 
@@ -145,4 +151,104 @@ export async function applyReroute(
 
 export function isPendingAction(v: unknown): v is PendingAction {
   return typeof v === "object" && v !== null && "kind" in v && "message" in v;
+}
+
+// ── Sprint 1: WalkDNA ──────────────────────────────────────────
+
+export async function fetchProfile(): Promise<WalkProfile> {
+  const r = await fetch(`${API}/v1/profile/${getSessionId()}`);
+  if (!r.ok) throw new Error("profile failed");
+  return r.json() as Promise<WalkProfile>;
+}
+
+export async function refreshProfile(): Promise<WalkProfile> {
+  const r = await fetch(`${API}/v1/profile/${getSessionId()}/refresh`, { method: "POST" });
+  if (!r.ok) throw new Error("profile refresh failed");
+  return r.json() as Promise<WalkProfile>;
+}
+
+// ── Sprint 2: Explore ──────────────────────────────────────────
+
+export async function fetchExplore(): Promise<ExploreStats> {
+  const r = await fetch(`${API}/v1/explore/${getSessionId()}`);
+  if (!r.ok) throw new Error("explore failed");
+  return r.json() as Promise<ExploreStats>;
+}
+
+// ── Sprint 3: Narrative v2 ─────────────────────────────────────
+
+export async function fetchLayeredNarrative(taskId: string, stopIdx: number): Promise<LayeredNarrative> {
+  const r = await fetch(`${API}/v1/walks/${taskId}/stops/${stopIdx}/narrative`);
+  if (!r.ok) throw new Error("narrative failed");
+  return r.json() as Promise<LayeredNarrative>;
+}
+
+// ── Sprint 4: Walk Card ────────────────────────────────────────
+
+export async function fetchCardData(taskId: string): Promise<WalkCardData> {
+  const r = await fetch(`${API}/v1/walks/${taskId}/card-data`);
+  if (!r.ok) throw new Error("card-data failed");
+  return r.json() as Promise<WalkCardData>;
+}
+
+// ── Sprint 5: Ratings ─────────────────────────────────────────
+
+export async function rateWalk(
+  taskId: string,
+  overall: number,
+  poiRatings?: Record<string, number>,
+  comment?: string,
+): Promise<RouteRating> {
+  const r = await fetch(
+    `${API}/v1/walks/${taskId}/rate?session_id=${encodeURIComponent(getSessionId())}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        overall,
+        poi_ratings: poiRatings ?? {},
+        comment: comment ?? "",
+        photos: [],
+      }),
+    },
+  );
+  if (!r.ok) throw new Error("rate failed");
+  return r.json() as Promise<RouteRating>;
+}
+
+// ── Sprint 5: Community ────────────────────────────────────────
+
+export async function fetchCommunityRoutes(limit = 20): Promise<CommunityRoute[]> {
+  const r = await fetch(`${API}/v1/community/routes?limit=${limit}`);
+  if (!r.ok) throw new Error("community routes failed");
+  const data = (await r.json()) as { routes: CommunityRoute[] };
+  return data.routes;
+}
+
+export async function publishCommunityRoute(
+  taskId: string,
+  tags?: string[],
+  authorLabel?: string,
+): Promise<CommunityRoute> {
+  const r = await fetch(
+    `${API}/v1/community/publish/${taskId}?session_id=${encodeURIComponent(getSessionId())}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tags: tags ?? [],
+        author_label: authorLabel ?? "匿名探索者",
+      }),
+    },
+  );
+  if (!r.ok) throw new Error("publish failed");
+  return r.json() as Promise<CommunityRoute>;
+}
+
+export async function rateCommunityRoute(routeId: string, rating: number): Promise<{ avg_rating: number; count: number }> {
+  const r = await fetch(`${API}/v1/community/routes/${routeId}/rate?rating=${rating}`, {
+    method: "POST",
+  });
+  if (!r.ok) throw new Error("rate community route failed");
+  return r.json() as Promise<{ avg_rating: number; count: number }>;
 }
