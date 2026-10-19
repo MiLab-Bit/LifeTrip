@@ -132,6 +132,7 @@ async def plan_route(
     exclude_ids: set[str] | None = None,
     prefer_indoor: bool = False,
     seed: int = 42,
+    session_id: str = "",
 ) -> RouteEnvelope:
     curated = load_curated(district.id, vibe)
     try:
@@ -194,7 +195,7 @@ async def plan_route(
             )
         )
 
-    stops = await polish_stops(stops, vibe=vibe, district=district.name)
+    stops = await polish_stops(stops, vibe=vibe, district=district.name, session_id=session_id)
 
     subtitle = f"精选 {curated_n} · OSM {len(stops) - curated_n} 站 · 步行约 {walk_min} 分钟"
     return RouteEnvelope(

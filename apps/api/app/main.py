@@ -593,6 +593,7 @@ async def walks_plan_async(body: WalkPlanBody):
     
     inp = {
         "task_id": f"wt-{session_id[-8:]}",  # Generate task_id from session
+        "session_id": session_id,
         "vibe": body.vibe,
         "district_id": body.district_id,
         "duration_min": body.duration_min,
