@@ -1,24 +1,14 @@
 """Narrative polish — editor baseline + optional LLM (POI-bound, async)."""
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import re
-import sys
-
-import httpx
 
 from app.contracts import Stop
 from app.paths import CACHE_NARRATIVES_DIR, DATA, NARRATIVES
-
-_SHARED = os.getenv("OPENCLAW_SHARED_DIR", "/opt/shared")
-if _SHARED not in sys.path:
-    sys.path.insert(0, _SHARED)
-try:
-    from llm_quota import allow as _quota_allow
-except ModuleNotFoundError:  # 开发克隆无 /opt/shared 时不阻断
-    def _quota_allow(*_a, **_k) -> bool:
-        return True
+from app.llm import chat_json
 
 VIBE_TONE = {
     "coffee": "独立杂志感，短句，强调当下逛法",
@@ -89,18 +79,13 @@ def _llm_enabled() -> bool:
     return os.getenv("LIFETRIP_LLM_POLISH", "0") == "1" and bool(os.getenv("LIFETRIP_LLM_API_KEY"))
 
 
-def _quota_db() -> str:
-    return os.getenv("LIFETRIP_QUOTA_DB") or str(DATA / "lifetrip.db")
-
-
 async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: int, session_id: str = "") -> dict[str, str] | None:
-    if not _quota_allow(_quota_db(), session_id or "anon"):
-        return None
-    api_key = os.getenv("LIFETRIP_LLM_API_KEY", "")
-    base = os.getenv("LIFETRIP_LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-    model = os.getenv("LIFETRIP_LLM_MODEL", "gpt-4o-mini")
-    url = f"{base}/chat/completions"
+    """调用平台 LLM 润色单站文案；失败（含配额超限）返回 None，由调用方降级。
 
+    配额门（scope=session_id）、并发闸门、退避、JSON 解析、缓存统一由
+    app.llm.chat_json → openclaw_core.gateway 处理。
+    """
+    model = os.getenv("LIFETRIP_LLM_MODEL") or "gpt-4o-mini"
     system = (
         "你是 LifeTrip city walk 文案编辑。\n"
         "\n"
@@ -131,25 +116,17 @@ async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: 
         ensure_ascii=False,
     )
 
-    try:
-        async with httpx.AsyncClient(timeout=float(os.getenv("LIFETRIP_LLM_TIMEOUT", "120")), proxy=None) as client:
-            r = await client.post(
-                url,
-                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-                json={
-                    "model": model,
-                    "temperature": 0.3,
-                    "response_format": {"type": "json_object"},
-                    "messages": [
-                        {"role": "system", "content": system},
-                        {"role": "user", "content": user},
-                    ],
-                },
-            )
-            r.raise_for_status()
-            content = r.json()["choices"][0]["message"]["content"]
-            data = json.loads(content)
-    except Exception:  # noqa: BLE001
+    data = await chat_json(
+        [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        model=model,
+        temperature=0.3,
+        max_tokens=None,
+        scope=session_id or "anon",
+    )
+    if not data:
         return None
 
     if stop.name not in (data.get("body") or "") and stop.name not in (data.get("headline") or ""):
@@ -193,7 +170,6 @@ async def polish_stop(
 
 async def polish_stops(stops: list[Stop], *, vibe: str, district: str, session_id: str = "") -> list[Stop]:
     """并发润色所有站点 — async 允许未来用 asyncio.gather 并行 LLM 调用。"""
-    import asyncio
     total = len(stops)
     tasks = [polish_stop(s, vibe=vibe, district=district, index=i, total=total, session_id=session_id) for i, s in enumerate(stops)]
     return await asyncio.gather(*tasks)
