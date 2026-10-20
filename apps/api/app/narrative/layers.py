@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
+import re
 
 from app.contracts import LayeredNarrative, Stop
 from app.paths import CACHE_NARRATIVES_DIR, NARRATIVES
-
-import httpx
+from app.llm import chat_json
 
 # Layer depth presets
 LAYER_DEPTH = {
@@ -53,30 +54,13 @@ def _llm_enabled() -> bool:
     return os.getenv("LIFETRIP_LLM_POLISH", "0") == "1" and bool(os.getenv("LIFETRIP_LLM_API_KEY"))
 
 
-def _get_llm_config() -> tuple[str, str, str] | None:
-    """Get LLM config from env or hardcoded fallback."""
-    api_key = os.getenv("LIFETRIP_LLM_API_KEY", "")
-    base_url = os.getenv("LIFETRIP_LLM_BASE_URL", "https://www.abc-ai.cn/v1")
-    model = os.getenv("LIFETRIP_LLM_MODEL", "qwen3.5-397b-a17b")
-    
-    # Hardcoded fallback for reliability
-    if not api_key:
-        api_key = "***REMOVED***"
-    
-    if api_key and len(api_key) >= 50:
-        return api_key, base_url, model
-    return None
-
-
 async def _call_llm_deep(stop: Stop, vibe: str) -> str | None:
-    """Generate deep cultural narrative via LLM."""
-    config = _get_llm_config()
-    if not config:
-        return None
-    
-    api_key, base_url, model = config
-    url = f"{base_url}/chat/completions"
+    """Generate deep cultural narrative via LLM (unmetered — 历史未计量).
 
+    平台 key / base_url / model 统一由 app.llm 解析（env 缺失时回退历史默认）。
+    失败返回 None，由调用方走本地兜底。
+    """
+    model = os.getenv("LIFETRIP_LLM_MODEL") or "qwen3.5-397b-a17b"
     system = (
         "你是 LifeTrip 文化导览编辑。\n\n"
         "任务：为 city walk 站点撰写深度文化叙事。\n\n"
@@ -98,38 +82,26 @@ async def _call_llm_deep(stop: Stop, vibe: str) -> str | None:
         "indoor": stop.indoor,
     }, ensure_ascii=False)
 
-    try:
-        async with httpx.AsyncClient(timeout=120.0, proxy=None) as client:
-            r = await client.post(
-                url,
-                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-                json={
-                    "model": model,
-                    "temperature": 0.4,
-                    "response_format": {"type": "json_object"},
-                    "messages": [
-                        {"role": "system", "content": system},
-                        {"role": "user", "content": user},
-                    ],
-                },
-            )
-            r.raise_for_status()
-            content = r.json()["choices"][0]["message"]["content"]
-            data = json.loads(content)
-            result = str(data.get("deep", ""))[:500] or None
-            if result:
-                import logging
-                logging.info(f"LLM deep generated for {stop.name}: {result[:50]}...")
-            return result
-    except Exception as e:  # noqa: BLE001
-        import logging
-        logging.error(f"LLM deep generation failed for {stop.name}: {e}")
+    data = await chat_json(
+        [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        model=model,
+        temperature=0.4,
+        max_tokens=None,
+        unmetered=True,
+    )
+    if not data:
         return None
+    result = str(data.get("deep", ""))[:500] or None
+    if result:
+        logging.info(f"LLM deep generated for {stop.name}: {result[:50]}...")
+    return result
 
 
 def _load_editor_deep(poi_id: str) -> str | None:
     """Check for editor-provided deep narrative."""
-    import re
     safe_id = re.sub(r"[^\w.-]", "_", poi_id)
     # Try layered format first
     path = NARRATIVES / f"{safe_id}_deep.json"

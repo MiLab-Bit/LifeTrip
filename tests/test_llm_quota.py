@@ -1,13 +1,17 @@
-"""LifeTrip LLM 每日配额测试 — 不调 LLM，只验证配额门、scope 隔离与降级。
+"""LifeTrip LLM 每日配额测试 — 不调 LLM（打桩 Gateway 客户端）。
 
-运行（仓库根）：
-    pytest tests/test_llm_quota.py -v
+polish._call_llm 现经 app.llm.chat_json → openclaw_core.gateway.Gateway；
+本测试只替换 Gateway 的客户端构造与配额存储，验证配额门、scope 隔离与降级
+（真实网关逻辑在 openclaw_core 黄金测试中覆盖）。
+
+运行（仓库根）：venv/bin/python -m pytest tests/test_llm_quota.py -v
 """
 from __future__ import annotations
 
 import asyncio
 import os
 import sys
+from types import SimpleNamespace
 
 import pytest
 
@@ -18,48 +22,38 @@ sys.path.insert(0, os.getenv("OPENCLAW_SHARED_DIR", "/opt/shared"))
 
 from app.contracts import Stop  # noqa: E402
 from app.narrative import polish  # noqa: E402
-import llm_quota  # noqa: E402
+from app import llm as lifetrip_llm  # noqa: E402
+from openclaw_core.quota import QuotaGate  # noqa: E402
 
-HTTP_CALLS: list = []
-
-
-class _StubClient:
-    """配额门生效时 HTTP 永远不应发生 — 发生了就记账并炸。"""
-
-    def __init__(self, *args, **kwargs):
-        pass
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, *args):
-        return False
-
-    async def post(self, *args, **kwargs):
-        HTTP_CALLS.append(args)
-        raise AssertionError("LLM HTTP must not be called when quota exhausted")
+# 供应商调用记账：配额门生效时供应商永远不应被调用
+SUPPLIER_CALLS: list = []
 
 
-class _OkClient(_StubClient):
-    async def post(self, *args, **kwargs):
-        HTTP_CALLS.append(args)
+class _Resp:
+    def __init__(self, content: str):
+        self.choices = [SimpleNamespace(message=SimpleNamespace(content=content))]
 
-        class _Resp:
-            def raise_for_status(self):
-                pass
 
-            def json(self):
-                return {
-                    "choices": [
-                        {
-                            "message": {
-                                "content": '{"headline":"润色标题","body":"测试POI0 润色正文","tip":"润色提示"}'
-                            }
-                        }
-                    ]
-                }
+class _Completions:
+    def __init__(self, fc):
+        self.fc = fc
 
-        return _Resp()
+    async def create(self, **kw):
+        self.fc.calls.append(kw)
+        content = '{"headline":"润色标题","body":"测试POI0 润色正文","tip":"润色提示"}'
+        return _Resp(content)
+
+
+class _Chat:
+    def __init__(self, fc):
+        self.completions = _Completions(fc)
+
+
+class _FakeClient:
+    def __init__(self):
+        self.calls = SUPPLIER_CALLS
+
+    chat = property(lambda self: _Chat(self))
 
 
 def _stop(i: int = 0, body: str = "短正文") -> Stop:
@@ -78,21 +72,26 @@ def _stop(i: int = 0, body: str = "短正文") -> Stop:
 
 @pytest.fixture()
 def quota_env(tmp_path, monkeypatch):
-    HTTP_CALLS.clear()
+    SUPPLIER_CALLS.clear()
     db = str(tmp_path / "lifetrip.db")
+    gate = QuotaGate(db, limit=3)
+    lifetrip_llm._gateway._quota = gate
+    lifetrip_llm._gateway._cache = None  # 测试关闭缓存，保证每次真实走配额门
+    fc = _FakeClient()
+    monkeypatch.setattr(lifetrip_llm._gateway, "_client", lambda b, k: fc)
     monkeypatch.setenv("LIFETRIP_QUOTA_DB", db)
     monkeypatch.setenv("LIFETRIP_LLM_POLISH", "1")
     monkeypatch.setenv("LIFETRIP_LLM_API_KEY", "test-key")
     monkeypatch.setenv("LIFETRIP_LLM_BASE_URL", "http://127.0.0.1:9/v1")
-    return db
+    return db, gate
 
 
-def _exhaust(db: str, scope: str, limit: int = 3) -> None:
+def _exhaust(gate, scope: str, limit: int = 3) -> None:
     for _ in range(limit):
-        assert llm_quota.allow(db, scope, limit=limit)
+        assert gate.allow(scope)
 
 
-def _call(stop: Stop, *, session_id: str = "", index: int = 0, total: int = 4):
+def _call(stop, *, session_id="", index=0, total=4):
     return asyncio.run(
         polish._call_llm(
             stop=stop,
@@ -106,23 +105,22 @@ def _call(stop: Stop, *, session_id: str = "", index: int = 0, total: int = 4):
 
 
 def test_quota_exhausted_skips_llm_http(quota_env, monkeypatch):
-    monkeypatch.setattr("httpx.AsyncClient", _StubClient)
-    _exhaust(quota_env, "sess-a")
+    _, gate = quota_env
+    _exhaust(gate, "sess-a")
     out = _call(_stop(), session_id="sess-a")
     assert out is None
-    assert HTTP_CALLS == []  # 关键：配额门拦在 HTTP 之前
+    assert SUPPLIER_CALLS == []  # 关键：配额门拦在供应商调用之前
 
 
 def test_within_quota_calls_llm(quota_env, monkeypatch):
-    monkeypatch.setattr("httpx.AsyncClient", _OkClient)
     out = _call(_stop(), session_id="sess-b")
     assert out is not None and out["headline"] == "润色标题"
-    assert len(HTTP_CALLS) == 1
+    assert len(SUPPLIER_CALLS) == 1
 
 
 def test_sessions_have_independent_quota(quota_env, monkeypatch):
-    monkeypatch.setattr("httpx.AsyncClient", _OkClient)
-    _exhaust(quota_env, "sess-a")
+    _, gate = quota_env
+    _exhaust(gate, "sess-a")
     blocked = _call(_stop(), session_id="sess-a")
     allowed = _call(_stop(), session_id="sess-b")
     assert blocked is None
@@ -130,29 +128,29 @@ def test_sessions_have_independent_quota(quota_env, monkeypatch):
 
 
 def test_quota_exhausted_polish_stop_falls_back_local(quota_env, monkeypatch):
-    monkeypatch.setattr("httpx.AsyncClient", _StubClient)
-    _exhaust(quota_env, "sess-c")
+    _, gate = quota_env
+    _exhaust(gate, "sess-c")
     stop = asyncio.run(
         polish.polish_stop(
             _stop(), vibe="coffee", district="安福-五原", index=0, total=4, session_id="sess-c"
         )
     )
     assert "「测试POI0」" in stop.body  # 本地兜底包裹句式
-    assert HTTP_CALLS == []
+    assert SUPPLIER_CALLS == []
 
 
 def test_anon_scope_when_no_session(quota_env, monkeypatch):
-    monkeypatch.setattr("httpx.AsyncClient", _StubClient)
-    _exhaust(quota_env, "anon")
+    _, gate = quota_env
+    _exhaust(gate, "anon")
     out = _call(_stop())
     assert out is None
-    assert HTTP_CALLS == []
+    assert SUPPLIER_CALLS == []
 
 
-def test_quota_env_unlimited(quota_env, monkeypatch):
-    monkeypatch.setenv("LLM_QUOTA_LIMIT", "0")
-    monkeypatch.setattr("httpx.AsyncClient", _OkClient)
+def test_quota_env_unlimited(quota_env, monkeypatch, tmp_path):
+    _, gate = quota_env
+    lifetrip_llm._gateway._quota = QuotaGate(str(tmp_path / "unlim.db"), limit=None)
     for i in range(5):
         out = _call(_stop(i), session_id="sess-d", index=i, total=5)
         assert out is not None
-    assert len(HTTP_CALLS) == 5
+    assert len(SUPPLIER_CALLS) == 5
