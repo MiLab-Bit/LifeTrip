@@ -5,8 +5,9 @@ llm_quota 配额打点 + 手工 JSON 解析。两处调用点改为调用本模�
 对外语义不变：平台 LLM 调用失败（含配额超限 / 上游错误）一律返回 None，
 由调用方走本地兜底。
 
-配置统一读取 LIFETRIP_LLM_* 环境变量；env 缺失时回退到历史默认
-（abc-ai.cn 网关 / qwen 模型 / 历史兜底 key），保证开发环境也能跑通。
+配置统一读取 LIFETRIP_LLM_* 环境变量；API key 仅从 env 读取，
+不再内置兜底密钥（历史兜底 key 已按泄露处置）。env 缺失时网关
+优雅降级，由调用方走本地兜底。
 """
 from __future__ import annotations
 
@@ -18,16 +19,14 @@ from app.paths import DATA
 
 _TIMEOUT = float(os.getenv("LIFETRIP_LLM_TIMEOUT", "120"))
 
-# 历史兜底 key：仅当 LIFETRIP_LLM_API_KEY 未配置时使用（生产必须配置 env）。
-_FALLBACK_KEY = "***REMOVED***"
 
 
 def _platform_base_url() -> str:
     return os.getenv("LIFETRIP_LLM_BASE_URL") or "https://www.abc-ai.cn/v1"
 
 
-def _platform_api_key() -> str:
-    return os.getenv("LIFETRIP_LLM_API_KEY") or _FALLBACK_KEY
+def _platform_api_key() -> str | None:
+    return os.getenv("LIFETRIP_LLM_API_KEY")
 
 
 def _platform_model() -> str:
