@@ -37,9 +37,8 @@ os.environ.setdefault("LIFETRIP_LLM_POLISH", "0")
 # 给一个确定性测试 secret(生产 secret 由 unit/.env.llm 提供, 两者互不可换)。
 os.environ.setdefault("LIFETRIP_SESSION_SECRET", "smoke-inprocess-test-secret")
 
-from fastapi.testclient import TestClient  # noqa: E402
-
 from app.main import app  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 results: list[tuple[str, bool, str]] = []
 warnings: list[str] = []

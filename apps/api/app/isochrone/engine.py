@@ -17,7 +17,6 @@ coverage.py / 前端 / eval 消费。
 
 from __future__ import annotations
 
-import asyncio
 from typing import List, Optional, Sequence, Tuple
 
 from . import geo

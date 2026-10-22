@@ -7,8 +7,8 @@ import os
 import re
 
 from app.contracts import Stop
-from app.paths import CACHE_NARRATIVES_DIR, DATA, NARRATIVES
 from app.llm import chat_json
+from app.paths import CACHE_NARRATIVES_DIR, NARRATIVES
 
 VIBE_TONE = {
     "coffee": "独立杂志感，短句，强调当下逛法",

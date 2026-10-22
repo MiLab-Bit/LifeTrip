@@ -4,7 +4,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from app.contracts import BriefInput, PendingAction, RouteEnvelope, Stop, WalkTask
+from app.contracts import BriefInput, RouteEnvelope, Stop, WalkTask
 from app.districts import DISTRICTS
 from app.memory import store
 from app.plan.planner import find_replacement, plan_route

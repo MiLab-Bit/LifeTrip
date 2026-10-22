@@ -3,8 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from app.contracts import Badge, WalkProfile
-from app.contracts import WalkTask
+from app.contracts import Badge, WalkProfile, WalkTask
 
 
 def _now() -> str:

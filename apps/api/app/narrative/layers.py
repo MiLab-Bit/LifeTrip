@@ -7,8 +7,8 @@ import os
 import re
 
 from app.contracts import LayeredNarrative, Stop
-from app.paths import CACHE_NARRATIVES_DIR, NARRATIVES
 from app.llm import chat_json
+from app.paths import NARRATIVES
 
 # Layer depth presets
 LAYER_DEPTH = {

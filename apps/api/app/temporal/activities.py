@@ -1,6 +1,8 @@
 """LifeTrip Temporal Activities — WalkTask 生命周期各阶段。"""
 from __future__ import annotations
+
 from typing import Any
+
 from temporalio import activity
 
 
@@ -15,24 +17,22 @@ def _hb(*d: str) -> None:
 async def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
     """规划一条 WalkTask 路线（选 POI + 排序 + 步行路由 + LLM 文案）。"""
     _hb("plan:start")
-    
-    from app.plan.planner import plan_route
-    from app.districts import District
+
     from app.narrative.polish import polish_stops
-    from app.contracts import Stop
-    
+    from app.plan.planner import plan_route
+
     vibe = inp.get("vibe", "coffee")
     district_id = inp.get("district_id", "anfu-wukang")
     duration_min = inp.get("duration_min", 90)
     pace = inp.get("pace", "normal")
     session_id = inp.get("session_id", "")
-    
+
     # Get district
     from app.districts import DISTRICTS
     district = next((d for d in DISTRICTS if d.id == district_id), None)
     if not district:
         raise ValueError(f"unknown district: {district_id}")
-    
+
     # Plan route
     route = await plan_route(
         vibe=vibe,
@@ -41,7 +41,7 @@ async def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
         pace=pace,
         session_id=session_id,
     )
-    
+
     # Polish stops with LLM
     stops = route.stops
     polished = await polish_stops(
@@ -49,9 +49,9 @@ async def plan_walktask_activity(inp: dict[str, Any]) -> dict[str, Any]:
         vibe=vibe,
         district=district_id,
     )
-    
+
     _hb(f"plan:done stops={len(polished)}")
-    
+
     return {
         "task_id": inp.get("task_id"),
         "route": route.model_dump(),

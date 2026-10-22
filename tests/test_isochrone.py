@@ -21,7 +21,6 @@ import os
 import sys
 
 import httpx
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -34,9 +33,9 @@ from app.isochrone import (  # noqa: E402
     IsochroneEngine,
     OfflineOsrmTransport,
     analyze_coverage,
+    geo,  # noqa: E402
     load_pois,
 )
-from app.isochrone import geo  # noqa: E402
 from app.isochrone.osrm import HttpOsrmTransport  # noqa: E402
 from app.isochrone.schemas import LatLng, Poi  # noqa: E402
 
@@ -111,10 +110,6 @@ class _RecordingHandler:
         if self.served <= self.fail_first:
             return httpx.Response(500, text="boom")
         # 解析 URL 里的坐标串：/table/v1/foot/lng,lat;lng,lat...?sources=0&destinations=...
-        path = request.url.path
-        coords_part = path.split(f"/table/v1/foot/")[1]
-        pairs = coords_part.split(";")
-        n_coord = len(pairs)
         dest_idx = [int(x) for x in request.url.params["destinations"].split(";")]
         n_dst = len(dest_idx)
         # 合成模型：时间 = 索引距离基准（保持与坐标顺序无关的确定性即可测分批合并）

@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import Dict, List, Sequence
 
 from . import geo
-from .schemas import CategoryCoverage, CoverageReport, GeoJSONPolygon, Poi, POI_CATEGORY_LABELS
+from .schemas import POI_CATEGORY_LABELS, CategoryCoverage, CoverageReport, GeoJSONPolygon, Poi
 
 # 六大类别固定顺序输出，前端条形图按这个顺序渲染
 CATEGORIES: Sequence[str] = ("medical", "education", "shopping", "dining", "green", "transit")

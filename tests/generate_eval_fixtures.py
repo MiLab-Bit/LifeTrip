@@ -17,7 +17,6 @@
 from __future__ import annotations
 
 import json
-import math
 import os
 import sys
 
@@ -25,9 +24,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "apps", "api"))
 
 import asyncio  # noqa: E402
 
-from app.isochrone import IsochroneEngine, OfflineOsrmTransport, analyze_coverage  # noqa: E402
+from app.isochrone import (  # noqa: E402
+    IsochroneEngine,
+    OfflineOsrmTransport,
+    analyze_coverage,
+    geo,  # noqa: E402
+)
 from app.isochrone.schemas import LatLng  # noqa: E402
-from app.isochrone import geo  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIX_DIR = os.path.join(HERE, "..", "content", "fixtures", "isochrone")
