@@ -20,9 +20,9 @@ REPO = os.path.abspath(os.path.join(HERE, ".."))
 sys.path.insert(0, os.path.join(REPO, "apps", "api"))
 sys.path.insert(0, os.getenv("OPENCLAW_SHARED_DIR", "/opt/shared"))
 
+from app import llm as lifetrip_llm  # noqa: E402
 from app.contracts import Stop  # noqa: E402
 from app.narrative import polish  # noqa: E402
-from app import llm as lifetrip_llm  # noqa: E402
 from openclaw_core.quota import QuotaGate  # noqa: E402
 
 # 供应商调用记账：配额门生效时供应商永远不应被调用

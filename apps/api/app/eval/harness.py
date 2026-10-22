@@ -14,8 +14,6 @@ from app.plan.planner import plan_route
 from app.verify.verify import verify_route
 
 
-
-
 def _run_coro(coro):
     """在同步函数里安全地跑一个协程。
 

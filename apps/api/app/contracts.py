@@ -6,7 +6,6 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-
 SourceLabel = Literal["green", "blue", "gray"]
 PermissionLevel = Literal["L0", "L1", "L2", "L3"]
 WalkTaskStatus = Literal["planned", "walking", "paused", "completed", "cancelled"]

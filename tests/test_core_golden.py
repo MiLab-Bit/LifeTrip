@@ -95,7 +95,7 @@ def test_classify_intent_resume_when_active():
 # session_auth: HMAC 防篡改
 # ----------------------------------------------------------------------
 def test_session_new_and_verify(monkeypatch):
-    from app.session_auth import new_session_id, verify_session_id, is_signed
+    from app.session_auth import is_signed, new_session_id, verify_session_id
 
     monkeypatch.setenv("LIFETRIP_SESSION_SECRET", _SESSION_SECRET)
     sid = new_session_id()
@@ -104,7 +104,7 @@ def test_session_new_and_verify(monkeypatch):
 
 
 def test_session_tampered_signature_rejected(monkeypatch):
-    from app.session_auth import new_session_id, verify_session_id, SessionInvalid
+    from app.session_auth import SessionInvalid, new_session_id, verify_session_id
 
     monkeypatch.setenv("LIFETRIP_SESSION_SECRET", _SESSION_SECRET)
     sid = new_session_id()
@@ -115,7 +115,7 @@ def test_session_tampered_signature_rejected(monkeypatch):
 
 
 def test_session_empty_rejected(monkeypatch):
-    from app.session_auth import verify_session_id, SessionInvalid
+    from app.session_auth import SessionInvalid, verify_session_id
 
     monkeypatch.setenv("LIFETRIP_SESSION_SECRET", _SESSION_SECRET)
     with pytest.raises(SessionInvalid):

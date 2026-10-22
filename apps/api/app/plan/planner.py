@@ -50,7 +50,6 @@ def _merge_pois(curated: list[dict], osm: list[dict]) -> list[dict]:
 def _weighted_pick(pois: list[dict], n: int, seed: int = 42) -> list[dict]:
     if len(pois) <= n:
         return pois
-    rng = random.Random(seed)
     pool = sorted(pois, key=lambda p: p.get("weight", 1.0), reverse=True)
     start = pool[0]
     chosen = [start]

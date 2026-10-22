@@ -136,7 +136,7 @@ def _conn():
 
 
 def ensure_session(session_id: str | None) -> str:
-    from app.session_auth import SessionInvalid, new_session_id, verify_session_id
+    from app.session_auth import new_session_id, verify_session_id
 
     if session_id:
         verify_session_id(session_id)  # 伪造/篡改 → SessionInvalid(403)

@@ -6,7 +6,7 @@ from typing import Any
 
 import httpx
 
-from app.contracts import RerouteProposal, RouteEnvelope, WalkTask
+from app.contracts import RerouteProposal, WalkTask
 from app.districts import DISTRICTS
 from app.plan.planner import plan_route
 

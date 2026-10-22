@@ -1,28 +1,28 @@
 """LifeTrip API — WalkTask agent backend."""
 from __future__ import annotations
-import time
 
 import json
 import os
+import time
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query, Body
+from fastapi import Body, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
+from app.api.v1.isochrone import router as isochrone_router
 from app.contracts import BriefInput, RouteEnvelope
-from app.districts import DISTRICTS, CITIES, District
+from app.districts import CITIES, DISTRICTS, District
 from app.eval.harness import run_eval
 from app.intent import classify_intent
 from app.memory import store
-from app.session_auth import SessionInvalid, verify_session_id
+from app.osm import overpass_status
 from app.paths import FIXTURES
 from app.plan.planner import plan_route
 from app.proactive.weather import check_weather_reroute
-from app.osm import overpass_status
+from app.session_auth import SessionInvalid, verify_session_id
 from app.walk import service as walk_service
-from app.api.v1.isochrone import router as isochrone_router
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -172,7 +172,7 @@ async def walks_plan(body: WalkPlanBody):
     )
     try:
         task = await walk_service.plan_walk_task(session_id, brief)
-    except Exception as exc:  # noqa: BLE001
+    except Exception:  # noqa: BLE001
         route = await _plan_with_fallback(PlanRequest(**body.model_dump()))
         task = store.create_task(session_id, brief, route)
     return {
@@ -316,10 +316,10 @@ async def refresh_profile(session_id: str):
 @app.get("/v1/explore/{session_id}")
 async def get_explore(session_id: str):
     verify_session_id(session_id)
+    from app.contracts import ExploreStats
     from app.explore.badges import compute_badges
     from app.explore.collection import compute_collection, compute_stats
     from app.explore.coverage import compute_coverage
-    from app.contracts import ExploreStats
 
     completed = store.list_recent_completed(session_id, limit=100)
     profile = store.get_profile(session_id)
@@ -585,12 +585,12 @@ async def dev_docs():
 async def walks_plan_async(body: WalkPlanBody):
     """Plan a walk using Temporal workflow (async, reliable)."""
     from temporalio.client import Client
-    
+
     session_id = store.ensure_session(body.session_id)
-    
+
     # Start Temporal workflow
     client = await Client.connect('localhost:7233', namespace='default')
-    
+
     inp = {
         "task_id": f"wt-{session_id[-8:]}",  # Generate task_id from session
         "session_id": session_id,
@@ -599,14 +599,14 @@ async def walks_plan_async(body: WalkPlanBody):
         "duration_min": body.duration_min,
         "pace": body.pace or "normal",
     }
-    
+
     handle = await client.start_workflow(
         "WalkTaskWorkflow",
         inp,
         id=f"walk-{session_id}-{int(time.time())}",
         task_queue="lifetrip-task-queue",
     )
-    
+
     return {
         "session_id": session_id,
         "workflow_id": handle.id,
