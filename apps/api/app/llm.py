@@ -1,4 +1,4 @@
-"""LifeTrip 统一 LLM 网关 — 委托 openclaw_core.gateway.Gateway。
+"""LifeTrip 统一 LLM 网关 — 委托 hermes_core.gateway.Gateway。
 
 取代 narrative/polish.py 与 narrative/layers.py 各自重复的 httpx 客户端 +
 llm_quota 配额打点 + 手工 JSON 解析。两处调用点改为调用本模块的 async 封装，
@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 
-from openclaw_core.gateway import Gateway, extract_json
+from hermes_core.gateway import Gateway, extract_json
 
 from app.paths import DATA
 

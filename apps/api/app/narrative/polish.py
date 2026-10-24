@@ -83,7 +83,7 @@ async def _call_llm(*, stop: Stop, vibe: str, district: str, index: int, total: 
     """调用平台 LLM 润色单站文案；失败（含配额超限）返回 None，由调用方降级。
 
     配额门（scope=session_id）、并发闸门、退避、JSON 解析、缓存统一由
-    app.llm.chat_json → openclaw_core.gateway 处理。
+    app.llm.chat_json → hermes_core.gateway 处理。
     """
     model = os.getenv("LIFETRIP_LLM_MODEL") or "gpt-4o-mini"
     system = (

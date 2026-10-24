@@ -1,8 +1,8 @@
 """LifeTrip LLM 每日配额测试 — 不调 LLM（打桩 Gateway 客户端）。
 
-polish._call_llm 现经 app.llm.chat_json → openclaw_core.gateway.Gateway；
+polish._call_llm 现经 app.llm.chat_json → hermes_core.gateway.Gateway；
 本测试只替换 Gateway 的客户端构造与配额存储，验证配额门、scope 隔离与降级
-（真实网关逻辑在 openclaw_core 黄金测试中覆盖）。
+（真实网关逻辑在 hermes_core 黄金测试中覆盖）。
 
 运行（仓库根）：venv/bin/python -m pytest tests/test_llm_quota.py -v
 """
@@ -23,7 +23,7 @@ sys.path.insert(0, os.getenv("OPENCLAW_SHARED_DIR", "/opt/shared"))
 from app import llm as lifetrip_llm  # noqa: E402
 from app.contracts import Stop  # noqa: E402
 from app.narrative import polish  # noqa: E402
-from openclaw_core.quota import QuotaGate  # noqa: E402
+from hermes_core.quota import QuotaGate  # noqa: E402
 
 # 供应商调用记账：配额门生效时供应商永远不应被调用
 SUPPLIER_CALLS: list = []

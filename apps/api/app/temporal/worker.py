@@ -1,7 +1,7 @@
-"""LifeTrip Temporal Worker（统一到 openclaw_core.temporal.run_worker）。"""
+"""LifeTrip Temporal Worker（统一到 hermes_core.temporal.run_worker）。"""
 from __future__ import annotations
 
-from openclaw_core.temporal import run_worker
+from hermes_core.temporal import run_worker
 
 from app.temporal.activities import (
     complete_walktask_activity,
