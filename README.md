@@ -58,4 +58,21 @@ LifeTrip 的竞争单位不是「推荐好不好」，而是 **WalkTask 能不�
 
 ---
 
+## 业务建模：把城市漫步变成可恢复的任务
+
+LifeTrip 将一次出行明确表示为 `WalkTask`：它持有 `BriefInput`（偏好与约束）、`RouteEnvelope`（路线与站点）、`current_stop_index`（当前进度）、`PendingAction`（待确认动作）和 `WalkTaskStatus`（planned / walking / paused / completed / cancelled）。`Stop` 是可操作的任务节点，而不是只有名称的地点卡片。
+
+**为什么这样设计：** 用户真正完成的是一个不断受天气、路线、时间及主观兴趣影响的连续任务，而不是一次性的 POI 推荐。任务状态独立于聊天上下文并由 SQLite 保存，支持重新打开后续走；“跳过 / 重抽 / 改线”的意图可以先生成提案，再由用户确认执行。
+
+**源码入口：** [业务契约](apps/api/app/contracts.py) · [任务服务](apps/api/app/walk/service.py) · [权限动作](apps/api/app/walk/permissions.py) · [持久化](apps/api/app/memory/store.py)。
+
+## 工程完成度与验证边界
+
+- **已在仓库中实现：** 路线、任务、权限动作的 Pydantic 契约；SQLite 的会话与任务持久化；路线规划、OSM/OSRM 数据接入及前端地图；`apps/api/app/eval/harness.py` 与 `tests/` 中的离线门禁和空间/烟测。
+- **可复核的工程配置：** [CI](.github/workflows/ci.yml) 与 [Release 工作流](.github/workflows/release.yml)。README 中的 50 题 Eval Harness 是项目设计/样本规模，不代表 50 个真实道路场景已验证成功。
+- **待加强的业务不变量：** `walk/service.py` 的 `confirm=True` 分支目前没有在服务层强制核对待确认动作的 ID/版本；`memory/store.py` 更新时没有乐观锁版本检查。这里属于可识别的后续工程任务，不能简单等同“已具备强授权与并发安全”。
+
+
+---
+
 © LifeTrip · MiLab-Bit
