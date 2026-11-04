@@ -42,12 +42,23 @@ def require_complete_eval(body: dict) -> str:
     """Reject partial, inconsistent or failing eval output even on HTTP 200."""
     total, passed = body.get("total"), body.get("passed")
     cases = body.get("results") or []
-    if not isinstance(total, int) or total <= 0:
+    if type(total) is not int or total <= 0:
         raise AssertionError("eval 没有有效 total")
-    if len(cases) != total:
+    if not isinstance(cases, list) or len(cases) != total:
         raise AssertionError("eval 结果数与总数不一致：%s/%s" % (len(cases), total))
-    failed_ids = [str(case.get("id")) for case in cases if not case.get("passed")]
-    if not isinstance(passed, int) or passed != total or failed_ids:
+    if any(
+        not isinstance(case, dict)
+        or not isinstance(case.get("id"), str)
+        or not case["id"].strip()
+        or type(case.get("passed")) is not bool
+        for case in cases
+    ):
+        raise AssertionError("eval 结果存在无效题目结构")
+    ids = [case["id"] for case in cases]
+    if len(ids) != len(set(ids)):
+        raise AssertionError("eval 结果包含重复题目 ID")
+    failed_ids = [case["id"] for case in cases if not case["passed"]]
+    if type(passed) is not int or passed != total or failed_ids:
         raise AssertionError(
             "eval 回归失败：%s/%s 通过；失败题目：%s"
             % (passed, total, "、".join(failed_ids[:12]))
