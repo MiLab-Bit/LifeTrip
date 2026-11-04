@@ -23,3 +23,17 @@ def test_eval_gate_accepts_complete_pass():
 def test_eval_gate_rejects_failing_or_incomplete_results(payload):
     with pytest.raises(AssertionError):
         require_complete_eval(payload)
+
+
+@pytest.mark.parametrize("payload", [
+    {"total": True, "passed": True, "results": [{"id": "A", "passed": True}]},
+    {"total": 1, "passed": True, "results": [{"id": "A", "passed": True}]},
+    {"total": 1, "passed": 1, "results": [{"id": "A", "passed": 1}]},
+    {"total": 2, "passed": 2, "results": [
+        {"id": "A", "passed": True}, {"id": "A", "passed": True}]},
+    {"total": 1, "passed": 1, "results": [{"id": "", "passed": True}]},
+    {"total": 1, "passed": 1, "results": ["not a case"]},
+])
+def test_eval_gate_rejects_malformed_and_duplicated_cases(payload):
+    with pytest.raises(AssertionError):
+        require_complete_eval(payload)
