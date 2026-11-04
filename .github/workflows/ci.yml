@@ -91,6 +91,17 @@ jobs:
           OUT_DIR: /tmp/web-asset
         run: SKIP_INSTALL=1 bash scripts/build-web-asset.sh ci
 
+      # Critical offline evaluation must be non-optional even when preflight
+      # auto-detection is modified or a tool is missing.
+      - name: Required offline evaluation contract tests
+        run: python -m pytest -q tests/test_smoke_eval_gate.py tests/test_isochrone.py
+
+      - name: Required end-to-end offline API and evaluation smoke
+        env:
+          LIFETRIP_OFFLINE: "1"
+          LIFETRIP_LLM_POLISH: "0"
+        run: python tests/smoke.py
+
       - name: 跑门禁（唯一入口）
         if: ${{ hashFiles('scripts/preflight.sh') != '' }}
         run: bash scripts/preflight.sh
