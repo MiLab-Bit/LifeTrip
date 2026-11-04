@@ -38,6 +38,23 @@ results: list[tuple[str, bool, str]] = []
 warnings: list[str] = []
 
 
+def require_complete_eval(body: dict) -> str:
+    """Reject partial, inconsistent or failing eval output even on HTTP 200."""
+    total, passed = body.get("total"), body.get("passed")
+    cases = body.get("results") or []
+    if not isinstance(total, int) or total <= 0:
+        raise AssertionError("eval 没有有效 total")
+    if len(cases) != total:
+        raise AssertionError("eval 结果数与总数不一致：%s/%s" % (len(cases), total))
+    failed_ids = [str(case.get("id")) for case in cases if not case.get("passed")]
+    if not isinstance(passed, int) or passed != total or failed_ids:
+        raise AssertionError(
+            "eval 回归失败：%s/%s 通过；失败题目：%s"
+            % (passed, total, "、".join(failed_ids[:12]))
+        )
+    return "eval %s/%s 通过，全绿" % (passed, total)
+
+
 def check(name: str, fn) -> None:
     t0 = time.time()
     try:
@@ -122,16 +139,7 @@ def main() -> int:
         def c_eval_offline():
             b = _json(c.post("/v1/eval/run"))
             assert b, "eval 返回空"
-            passed, total = b.get("passed"), b.get("total")
-            assert total, "eval 没有 total"
-            cases = b.get("results") or []
-            bad = [x.get("id") for x in cases if not x.get("passed")]
-            assert len(cases) == total, "eval 结果数与总数不一致：%s/%s" % (len(cases), total)
-            assert isinstance(passed, int) and passed == total and not bad, (
-                "eval 回归失败：%s/%s 通过；失败题目：%s"
-                % (passed, total, "、".join(str(x) for x in bad[:12]))
-            )
-            return "eval %s/%s 通过，全绿" % (passed, total)
+            return require_complete_eval(b)
 
         def c_isochrone_offline():
             paths = list(_json(c.get("/openapi.json")).get("paths") or {})
