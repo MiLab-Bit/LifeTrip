@@ -10,12 +10,9 @@
 
 退出码 0 = 通过；非 0 = 有失败项（逐条打印原因）。
 
-已知问题（下面会用 WARN 报出来，不算本脚本失败）：
-    `/v1/eval/run` 的 emergency 档 15 条目前恒失败，报
-    `'coroutine' object has no attribute 'stops'`。根因在
-    `apps/api/app/eval/harness.py`：异步的 `plan_route` 被当同步函数调用
-    （RuntimeWarning: coroutine 'plan_route' was never awaited）。
-    这是产品代码的缺陷，不是离线模式导致的；修好之前这一档无法作为门禁判据。
+回归门禁：`/v1/eval/run` 的所有已定义题目必须通过。
+曾经的 emergency 异步调用缺陷已由真实 CI 50/50 通过记录证明不再出现；
+若再次出现失败，本脚本应返回非 0，不能继续把失败降级为 WARN。
 """
 
 from __future__ import annotations
@@ -127,13 +124,14 @@ def main() -> int:
             assert b, "eval 返回空"
             passed, total = b.get("passed"), b.get("total")
             assert total, "eval 没有 total"
-            bad = [x.get("id") for x in (b.get("results") or []) if not x.get("passed")]
-            if bad:
-                warnings.append(
-                    "eval 有 %d/%s 条失败：%s%s（已知 emergency 档缺陷，见文件头说明）"
-                    % (len(bad), total, "、".join(bad[:6]), "…" if len(bad) > 6 else "")
-                )
-            return "eval %s/%s 通过%s" % (passed, total, "，见 WARN" if bad else "，全绿")
+            cases = b.get("results") or []
+            bad = [x.get("id") for x in cases if not x.get("passed")]
+            assert len(cases) == total, "eval 结果数与总数不一致：%s/%s" % (len(cases), total)
+            assert isinstance(passed, int) and passed == total and not bad, (
+                "eval 回归失败：%s/%s 通过；失败题目：%s"
+                % (passed, total, "、".join(str(x) for x in bad[:12]))
+            )
+            return "eval %s/%s 通过，全绿" % (passed, total)
 
         def c_isochrone_offline():
             paths = list(_json(c.get("/openapi.json")).get("paths") or {})
