@@ -24,6 +24,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Release deployment fail-closed contract (no deployment)
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/deploy.sh
+          output="$(mktemp)"
+          set +e
+          env -u APP_DIR bash scripts/deploy.sh --detect >"$output" 2>&1
+          status=$?
+          set -e
+          if [ "$status" -ne 2 ]; then
+            cat "$output"
+            echo "::error::Expected missing APP_DIR to exit 2, got $status"
+            exit 1
+          fi
+          if ! grep -q '必须显式指定 APP_DIR' "$output"; then
+            cat "$output"
+            echo "::error::Missing APP_DIR rejection message"
+            exit 1
+          fi
+          rm -f "$output"
+
       - name: 仓库结构探测（失败排查时看这段日志）
         run: |
           echo "== 顶层 =="; ls -a | head -40
