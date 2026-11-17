@@ -26,9 +26,7 @@ APP_DIR=/opt/lifetrip         TARGET_ENV=production bash scripts/deploy.sh <tag>
 脚本行为：`git fetch --tags` → `checkout --force <ref>` → **校验 HEAD 与目标 commit 一致** →
 重启 systemd 单元 → 轮询 `/v1/health`（最多约 60 秒）→ 失败则自动回退到上一个 tag。
 
-**坑（实测）**：`APP_DIR` 默认是 `/opt/lifetrip`。想部署 staging 却只写 `bash scripts/deploy.sh <tag>`，
-会去重启**生产**的 `lifetrip-api`。脚本已加护栏（`SERVICE` 与 `APP_DIR` 不一致直接拒绝），
-但命令请一律写全 `APP_DIR=`。
+**安全门禁（2026-11-17 修复分支）**：`APP_DIR` **没有默认值，必须显式提供**。未设置或为空时，脚本在执行任何 Git、systemd 或部署动作之前退出，退出码为 `2`。部署 staging 与生产必须分别指定对应目录；保留 `SERVICE` 与 `APP_DIR` 的绑定校验。旧版本默认 `/opt/lifetrip` 的行为已废弃。
 
 可选：`ISOCHRONE_PROBE`、`REQUIRE_ISOCHRONE=1`（等时圈仍降级就算失败）、`POST_DEPLOY_CMD`、`ROLLBACK_TO`。
 
